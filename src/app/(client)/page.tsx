@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import SectionHearderHomepage from './_sections/homepage/Hearder'
 import { OverlayLoginStore, OverlayRegisterStore } from '@/app/store';
+import TestimonialsSection from './_sections/homepage/TestimonialsSection';
 
 export default function Page() {
   const { setOverlayLogin } = OverlayLoginStore();
@@ -27,6 +28,7 @@ export default function Page() {
   return (
     <div>
       <SectionHearderHomepage />
+      <TestimonialsSection />
     </div>
   )
 }
