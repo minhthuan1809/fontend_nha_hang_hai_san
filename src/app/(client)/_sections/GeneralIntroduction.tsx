@@ -1,14 +1,20 @@
 import React from "react";
+import Image from "next/image";
 
 export default function GeneralIntroduction() {
   return (
-    <div
-      className="relative px-4 py-16 bg-cover bg-center bg-no-repeat bg-fixed flex items-center justify-center overflow-hidden"
-      style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0088_preview.jpeg)`,
-      }}
-    >
-      <div className="container mx-auto md:w-3/5 bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+    <div className="relative px-4 py-16 flex items-center justify-center overflow-hidden">
+      <Image
+        src="http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0088_preview.jpeg"
+        alt="Background"
+        fill
+        className="object-cover z-0"
+        quality={100}
+        priority
+      />
+      <div className="absolute inset-0 bg-black/50 z-[1]" />
+
+      <div className="container mx-auto md:w-3/5 bg-white/90 p-8 rounded-xl shadow-2xl relative z-[2]">
         <h1 className="text-4xl md:text-6xl font-bold text-center mb-8 text-amber-600 font-sans tracking-tight">
           Minh Thuận
         </h1>
