@@ -26,17 +26,10 @@ const SelectSection = () => {
   ];
 
   return (
-    <div className="relative py-24 bg-amber-50">
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg"
-          alt="Background"
-          className="w-full h-full object-cover absolute"
-        />
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-      </div>
-
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+    <div
+      className="relative py-24  bg-amber-50 bg-fixed bg-cover bg-center bg-no-repeat bg-[url('http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg')]"
+    >
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-2xl md:text-4xl font-bold text-amber-600 mb-4">
             Đây là lý do khách hàng thường chọn chúng tôi
