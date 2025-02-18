@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Icon from "@/app/_utils/Icon";
 
 const images = [
   "http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg",
@@ -13,13 +15,15 @@ const images = [
 export default function SectionHearderHomepage() {
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
-  React.useEffect(() => {
+  
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
     }, 5000);
 
     return () => clearInterval(timer);
   }, []);
+
 
   return (
     <>
@@ -65,25 +69,30 @@ export default function SectionHearderHomepage() {
         <button className="px-6 py-3 bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors">
           Liên hệ ngay
         </button>
-        <button className="px-6 py-3 border border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+        <Link href="#food-sale" className="px-6 py-3 border border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
           Xem thêm
-        </button>
+        </Link>
       </div>
     </motion.div>
   </div>
 
   {/* Slide Navigation */}
-  <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-3">
+  <div className="absolute right-5 top-1/2 z-20 flex flex-col gap-3">
     {images.map((_, i) => (
       <button
         key={i}
         className={`h-2 rounded-full transition-all ${
-          currentSlide === i ? "w-8 bg-white" : "w-2 bg-white/50"
+          currentSlide === i ? "w-3 h-3 bg-white" : "w-3 h-3 bg-white/50"
         }`}
         onClick={() => setCurrentSlide(i)}
         aria-label={`Go to slide ${i + 1}`}
       />
     ))}
+  </div>
+
+  {/* Scroll Down */}
+  <div className="absolute bottom-[6rem] left-[45%] lg:left-[50%] z-20 flex gap-3 border-4 border-white rounded-full p-2 animate-bounce">
+  <Icon icon="ChevronDown" className="w-10 h-10 text-white" />
   </div>
 </div>
 </>

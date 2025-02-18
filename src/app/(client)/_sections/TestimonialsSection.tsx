@@ -10,7 +10,7 @@ export default function TestimonialsSection() {
   const testimonials = [
     {
       id: 1,
-      name: "Tóc Tiên",
+      name: "Vũ Quang Huy",
       avatar:
         "https://scontent.fhan18-1.fna.fbcdn.net/v/t39.30808-1/400057903_10159821074220592_7376063669291051878_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e99d92&_nc_eui2=AeHaeRkpk27lYXuH1SkY5OnKURtylWC26rBRG3KVYLbqsBsO_iif2OztMNyU-suKqPTpmLAUUPIYNrom1qMe5Dwr&_nc_ohc=S-hyNNlvrzAQ7kNvgHFQkoK&_nc_oc=AdicJ0WkOcMy7O-OgwGI4huB-UiYYa-8D7T4nPQm92q_reL_ZcMLsfvbipEn-BHAFSg&_nc_zt=24&_nc_ht=scontent.fhan18-1.fna&_nc_gid=AlN2e0rbRRQD5R5VZPphZXC&oh=00_AYAwuQkyA3cbCKbeghLNIjvz-nbnyCtjvWDdKpW2i8Y2jg&oe=67BA2BCA",
       content:
@@ -89,7 +89,7 @@ export default function TestimonialsSection() {
                   </div>
 
                   <div className="text-gray-700 leading-relaxed text-center">
-                    <p className="text-lg">{testimonial.content}</p>
+                    <cite className="text-lg italic">" {testimonial.content} "</cite>
                   </div>
                 </SwiperSlide>
               ))}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ChefHat, Search, Star } from "lucide-react";
+import { ChefHat, Star } from "lucide-react";
 import Link from "next/link";
+import Icon from "@/app/_utils/Icon";
 
 const PopularFoodSection = () => {
   const [menuItems, setMenuItems] = useState([
@@ -10,27 +11,31 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.8,
+      category: "fish"
     },
     {
-      name: "Ghẹ hấp xả",
+      name: "Ghẹ hấp xả", 
       price: "220.000 đ",
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.9,
+      category: "crab"
     },
     {
       name: "Tôm chiên bột",
-      price: "280.000 đ",
+      price: "280.000 đ", 
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.7,
+      category: "shrimp"
     },
     {
       name: "Cá chiên phượng hoàng",
       price: "560.000 đ",
-      image: "https://picsum.photos/200",
+      image: "https://picsum.photos/200", 
       hot: false,
       rating: 4.5,
+      category: "fish"
     },
     {
       name: "Mực chiên giòn",
@@ -38,6 +43,7 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.6,
+      category: "squid"
     },
     {
       name: "Tôm tít chấy tỏi",
@@ -45,34 +51,37 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
+      category: "shrimp"
     },
     {
-      name: "Tôm tít chấy tỏi",
-      price: "120.000 đ",
+      name: "Cua rang me",
+      price: "180.000 đ",
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
+      category: "crab"
     },
     {
-      name: "Tôm tít chấy tỏi",
-      price: "120.000 đ",
+      name: "Mực xào sa tế",
+      price: "150.000 đ",
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
+      category: "squid"
     },
   ]);
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const filteredItems =
-    activeFilter === "all"
+  const filteredItems = 
+    activeFilter === "all" 
       ? menuItems
       : activeFilter === "hot"
-      ? menuItems.filter((item) => item.hot)
-      : menuItems.filter((item) => !item.hot);
+      ? menuItems.filter(item => item.hot)
+      : menuItems.filter(item => item.category === activeFilter);
 
   return (
-    <div className="w-full bg-gray-50 py-8 sm:py-12 md:py-16">
+    <div id="food-sale" className="w-full bg-gray-50 py-8 sm:py-12 md:py-16">
       <div className="w-[95%] sm:w-[90%] md:w-[85%] lg:w-[80%] xl:w-[70%] mx-auto px-2 sm:px-4">
         {/* Header with decorative elements */}
         <div className="text-center mb-8 sm:mb-12 relative">
@@ -91,7 +100,7 @@ const PopularFoodSection = () => {
 
         {/* Filter tabs */}
         <div className="flex justify-center mb-6 sm:mb-10">
-          <div className="inline-flex bg-white shadow-md rounded-lg p-1">
+          <div className="inline-flex flex-wrap gap-2 bg-white shadow-md rounded-lg p-1">
             <button
               onClick={() => setActiveFilter("all")}
               className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
@@ -113,81 +122,105 @@ const PopularFoodSection = () => {
               Món hot
             </button>
             <button
-              onClick={() => setActiveFilter("other")}
+              onClick={() => setActiveFilter("fish")}
               className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
-                activeFilter === "other"
+                activeFilter === "fish"
                   ? "bg-[#d97706] text-white"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              Món khác
+              Cá
             </button>
+            <button
+              onClick={() => setActiveFilter("shrimp")}
+              className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
+                activeFilter === "shrimp"
+                  ? "bg-[#d97706] text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Tôm
+            </button>
+            <button
+              onClick={() => setActiveFilter("crab")}
+              className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
+                activeFilter === "crab"
+                  ? "bg-[#d97706] text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Cua/Ghẹ
+            </button>
+        
           </div>
         </div>
 
         {/* Menu grid with improved cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-          {filteredItems.map((item, index) => {
-            if (index > 7) return;
-            return (
-              <div key={index} className="group">
-                <div className="bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                  <div className="relative">
-                    {/* Image container with aspect ratio */}
-                    <div className="h-[12rem] sm:h-[14rem] md:h-[16rem] relative overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                      />
-                    </div>
+        <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
+          {filteredItems.map((item, index) => (
+            <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 group">
+              <div className="relative">
+                {/* Image container */}
+                <div className="h-36 sm:h-48 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  />
+                </div>
 
-                    {/* Hot badge */}
-                    {item.hot && (
-                      <div className="absolute top-3 left-3">
-                        <span className="bg-red-500 text-white text-xs font-medium px-2 sm:px-3 py-1 rounded-full shadow-md flex items-center">
-                          <Star size={12} className="mr-1 fill-white" />
-                          HOT
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Price tag */}
-                    <div className="absolute bottom-3 right-3 bg-white/95 text-[#d97706] font-bold text-sm sm:text-base px-2 sm:px-3 py-1 rounded-lg shadow-md">
-                      {item.price}
-                    </div>
+                {/* Hot badge */}
+                {item.hot && (
+                  <div className="absolute top-2 left-2">
+                    <span className="bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg flex items-center gap-1">
+                      <Star size={10} className="fill-white" />
+                      HOT
+                    </span>
                   </div>
+                )}
 
-                  {/* Content */}
-                  <div className="p-3 sm:p-4 md:p-5">
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 group-hover:text-[#d97706] transition-colors line-clamp-2">
-                      {item.name}
-                    </h3>
-
-                    {/* Rating */}
-                    <div className="flex items-center">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={14}
-                            className={`${
-                              i < Math.floor(item.rating)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="ml-1 text-xs sm:text-sm text-gray-500">
-                        ({item.rating})
-                      </span>
-                    </div>
+                {/* Price tag */}
+                <div className="absolute -bottom-3 right-3">
+                  <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg">
+                    {item.price}
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              <div className="p-4 pt-5">
+                <Link href={`/products/${item.name}`} className="text-base font-bold text-gray-800 mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">
+                  {item.name}
+                </Link>
+
+                <div className="flex items-center justify-between mt-3">
+                  {/* Rating */}
+                  <div className="flex items-center gap-1">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={12}
+                          className={`${
+                            i < Math.floor(item.rating)
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs font-medium text-gray-600">
+                      ({item.rating})
+                    </span>
+                  </div>
+
+                  {/* Cart button */}
+                  <button className="w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 flex items-center justify-center transition-colors">
+                    <Icon icon="ShoppingCart" className="w-4 h-4 text-amber-600" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Call to action button */}

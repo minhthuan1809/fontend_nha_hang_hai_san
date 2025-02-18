@@ -14,6 +14,11 @@ interface OverlayForgotPasswordState {
   setOverlayForgotPassword: (data: boolean) => void;
 }
 
+interface LoadingState {
+  dataLoading: boolean;
+  setLoading: (data: boolean) => void;
+}
+
 
 
 
@@ -38,6 +43,12 @@ export const OverlayRegisterStore = create<OverlayRegisterState>((set) => ({
 export const OverlayForgotPasswordStore = create<OverlayForgotPasswordState>((set) => ({
   dataOverlayForgotPassword: false,
   setOverlayForgotPassword: (data) => set({ dataOverlayForgotPassword: data }),
+}));
+
+// loading
+export const LoadingStore = create<LoadingState>((set) => ({
+  dataLoading: false,
+  setLoading: (data) => set({ dataLoading: data }),
 }));
 
 // store để refresh dữ liệu

@@ -7,6 +7,9 @@ import FoodSaleSection from "./_sections/FoodSaleSection";
 import GeneralIntroduction from "./_sections/GeneralIntroduction";
 import SelectSection from "./_sections/SelectSection";
 import NewSection from "./_sections/NewSection";
+import BackToTop from "@/app/_common/ui/BackToTop";
+import FixedProductComment from "@/app/_common/ui/FixedProductComment";
+
 export default function Page() {
   const { setOverlayLogin } = OverlayLoginStore();
   const { setOverlayRegister } = OverlayRegisterStore();
@@ -33,13 +36,21 @@ export default function Page() {
       <SectionHearderHomepage />
       {/* // menu */}
       <FoodSaleSection />
-
+      {/* // Giới thiệu chung */}
+      <GeneralIntroduction />
       {/* // Khách hàng nói gì về chúng tôi */}
       <TestimonialsSection />
       {/* // Lý do khách hàng chọn chúng tôi */}
       <SelectSection />
-      {/* // Món mới */}
+      {/* Tin tức */}
       <NewSection />
+
+      {/* // Back to top */}
+      <BackToTop />
+
+      {/* // Fixed product comment */}
+      <FixedProductComment />
+      
     </div>
   );
 }

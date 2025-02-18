@@ -33,7 +33,7 @@ const SelectSection = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundImage:
-          "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg')",
+          "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg')",
       }}
       className="relative py-24  bg-amber-50"
     >
