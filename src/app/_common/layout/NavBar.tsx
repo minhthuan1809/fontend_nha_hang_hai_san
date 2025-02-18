@@ -102,8 +102,8 @@ export default function App() {
               onClick={handleNavItemClick}
               className={`px-3 py-2 text-sm lg:text-base font-medium transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${
                 pathname === item.href
-                  ? "text-blue-600 dark:text-blue-400"
-                  : "text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-blue-400"
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
               }`}>
               {item.label}
             </Link>
@@ -116,8 +116,8 @@ export default function App() {
           <Button
             className={`px-3 py-1 text-sm lg:text-base font-medium ${
               dataOverlayLogin
-                ? "bg-blue-600 text-white"
-                : "bg-transparent text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-blue-400"
+                ? "bg-amber-600 text-white"
+                : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
             }`}
             onClick={() => setOverlayLogin(!dataOverlayLogin)}
             variant={dataOverlayLogin ? "solid" : "light"}>
@@ -127,8 +127,8 @@ export default function App() {
           <Button
             className={`px-3 py-1 text-sm lg:text-base font-medium hidden md:block ${
               dataOverlayRegister
-                ? "bg-blue-600 text-white"
-                : "bg-transparent text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-blue-400"
+                ? "bg-amber-600 text-white"
+                : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
             }`}
             onClick={() => setOverlayRegister(!dataOverlayRegister)}
             variant={dataOverlayRegister ? "solid" : "light"}>
@@ -152,8 +152,8 @@ export default function App() {
               onClick={handleNavItemClick}
               className={`w-full py-2 text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors block px-4 ${
                 pathname === item.href
-                  ? "text-blue-600 dark:text-blue-400 bg-gray-50 dark:bg-gray-800"
-                  : "text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-blue-400"
+                  ? "text-amber-600 dark:text-amber-400 bg-gray-50 dark:bg-gray-800"
+                  : "text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
               }`}>
               {item.label}
             </Link>
@@ -162,7 +162,7 @@ export default function App() {
 
         <div className="flex flex-col gap-3 mt-6">
           <Button
-            className={`w-full font-medium py-2 rounded-lg transition-colors bg-blue-600 text-white`}
+            className={`w-full font-medium py-2 rounded-lg transition-colors bg-amber-600 text-white`}
             onClick={() => {
               setOverlayLogin(!dataOverlayLogin);
               setIsMenuOpen(false);
@@ -172,7 +172,7 @@ export default function App() {
           <Button
             className={`w-full font-medium py-2 rounded-lg transition-colors ${
               dataOverlayRegister
-                ? "bg-blue-600 text-white"
+                ? "bg-amber-600 text-white"
                 : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
             }`}
             onClick={() => {

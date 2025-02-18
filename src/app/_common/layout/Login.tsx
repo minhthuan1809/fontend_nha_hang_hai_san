@@ -129,7 +129,7 @@ export default function Login() {
             onChange={() => setRemember(!remember)}>
             Ghi nhớ tài khoản
           </Checkbox>
-          <span className="text-blue-600 hover:text-blue-700 cursor-pointer font-medium transition-colors text-sm sm:text-base" onClick={() => {
+          <span className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors text-sm sm:text-base" onClick={() => {
             setOverlayLogin(false);
             setOverlayForgotPassword(true);
           }}>
@@ -138,14 +138,14 @@ export default function Login() {
         </div>
 
         <Button
-          className="w-full mt-8 bg-blue-600 text-white text-lg font-medium py-6"
+          className="w-full mt-8 bg-amber-600 text-white text-lg font-medium py-6"
           onClick={handleLogin}>
           {loading ? <Icon icon="Loader" className="animate-spin" /> : "Đăng nhập"}
         </Button>
 
         <div className="text-center mt-6 text-gray-600">
           Bạn chưa có tài khoản?{" "}
-          <span className="text-blue-600 hover:text-blue-700 cursor-pointer font-medium transition-colors" onClick={() => {
+          <span className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors" onClick={() => {
             setOverlayLogin(false);
             setOverlayRegister(true);
           }}>

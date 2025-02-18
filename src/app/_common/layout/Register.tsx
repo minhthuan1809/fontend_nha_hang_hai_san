@@ -167,14 +167,14 @@ export default function Register() {
         </div>
 
         <Button
-          className="w-full mt-8 bg-blue-600 text-white text-lg font-medium py-6"
+          className="w-full mt-8 bg-amber-600 text-white text-lg font-medium py-6"
           onClick={handleRegister}>
          {loading ? <Icon icon="Loader" className="animate-spin" /> : "Đăng ký"}
         </Button>
 
         <div className="text-center mt-6 text-gray-600">
           Đã có tài khoản?{" "}
-          <span className="text-blue-600 hover:text-blue-700 cursor-pointer font-medium transition-colors" onClick={() => {
+          <span className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors" onClick={() => {
             setOverlayRegister(false);
             setOverlayLogin(true);
           }}>
