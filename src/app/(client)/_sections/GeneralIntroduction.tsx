@@ -2,8 +2,8 @@ import React from "react";
 
 export default function GeneralIntroduction() {
   return (
-    <div className="relative px-4 py-16 bg-cover bg-center bg-no-repeat bg-fixed flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-[url(https://scontent.fhan17-1.fna.fbcdn.net/v/t1.15752-9/476911566_1723320565279294_6474198103564421508_n.png?stp=dst-png_s552x414&_nc_cat=109&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeE6IJBgPRWQRQMCw2nZnwqwaMlwAvMtOoNoyXAC8y06g0hGV2w8qtysooOFZvnPqbjdFfVnz9xLYxe7sOfjrAA9&_nc_ohc=2Qsj5wYofggQ7kNvgHLcfLH&_nc_oc=Adi1UU_q6c8Ej34hB5ZvHUy7RPKNzf061IOIUrE-odMM-ghZrg9aZygA4MDU0kLz82Ir5yRmFwij0N5PHg1MrAif&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fhan17-1.fna&oh=03_Q7cD1gG00iiWFc29aCz-tf8DOdqyrSN11vPqxSONC3phkeCQDg&oe=67DC2FF2)] bg-fixed bg-cover bg-center bg-no-repeat ">
+    <div className="relative px-4 py-16  flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-[url(https://scontent.fhan17-1.fna.fbcdn.net/v/t1.15752-9/476911566_1723320565279294_6474198103564421508_n.png?stp=dst-png_s552x414&_nc_cat=109&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeE6IJBgPRWQRQMCw2nZnwqwaMlwAvMtOoNoyXAC8y06g0hGV2w8qtysooOFZvnPqbjdFfVnz9xLYxe7sOfjrAA9&_nc_ohc=2Qsj5wYofggQ7kNvgHLcfLH&_nc_oc=Adi1UU_q6c8Ej34hB5ZvHUy7RPKNzf061IOIUrE-odMM-ghZrg9aZygA4MDU0kLz82Ir5yRmFwij0N5PHg1MrAif&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fhan17-1.fna&oh=03_Q7cD1gG00iiWFc29aCz-tf8DOdqyrSN11vPqxSONC3phkeCQDg&oe=67DC2FF2)] bg-fixed bg-cover  bg-no-repeat  opacity-90">
 
       </div>
       <div className="container mx-auto md:w-3/5 bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-2xl relative z-20">
