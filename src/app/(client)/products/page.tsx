@@ -187,11 +187,7 @@ const MenuPageContent = () => {
   useEffect(() => {
     let result = [...menuItems];
 
-    if (searchTerm) {
-      result = result.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+    
 
     if (categoryFilter) {
       result = result.filter(item => item.category === categoryFilter);

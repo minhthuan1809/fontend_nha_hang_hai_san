@@ -13,7 +13,6 @@ import SectionHearderHomepage from "./_sections/homepage/Hearder";
 import FoodSaleSection from "./_sections/FoodSaleSection";
 import TestimonialsSection from "./_sections/TestimonialsSection";
 import GeneralIntroduction from "./_sections/GeneralIntroduction";
-import FixedProductComment from "../_shared/components/ui/FixedProductComment";
 import SelectSection from "./_sections/SelectSection";
 import NewSection from "./_sections/NewSection";
 import BackToTop from "../_shared/components/ui/BackToTop";
