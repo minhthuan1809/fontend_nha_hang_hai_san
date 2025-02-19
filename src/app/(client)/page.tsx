@@ -51,6 +51,7 @@ export default function Page() {
       <SelectSection />
       {/* Tin tức */}
       <NewSection />
+      {/* // quảng cáo */}
       <AdsHomePage />
     </div>
   );

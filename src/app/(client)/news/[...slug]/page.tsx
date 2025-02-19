@@ -1,7 +1,12 @@
-import Navigation from '@/app/_shared/components/ui/Navigation'
-import React from 'react'
+import Navigation from "@/app/_shared/components/ui/Navigation";
+import React from "react";
 
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Tin tức tại nhà hàng hải sản Minh Thuận",
+  description: "Tin tức tại nhà hàng hải sản Minh Thuận",
+};
 
 export default async function NewsDetailPage() {
   // Giả sử đây là HTML nhận được từ server
@@ -27,18 +32,22 @@ export default async function NewsDetailPage() {
       <h2 class="text-2xl font-bold mt-6 mb-4">Cách làm tôm rang me như sau:</h2>
       <p class="text-base leading-relaxed">Bắt đầu, cho nướng chảo, sau đó cho 1 muỗng dầu ăn vào. Phi đầu tôm lên, cho 1 muỗng nước bột đầu để tạo màu sắc. Đầu tiên, bắt đầu rây khoảng 2 – 3 phút là có thể tắt bếp. Hỗn hợp đầu có màu đỏ, mùi thơm.</p>
     </div>
-  `
+  `;
 
   return (
     <div className="container mx-auto p-4 max-w-7xl min-h-screen">
       <Navigation />
-      
+
       <div className="mt-8">
-        <h1 className="text-3xl font-bold mb-4">Cách làm tôm rang me chua ngọt cực ngon dành cho cả gia đình</h1>
-        
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <h1 className="text-3xl font-bold mb-4">
+          Cách làm tôm rang me chua ngọt cực ngon dành cho cả gia đình
+        </h1>
+
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
       </div>
-      
     </div>
-  )
+  );
 }
