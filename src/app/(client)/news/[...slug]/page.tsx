@@ -1,13 +1,9 @@
 import Navigation from '@/app/_shared/components/ui/Navigation'
 import React from 'react'
 
-type Props = {
-  params: {
-    slug: string[]
-  }
-}
 
-export default function NewsDetailPage({ params }: Props) {
+
+export default async function NewsDetailPage() {
   // Giả sử đây là HTML nhận được từ server
   const htmlContent = `
     <div class="article-content">

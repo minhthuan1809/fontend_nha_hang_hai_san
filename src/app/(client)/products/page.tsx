@@ -1,37 +1,15 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import CartProduct from '@/app/_shared/components/ui/Cart';
 import Pagination from '@/app/_shared/components/ui/Pagination';
 import Navigation from '@/app/_shared/components/ui/Navigation';
 import { Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const MenuPage = () => {
+const MenuPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [menuItems, setMenuItems] = useState([
-    {
-      name: "Cá mặt quỷ chiên giòn", 
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ", 
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
     {
       name: "Cá mặt quỷ chiên giòn", 
       price: "180.000 đ",
@@ -192,7 +170,6 @@ const MenuPage = () => {
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || '');
   const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '');
   const [filteredItems, setFilteredItems] = useState(menuItems);
-
   const updateURL = (params: {search?: string, sort?: string, category?: string}) => {
     const url = new URLSearchParams(searchParams.toString());
     
@@ -334,6 +311,14 @@ const MenuPage = () => {
         <Pagination />
       </div>
     </div>
+  );
+};
+
+const MenuPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MenuPageContent />
+    </Suspense>
   );
 };
 
