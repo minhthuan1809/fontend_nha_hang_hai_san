@@ -1,4 +1,4 @@
-import Icon from '@/app/_utils/Icon'
+import Icon from '@/app/_shared/utils/Icon'
 import React from 'react'
 
 export default function FixedProductComment() {

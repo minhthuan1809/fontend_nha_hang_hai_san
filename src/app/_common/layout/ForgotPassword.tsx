@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Input, Button, InputOtp, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react'
-import Icon from '@/app/_utils/Icon';
-import { OverlayForgotPasswordStore } from '@/app/store';
+import Icon from '@/app/_shared/utils/Icon';
+import { OverlayForgotPasswordStore } from '@/app/store/ZustandSStore';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

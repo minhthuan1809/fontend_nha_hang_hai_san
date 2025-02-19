@@ -1,10 +1,11 @@
-import React from "react";
+import Login from "../_common/auth/Login";
+import Register from "../_common/auth/Register";
 import Footer from "../_common/layout/Footer";
-import NavBar from "../_common/layout/NavBar";
-import Login from "../_common/layout/Login";
-import Register from "../_common/layout/Register";
 import ForgotPassword from "../_common/layout/ForgotPassword";
-import Loading from "../_common/ui/Loading";
+import NavBar from "../_common/layout/NavBar";
+import Loading from "../_shared/components/Loading";
+import FixedProductComment from "../_shared/components/ui/FixedProductComment";
+
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
@@ -13,6 +14,8 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <Register />
       <ForgotPassword />
       <Loading />
+        {/* // Fixed product comment */}
+        <FixedProductComment/>
       {children}
       <Footer />
     </div>

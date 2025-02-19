@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import Icon from "@/app/_utils/Icon";
+import Icon from "@/app/_shared/utils/Icon";
 import Link from "next/link";
 import { Input, Button } from "@nextui-org/react";
 
@@ -92,7 +92,10 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row md:justify-between items-center border-t border-amber-800/20 mt-12 pt-8 text-gray-400">
-            <p>&copy; 2025 Minh Thuận. All rights reserved.</p>
+            <p>&copy; 2024 MINHTHUAN. Bản quyền được bảo lưu.
+
+
+            </p>
             <div className="flex gap-4 mt-4 md:mt-0">
               <Link href="/" className="text-sm hover:text-amber-300 transition-colors">Chính sách bảo mật</Link>
               <Link href="/" className="text-sm hover:text-amber-300 transition-colors">Điều khoản sử dụng</Link>

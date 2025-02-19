@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Icon from "@/app/_utils/Icon";
+import Icon from "@/app/_shared/utils/Icon";
 
 const images = [
   "http://dev.mypagevn.com/ganhhao/wp-content/uploads/2018/02/FOD0020_preview.jpeg",

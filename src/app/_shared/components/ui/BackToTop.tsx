@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import Icon from '@/app/_utils/Icon'
+import Icon from '@/app/_shared/utils/Icon'
 export default function BackToTop() {
     const [isVisible, setIsVisible] = useState(false);
 

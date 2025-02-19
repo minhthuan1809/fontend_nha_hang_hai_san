@@ -2,7 +2,7 @@
 
 import { NextUIProvider } from "@nextui-org/react";
 import { SnackbarProvider } from "notistack";
-import Icon from "./_utils/Icon";
+import Icon from "./_shared/utils/Icon";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

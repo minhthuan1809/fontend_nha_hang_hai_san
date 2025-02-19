@@ -1,5 +1,5 @@
 "use client";
-import Icon from "@/app/_utils/Icon";
+import Icon from "@/app/_shared/utils/Icon";
 import {
   Button,
   Input,
@@ -8,8 +8,8 @@ import {
 import React, { useEffect } from "react";
 import { enqueueSnackbar } from "notistack";
 // import component
-import InputPassword from "../ui/InputPassword";
-import { OverlayRegisterStore ,OverlayLoginStore } from "@/app/store";
+import InputPassword from "../../_shared/components/ui/InputPassword";
+import { OverlayRegisterStore ,OverlayLoginStore } from "@/app/store/ZustandSStore";
 
 // code xử lý
 export default function Register() {

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { ChefHat, Star } from "lucide-react";
 import Link from "next/link";
-import Icon from "@/app/_utils/Icon";
 
+import CartProduct from "@/app/_shared/components/ui/Cart";
+import Icon from "@/app/_shared/utils/Icon";
 const PopularFoodSection = () => {
   const [menuItems, setMenuItems] = useState([
     {
@@ -11,7 +11,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.8,
-      category: "fish"
+      category: "fish",
+      quantity: 15,
+      inStock: true,
+      status: false,
     },
     {
       name: "Ghẹ hấp xả", 
@@ -19,7 +22,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.9,
-      category: "crab"
+      category: "crab",
+      quantity: 0,
+      inStock: false,
+      status: false,
     },
     {
       name: "Tôm chiên bột",
@@ -27,7 +33,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.7,
-      category: "shrimp"
+      category: "shrimp",
+      quantity: 8,
+      inStock: true,
+      status: false,
     },
     {
       name: "Cá chiên phượng hoàng",
@@ -35,7 +44,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200", 
       hot: false,
       rating: 4.5,
-      category: "fish"
+      category: "fish",
+      quantity: 3,
+      inStock: true,
+      status: false,
     },
     {
       name: "Mực chiên giòn",
@@ -43,7 +55,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.6,
-      category: "squid"
+      category: "squid",
+      quantity: 0,
+      inStock: false,
+      status: false,
     },
     {
       name: "Tôm tít chấy tỏi",
@@ -51,7 +66,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
-      category: "shrimp"
+      category: "shrimp",
+      quantity: 12,
+      inStock: true,
+      status: false,
     },
     {
       name: "Cua rang me",
@@ -59,7 +77,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
-      category: "crab"
+      category: "crab",
+      quantity: 5,
+      inStock: true,
+      status: false,
     },
     {
       name: "Mực xào sa tế",
@@ -67,7 +88,10 @@ const PopularFoodSection = () => {
       image: "https://picsum.photos/200",
       hot: false,
       rating: 4.4,
-      category: "squid"
+      category: "squid",
+      quantity: 0,
+      inStock: false,
+      status: false,
     },
   ]);
 
@@ -86,7 +110,7 @@ const PopularFoodSection = () => {
         {/* Header with decorative elements */}
         <div className="text-center mb-8 sm:mb-12 relative">
           <div className="absolute left-1/2 transform -translate-x-1/2 -top-6">
-            <ChefHat size={36} className="text-[#d97706]" />
+            <Icon icon="ChefHat" size={36} className="text-[#d97706]" />
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4 pt-8">
             Tinh Hoa Ẩm Thực Biển
@@ -156,72 +180,7 @@ const PopularFoodSection = () => {
         </div>
 
         {/* Menu grid with improved cards */}
-        <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
-          {filteredItems.map((item, index) => (
-            <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 group">
-              <div className="relative">
-                {/* Image container */}
-                <div className="h-36 sm:h-48 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-
-                {/* Hot badge */}
-                {item.hot && (
-                  <div className="absolute top-2 left-2">
-                    <span className="bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-lg flex items-center gap-1">
-                      <Star size={10} className="fill-white" />
-                      HOT
-                    </span>
-                  </div>
-                )}
-
-                {/* Price tag */}
-                <div className="absolute -bottom-3 right-3">
-                  <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg">
-                    {item.price}
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 pt-5">
-                <Link href={`/products/${item.name}`} className="text-base font-bold text-gray-800 mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">
-                  {item.name}
-                </Link>
-
-                <div className="flex items-center justify-between mt-3">
-                  {/* Rating */}
-                  <div className="flex items-center gap-1">
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          className={`${
-                            i < Math.floor(item.rating)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs font-medium text-gray-600">
-                      ({item.rating})
-                    </span>
-                  </div>
-
-                  {/* Cart button */}
-                  <button className="w-8 h-8 rounded-full bg-amber-50 hover:bg-amber-100 flex items-center justify-center transition-colors">
-                    <Icon icon="ShoppingCart" className="w-4 h-4 text-amber-600" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <CartProduct filteredItems={filteredItems} />
 
         {/* Call to action button */}
         <div className="text-center mt-8 sm:mt-10 md:mt-14">

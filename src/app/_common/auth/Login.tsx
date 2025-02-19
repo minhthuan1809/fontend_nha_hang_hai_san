@@ -1,5 +1,5 @@
 "use client";
-import Icon from "@/app/_utils/Icon";
+import Icon from "@/app/_shared/utils/Icon";
 import {
   Button,
   Checkbox,
@@ -10,8 +10,8 @@ import React, { useEffect } from "react";
 import { setCookie, deleteCookie } from "cookies-next";
 import { enqueueSnackbar, closeSnackbar } from "notistack";
 // import component
-import InputPassword from "../ui/InputPassword";
-import { OverlayForgotPasswordStore, OverlayLoginStore ,OverlayRegisterStore } from "@/app/store";
+import InputPassword from "../../_shared/components/ui/InputPassword";
+import { OverlayForgotPasswordStore, OverlayLoginStore ,OverlayRegisterStore } from "@/app/store/ZustandSStore";
 
 // code xử lý
 export default function Login() {

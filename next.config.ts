@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       {
         hostname: 'dev.mypagevn.com',
       },
+      {
+        hostname: 'picsum.photos',
+      },
     ],
   },
   /* config options here */

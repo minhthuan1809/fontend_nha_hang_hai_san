@@ -1,4 +1,4 @@
-import Icon from '@/app/_utils/Icon'
+import Icon from '@/app/_shared/utils/Icon'
 import { Input, Button } from '@nextui-org/react'
 import React from 'react'
 

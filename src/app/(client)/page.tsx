@@ -1,15 +1,23 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+
+import { useEffect } from "react";
+
+import { useCallback } from "react";
+
+import { useState } from "react";
+import {
+  OverlayLoginStore,
+  OverlayRegisterStore,
+} from "../store/ZustandSStore";
 import SectionHearderHomepage from "./_sections/homepage/Hearder";
-import { OverlayLoginStore, OverlayRegisterStore } from "@/app/store";
-import TestimonialsSection from "./_sections/TestimonialsSection";
 import FoodSaleSection from "./_sections/FoodSaleSection";
+import TestimonialsSection from "./_sections/TestimonialsSection";
 import GeneralIntroduction from "./_sections/GeneralIntroduction";
+import FixedProductComment from "../_shared/components/ui/FixedProductComment";
 import SelectSection from "./_sections/SelectSection";
 import NewSection from "./_sections/NewSection";
-import BackToTop from "@/app/_common/ui/BackToTop";
-import FixedProductComment from "@/app/_common/ui/FixedProductComment";
-
+import BackToTop from "../_shared/components/ui/BackToTop";
+import AdsHomePage from "../_shared/components/modals/AdsHomePage";
 export default function Page() {
   const { setOverlayLogin } = OverlayLoginStore();
   const { setOverlayRegister } = OverlayRegisterStore();
@@ -44,13 +52,7 @@ export default function Page() {
       <SelectSection />
       {/* Tin tức */}
       <NewSection />
-
-      {/* // Back to top */}
-      <BackToTop />
-
-      {/* // Fixed product comment */}
-      <FixedProductComment />
-      
+      <AdsHomePage />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 "use client";
 import React from "react";
 import styles from "./css/Loading.module.css";
-import { LoadingStore } from "@/app/store";
+import { LoadingStore } from "@/app/store/ZustandSStore";
 export default function Loading() {
   const { dataLoading } = LoadingStore();
   if (!dataLoading) return null;

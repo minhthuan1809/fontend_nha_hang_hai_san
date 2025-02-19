@@ -15,8 +15,8 @@ import {
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { OverlayLoginStore, OverlayRegisterStore } from "@/app/store";
-import Login from "./Login";
+import { OverlayLoginStore, OverlayRegisterStore } from "@/app/store/ZustandSStore";
+import Login from "../auth/Login";
 
 const navItems = [
   {
@@ -39,10 +39,7 @@ const navItems = [
     label: "Tin tức",
     href: "/news",
   },
-  {
-    label: "Hỗ trợ",
-    href: "/support",
-  },
+
 ];
 
 export default function App() {
