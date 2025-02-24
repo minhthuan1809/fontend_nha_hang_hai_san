@@ -4,16 +4,19 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'scontent.fhan17-1.fna.fbcdn.net',
+        hostname: "scontent.fhan17-1.fna.fbcdn.net",
       },
       {
-        hostname: 'images.unsplash.com',
+        hostname: "images.unsplash.com",
       },
       {
-        hostname: 'dev.mypagevn.com',
+        hostname: "dev.mypagevn.com",
       },
       {
-        hostname: 'picsum.photos',
+        hostname: "picsum.photos",
+      },
+      {
+        hostname: "res.cloudinary.com",
       },
     ],
   },

@@ -3,7 +3,7 @@ import Register from "../_common/auth/Register";
 import Footer from "../_common/layout/Footer";
 import ForgotPassword from "../_common/layout/ForgotPassword";
 import NavBar from "../_common/layout/NavBar";
-import Loading from "../_shared/components/Loading";
+import TawkToChat from "../_shared/components/TawkToChat";
 
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,8 +12,9 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <Login />
       <Register />
       <ForgotPassword />
-      <Loading />
-        {/* // Fixed product comment */}
+      {/* // chat */}
+      <TawkToChat />
+      {/* // Fixed product comment */}
       {children}
       <Footer />
     </div>

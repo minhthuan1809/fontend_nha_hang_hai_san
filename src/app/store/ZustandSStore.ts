@@ -19,10 +19,6 @@ interface LoadingState {
   setLoading: (data: boolean) => void;
 }
 
-
-
-
-
 // store để lưu dữ liệu người dùng
 export const useStore = create((set) => ({
   dataUsers: [],
@@ -40,16 +36,13 @@ export const OverlayRegisterStore = create<OverlayRegisterState>((set) => ({
   setOverlayRegister: (data) => set({ dataOverlayRegister: data }),
 }));
 // forgot password
-export const OverlayForgotPasswordStore = create<OverlayForgotPasswordState>((set) => ({
-  dataOverlayForgotPassword: false,
-  setOverlayForgotPassword: (data) => set({ dataOverlayForgotPassword: data }),
-}));
-
-// loading
-export const LoadingStore = create<LoadingState>((set) => ({
-  dataLoading: false,
-  setLoading: (data) => set({ dataLoading: data }),
-}));
+export const OverlayForgotPasswordStore = create<OverlayForgotPasswordState>(
+  (set) => ({
+    dataOverlayForgotPassword: false,
+    setOverlayForgotPassword: (data) =>
+      set({ dataOverlayForgotPassword: data }),
+  })
+);
 
 // store để refresh dữ liệu
 export const refreshStore = create((set) => ({
