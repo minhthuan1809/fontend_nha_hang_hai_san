@@ -85,37 +85,31 @@ const ModalUrl = ({
   };
   // handle edit
   const handleEdit = async () => {
-    if (name === "" || url === "" || orderPosition === "") {
-      enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {
-        variant: "error",
+    setLoading(true);
+    try {
+      const res = await editMenu(dataEdit.id, {
+        name,
+        url,
+        order_position: orderPosition,
       });
-      return;
-    } else {
-      setLoading(true);
-      try {
-        const res = await editMenu(dataEdit.id, {
-          name,
-          url,
-          order_position: orderPosition,
+
+      if (res.ok) {
+        enqueueSnackbar(res.message, {
+          variant: "success",
         });
-        if (res.ok) {
-          enqueueSnackbar(res.message, {
-            variant: "success",
-          });
-          handleClose();
-          setRefresh((prev: any) => !prev);
-        } else {
-          enqueueSnackbar(res.message, {
-            variant: "error",
-          });
-        }
-      } catch (error) {
-        enqueueSnackbar("Có lỗi xảy ra", {
+        handleClose();
+        setRefresh((prev: any) => !prev);
+      } else {
+        enqueueSnackbar(res.message, {
           variant: "error",
         });
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra", {
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 

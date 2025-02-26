@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon from "../_shared/utils/Icon";
 import { cn } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
   // Check if mobile and handle resize
   useEffect(() => {
@@ -177,14 +179,33 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <div className="space-y-2">
                   <button
                     onClick={() => toggleSubmenu(item.name)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors group ${
+                      pathname.startsWith(item.href) ||
+                      item.submenu.some((sub) => pathname === sub.href)
+                        ? "bg-blue-50"
+                        : ""
+                    }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0 w-6 h-6 text-gray-500 group-hover:text-blue-600 transition-colors">
+                      <div
+                        className={`flex-shrink-0 w-6 h-6 ${
+                          pathname.startsWith(item.href) ||
+                          item.submenu.some((sub) => pathname === sub.href)
+                            ? "text-blue-600"
+                            : "text-gray-500"
+                        } group-hover:text-blue-600 transition-colors`}
+                      >
                         <Icon icon={item.icon} />
                       </div>
                       {(!isCollapsed || isMobile) && (
-                        <span className="text-gray-700 text-md font-medium">
+                        <span
+                          className={`text-md font-medium ${
+                            pathname.startsWith(item.href) ||
+                            item.submenu.some((sub) => pathname === sub.href)
+                              ? "text-blue-600"
+                              : "text-gray-700"
+                          }`}
+                        >
                           {item.name}
                         </span>
                       )}
@@ -203,19 +224,39 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     )}
                   </button>
 
+                  {/* Submenu */}
                   {activeMenu === item.name && (!isCollapsed || isMobile) && (
                     <div className="ml-4 space-y-1">
                       {item.submenu.map((subitem) => (
                         <Link
                           key={subitem.name}
                           href={subitem.href}
-                          className="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-50 transition-colors group"
+                          className={`flex items-center px-4 py-2 text-sm rounded-lg hover:bg-gray-50 transition-colors group ${
+                            pathname === subitem.href.split("?")[0]
+                              ? "bg-blue-50"
+                              : ""
+                          }`}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
-                          <div className="w-6 h-6 mr-3 text-gray-400 group-hover:text-blue-600 transition-colors">
+                          <div
+                            className={`w-6 h-6 mr-3 ${
+                              pathname === subitem.href.split("?")[0]
+                                ? "text-blue-600"
+                                : "text-gray-400"
+                            } group-hover:text-blue-600 transition-colors`}
+                          >
                             <Icon icon={subitem.icon} />
+                            {}
                           </div>
-                          <span>{subitem.name}</span>
+                          <span
+                            className={
+                              pathname === subitem.href.split("?")[0]
+                                ? "text-blue-600"
+                                : "text-gray-600"
+                            }
+                          >
+                            {subitem.name}
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -224,14 +265,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               ) : (
                 <Link
                   href={item.href}
-                  className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                  className={`flex items-center px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors group ${
+                    pathname === item.href ? "bg-blue-50" : ""
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <div className="flex-shrink-0 w-6 h-6 text-gray-500 group-hover:text-blue-600 transition-colors">
+                  <div
+                    className={`flex-shrink-0 w-6 h-6 ${
+                      pathname === item.href ? "text-blue-600" : "text-gray-500"
+                    } group-hover:text-blue-600 transition-colors`}
+                  >
                     <Icon icon={item.icon} />
                   </div>
                   {(!isCollapsed || isMobile) && (
-                    <span className="ml-3 text-gray-700 font-medium">
+                    <span
+                      className={`ml-3 font-medium ${
+                        pathname === item.href
+                          ? "text-blue-600"
+                          : "text-gray-700"
+                      }`}
+                    >
                       {item.name}
                     </span>
                   )}

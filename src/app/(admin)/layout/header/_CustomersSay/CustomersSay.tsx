@@ -18,7 +18,9 @@ import InputChangerImg from "@/app/_shared/components/ui/InputChangerImg";
 import {
   deleteCustomerSection,
   editCustomerSection,
+  newCustomerSection,
 } from "@/app/_service/admin/home";
+import ModalAddImg from "../modal/Modal_Add_Img";
 
 export default function CustomersSay({
   data,
@@ -34,6 +36,12 @@ export default function CustomersSay({
   const [imageUrls, setImageUrls] = useState(
     data.map((item) => item.image_url || "")
   );
+  const [isOpenModalAddImg, setIsOpenModalAddImg] = useState(false);
+  const [newData, setNewData] = useState({
+    title: "",
+    description: "",
+    image_url: "",
+  });
 
   const handleChange = (index: number, field: string, value: string) => {
     const updatedData = [...formData];
@@ -92,10 +100,39 @@ export default function CustomersSay({
     }
   };
 
+  // thêm mới customer section
+  const handleAddNew = async () => {
+    setIsLoading(true);
+    const image_url = await uploadImageToCloudinary(newData.image_url);
+    console.log(image_url);
+    if (image_url.secure_url) {
+      const response = await newCustomerSection({
+        name: newData.title,
+        description: newData.description,
+        image_url: image_url.secure_url,
+      });
+      enqueueSnackbar(response.message, {
+        variant: response.ok ? "success" : "error",
+      });
+      if (response.ok) {
+        setRefresh((prev: any) => !prev);
+        setIsOpenModalAddImg((prev: any) => !prev);
+        setNewData({
+          title: "",
+          description: "",
+          image_url: "",
+        });
+      }
+    } else {
+      enqueueSnackbar("Có lỗi xảy ra khi tải ảnh", { variant: "error" });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="bg-gradient-to-b from-gray-50 to-gray-100 md:p-8 border-2 border-blue-500 rounded-lg shadow-lg mt-4 ư">
       <div className="w-full mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between my-[2rem] mx-[1rem] ">
           <h1 className="text-2xl font-bold text-center text-gray-800">
             Khách hàng nói
           </h1>
@@ -103,6 +140,7 @@ export default function CustomersSay({
             color="primary"
             variant="shadow"
             startContent={<Icon icon="Plus" className="w-5 h-5" />}
+            onPress={() => setIsOpenModalAddImg(true)}
           >
             Thêm mới
           </Button>
@@ -121,6 +159,8 @@ export default function CustomersSay({
                       alt={item.title || "Hình ảnh banner"}
                       fill
                       className="object-cover transition-transform hover:scale-105"
+                      loading="lazy"
+                      onLoadingComplete={() => setIsLoading(false)}
                     />
                     <div
                       className="absolute inset-0 w-full h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer"
@@ -201,6 +241,19 @@ export default function CustomersSay({
           ))}
         </div>
       </div>
+
+      {/* modal thêm hình ảnh */}
+      <ModalAddImg
+        isOpen={isOpenModalAddImg}
+        onClose={() => setIsOpenModalAddImg(false)}
+        setData={setNewData}
+        data={newData}
+        table="Tên khách hàng"
+        addNew={handleAddNew}
+        isLoading={isLoading}
+      />
+
+      {/* modal xem hình ảnh */}
       <Modal_detail_img_banner
         img_url={_img_url}
         isOpen={isOpen}

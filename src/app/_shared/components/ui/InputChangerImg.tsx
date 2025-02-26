@@ -37,6 +37,7 @@ export default function InputChangerImg({
         value={dataInput || selectedImage || ""}
         placeholder="Nhập link hình ảnh"
         variant="bordered"
+        disabled
         endContent={
           <Button
             isIconOnly

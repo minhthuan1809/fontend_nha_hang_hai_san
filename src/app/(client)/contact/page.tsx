@@ -1,39 +1,44 @@
+"use client";
 import Icon from "@/app/_shared/utils/Icon";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SentContact from "./SentContact";
 import Navigation from "@/app/_shared/components/ui/Navigation";
-
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Liên hệ",
-  description:
-    "Liên hệ với nhà hàng hải sản Minh Thuận - Nơi mang đến cho bạn những món ăn hải sản tươi ngon nhất với giá cả hợp lý. Đặt bàn ngay hôm nay để nhận ưu đãi đặc biệt!",
-};
+import { getContact } from "@/app/_service/client/layout";
+import Loading from "@/app/_shared/components/Loading";
 
 export default function ContactPage() {
-  const contactInfo = [
-    {
-      icon: "Phone",
-      title: "Điện thoại",
-      content: "0909090909",
-    },
-    {
-      icon: "Mail",
-      title: "Email",
-      content: "minhthuan@gmail.com",
-    },
-    {
-      icon: "MapPin",
-      title: "Địa chỉ",
-      content: "Số 123, Đường ABC, Quận XYZ, Thành phố Hồ Chí Minh",
-    },
-    {
-      icon: "Clock",
-      title: "Thời gian làm việc",
-      content: "8:00 - 18:00",
-    },
-  ];
+  const [contactData, setContactData] = useState([]);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      const response = await getContact();
+      if (response.ok && response.data) {
+        const formattedData = response.data.map((item: any) => ({
+          icon: item.icon,
+          title: getTitleFromIcon(item.icon),
+          content: item.type,
+        }));
+        setContactData(formattedData);
+      }
+    };
+    fetchContact();
+  }, []);
+
+  const getTitleFromIcon = (icon: string) => {
+    switch (icon.toLowerCase()) {
+      case "map":
+        return "Địa chỉ";
+      case "phone":
+        return "Điện thoại";
+      case "mail":
+        return "Email";
+      case "calendarcheck2":
+        return "Thời gian làm việc";
+      default:
+        return "";
+    }
+  };
+  if (contactData.length === 0) return <Loading />;
 
   return (
     <div className="container mx-auto p-4 max-w-7xl relative z-10 min-h-screen">
@@ -61,22 +66,27 @@ export default function ContactPage() {
           <h2 className="text-2xl font-bold mb-6 text-amber-500 ">
             Liên hệ với chúng tôi
           </h2>
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            {contactInfo.map((item, index) => (
-              <div key={index} className="bg-amber-50 rounded-lg p-4">
-                <div className="flex items-center gap-4">
-                  <div className="bg-amber-100 p-2 rounded-lg">
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            {contactData.map((item: any, index: number) => (
+              <div
+                key={index}
+                className="bg-amber-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="bg-amber-100 p-3 rounded-xl shadow-inner">
                     <Icon
                       icon={item.icon}
-                      size={20}
+                      size={24}
                       className="text-amber-600"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-gray-600 font-medium">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-gray-700 font-semibold text-lg">
                       {item.title}
                     </span>
-                    <span className="text-gray-800">{item.content}</span>
+                    <span className="text-gray-600 text-sm">
+                      {item.content}
+                    </span>
                   </div>
                 </div>
               </div>

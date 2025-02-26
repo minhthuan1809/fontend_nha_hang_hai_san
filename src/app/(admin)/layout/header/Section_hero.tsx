@@ -16,9 +16,11 @@ import { enqueueSnackbar } from "notistack";
 import Modal_detail_img_banner from "./modal/Modal_detail_img_banner";
 import {
   deleteHeroSection,
+  newHeroSection,
   updateHeroSection,
 } from "@/app/_service/admin/home";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
+import ModalAddImg from "./modal/Modal_Add_Img";
 
 export default function Section_hero() {
   const [data, setData] = useState<any[]>([]);
@@ -26,6 +28,12 @@ export default function Section_hero() {
   const [refresh, setRefresh] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [_img_url, setImgUrl] = useState("");
+  const [isOpenModalAddImg, setIsOpenModalAddImg] = useState(false);
+  const [newData, setNewData] = useState({
+    title: "",
+    description: "",
+    image_url: "",
+  });
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -107,6 +115,32 @@ export default function Section_hero() {
     }
   };
 
+  // thêm mới
+  const handleAddNew = async () => {
+    const imageUrl = await uploadImageToCloudinary(newData.image_url);
+    if (imageUrl.secure_url) {
+      const response = await newHeroSection({
+        image_url: imageUrl.secure_url,
+        title: newData.title,
+        description: newData.description,
+      });
+      if (response.ok) {
+        enqueueSnackbar(response.message, { variant: "success" });
+        setRefresh(!refresh);
+        setIsOpenModalAddImg((prev) => !prev);
+        setNewData({
+          title: "",
+          description: "",
+          image_url: "",
+        });
+      } else {
+        enqueueSnackbar(response.message, { variant: "error" });
+      }
+    } else {
+      enqueueSnackbar("Lưu thay đổi thất bại", { variant: "error" });
+    }
+  };
+
   return (
     <div className=" bg-gradient-to-b from-gray-50 to-gray-100 md:p-8">
       <div className="w-full mx-auto">
@@ -115,6 +149,7 @@ export default function Section_hero() {
           <Button
             color="primary"
             variant="shadow"
+            onClick={() => setIsOpenModalAddImg(true)}
             startContent={<Icon icon="Plus" className="w-5 h-5" />}
           >
             Thêm mới
@@ -160,7 +195,7 @@ export default function Section_hero() {
                       <h2 className="text-xl font-semibold">
                         Hình ảnh {index + 1}
                       </h2>
-                      <Tooltip content="Xóa banner" color="danger">
+                      <Tooltip content="Xóa" color="danger">
                         <Button
                           isIconOnly
                           color="danger"
@@ -238,6 +273,16 @@ export default function Section_hero() {
           ))}
         </div>
       </div>
+      <ModalAddImg
+        isOpen={isOpenModalAddImg}
+        onClose={() => setIsOpenModalAddImg(false)}
+        setData={setNewData}
+        data={newData}
+        table="Tiêu đề"
+        addNew={handleAddNew}
+        isLoading={isLoading}
+      />
+      {/* modal xem hình ảnh */}
       <Modal_detail_img_banner
         img_url={_img_url}
         isOpen={isOpen}

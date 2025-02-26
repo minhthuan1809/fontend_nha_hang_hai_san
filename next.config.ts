@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "res.cloudinary.com",
       },
+      {
+        hostname: "thegioihaisan.vn",
+      },
     ],
   },
   /* config options here */

@@ -19,6 +19,7 @@ import { enqueueSnackbar } from "notistack";
 import ModalUrl from "./ModalUrl";
 import { getNavbar } from "@/app/_service/client/layout";
 import Loading from "@/app/_shared/components/Loading";
+import Icon from "@/app/_shared/utils/Icon";
 
 const LayoutsPage = () => {
   const [refresh, setRefresh] = useState(false);
@@ -47,7 +48,6 @@ const LayoutsPage = () => {
   };
 
   const handleEdit = (item: any) => {
-    console.log("item ", item);
     setIsOpenModalUrl(true);
     setDataEdit(item);
   };
@@ -69,11 +69,12 @@ const LayoutsPage = () => {
           <h2 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100">
             Menu điều hướng
           </h2>
+
           <Button
-            color="primary"
             size="sm"
-            className="w-full md:w-auto hover:opacity-90 transition-opacity"
-            startContent={<span>+</span>}
+            color="primary"
+            className="mb-4 text-xs md:text-sm"
+            startContent={<Icon icon="Plus" className="w-4 h-4" />}
             onPress={() => setIsOpenModalUrl(true)}
           >
             Thêm mới
@@ -127,24 +128,22 @@ const LayoutsPage = () => {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <div className="flex justify-center gap-2">
+                        <div className="flex gap-1  justify-center">
                           <Button
                             size="sm"
-                            color="primary"
-                            variant="flat"
-                            className="hover:opacity-90 transition-opacity"
+                            variant="bordered"
                             onPress={() => handleEdit(item)}
+                            className="text-xs md:text-sm"
                           >
-                            Chỉnh sửa
+                            Sửa
                           </Button>
                           <Button
                             size="sm"
-                            color="danger"
-                            variant="flat"
-                            className="hover:opacity-90 transition-opacity"
                             onPress={() => handleDelete(item.id)}
+                            className="text-xs md:text-sm"
+                            variant="light"
                           >
-                            Xóa
+                            <Icon icon="Trash" className="text-red-500" />
                           </Button>
                         </div>
                       </TableCell>
@@ -187,19 +186,18 @@ const LayoutsPage = () => {
                   <div className="flex gap-2 pt-2">
                     <Button
                       size="sm"
-                      color="primary"
-                      variant="flat"
-                      className="flex-1 hover:opacity-90 transition-opacity"
+                      variant="bordered"
                       onPress={() => handleEdit(item)}
+                      className="flex-1"
                     >
-                      Chỉnh sửa
+                      Sửa
                     </Button>
                     <Button
                       size="sm"
                       color="danger"
-                      variant="flat"
-                      className="flex-1 hover:opacity-90 transition-opacity"
+                      variant="bordered"
                       onPress={() => handleDelete(item.id)}
+                      className="flex-1"
                     >
                       Xóa
                     </Button>

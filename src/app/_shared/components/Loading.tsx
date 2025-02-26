@@ -2,10 +2,7 @@
 "use client";
 import React from "react";
 import styles from "./css/Loading.module.css";
-import { LoadingStore } from "@/app/store/ZustandSStore";
 export default function Loading() {
-  // const { dataLoading } = LoadingStore();
-  // // if (!dataLoading) return null;
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className={styles.loader}>

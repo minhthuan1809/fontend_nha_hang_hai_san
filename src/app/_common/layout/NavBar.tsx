@@ -26,14 +26,12 @@ type Navbar = {
     brand_name: "";
     logo_url: "";
   };
-  navigation: [
-    {
-      name: "";
-      url: "";
-      is_active: true;
-      parent_id: null;
-    }
-  ];
+  navigation: {
+    name: string;
+    url: string;
+    is_active: boolean;
+    parent_id: null;
+  }[];
 };
 
 export default function App() {
