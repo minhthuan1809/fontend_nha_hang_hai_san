@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+
 import Icon from "@/app/_shared/utils/Icon";
 import {
   Card,
@@ -154,13 +154,10 @@ export default function CustomersSay({
               <CardBody className="p-6">
                 <div className="flex flex-col lg:flex-row gap-8">
                   <div className="relative w-full lg:w-1/3 aspect-video rounded-xl overflow-hidden">
-                    <Image
+                    <img
                       src={imageUrls[index] || "/placeholder.jpg"}
                       alt={item.title || "Hình ảnh banner"}
-                      fill
                       className="object-cover transition-transform hover:scale-105"
-                      loading="lazy"
-                      onLoadingComplete={() => setIsLoading(false)}
                     />
                     <div
                       className="absolute inset-0 w-full h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer"

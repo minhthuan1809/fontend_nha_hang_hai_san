@@ -2,14 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { getCustomerSection } from "@/app/_service/client/layout";
-import {
-  Button,
-  Image,
-  Input,
-  Card,
-  CardBody,
-  CardHeader,
-} from "@nextui-org/react";
+import { Button, Input, Card, CardBody, CardHeader } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import InputChangerImg from "@/app/_shared/components/ui/InputChangerImg";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
@@ -141,13 +134,11 @@ export default function CustomersSayTitle() {
                       size={50}
                     />
                   </div>
-                  <Image
+                  <img
                     src={imageUrl || selectedImage?.image_url}
                     alt={selectedImage?.title || "Khách hàng đánh giá"}
                     className="object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
                     height={300}
-                    onLoad={() => setIsLoading(false)}
-                    loading="lazy"
                   />
                 </div>
               ) : (

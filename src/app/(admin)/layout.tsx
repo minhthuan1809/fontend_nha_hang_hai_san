@@ -82,6 +82,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       icon: "Package",
     },
     {
+      name: "Bài Viết",
+      href: "/articles",
+      icon: "FileText",
+    },
+    {
       name: "Giao Diện",
       href: "/layout",
       icon: "Palette",
@@ -100,11 +105,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           name: "Footer",
           href: "/layout/footer",
           icon: "Footprints",
-        },
-        {
-          name: "Home",
-          href: "/layout/home",
-          icon: "Home",
         },
       ],
     },

@@ -1,6 +1,5 @@
 import { getSelectSection } from "@/app/_service/client/layout";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { Card, CardHeader, CardBody, Input, Button } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import Modal_detail_img_banner from "../modal/Modal_detail_img_banner";
@@ -10,8 +9,6 @@ import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudin
 import { updateCustomerChooseSection } from "@/app/_service/admin/home";
 import { enqueueSnackbar } from "notistack";
 import CustomerChooseItem from "./CustomerChooseItem";
-import ModalAddEditItem from "../modal/ModalAddEditItem";
-import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
 
 export default function CustomerChooseTitle() {
   const [refresh, setRefresh] = useState(false);
@@ -115,7 +112,7 @@ export default function CustomerChooseTitle() {
                       size={50}
                     />
                   </div>
-                  <Image
+                  <img
                     src={imageUrl || selectedImage?.image_url}
                     alt={selectedImage?.title || "Khách hàng đánh giá"}
                     className="object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"

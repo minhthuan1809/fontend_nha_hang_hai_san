@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Image from "next/image";
+
 import {
   Modal,
   ModalContent,
@@ -34,14 +34,11 @@ const Modal_detail_img_banner: React.FC<ModalProps> = ({
                 <Spinner color="primary" size="lg" />
               </div>
             )}
-            <Image
+            <img
               src={img_url || "/placeholder.jpg"}
               alt="Chi tiết banner"
-              fill
               className="object-contain"
-              unoptimized={!img_url}
               loading="lazy"
-              onLoadingComplete={() => setIsLoading(false)}
             />
           </div>
         </ModalBody>

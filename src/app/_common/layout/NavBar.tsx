@@ -11,7 +11,6 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   OverlayLoginStore,
@@ -72,7 +71,7 @@ export default function App() {
       maxWidth="xl"
     >
       <NavbarContent className="gap-0 sm:gap-2 overflow-hidden ">
-        <Image
+        <img
           src={navData?.brand.logo_url}
           alt={navData?.brand.alt_text}
           width={80}

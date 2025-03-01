@@ -118,13 +118,15 @@ export default function Contact({ data, setRefetch }: ContactProps) {
   return (
     <>
       <Card className="mx-auto shadow-lg min-h-[500px]">
-        <CardHeader className="pb-0 pt-6 px-6">
-          <h1 className="text-2xl font-bold  w-full">Thông tin liên hệ</h1>
+        <CardHeader className="pb-0 pt-6 px-4 md:px-6">
+          <h1 className="text-xl md:text-2xl font-bold w-full">
+            Thông tin liên hệ
+          </h1>
         </CardHeader>
 
-        <CardBody className="p-6 overflow-visible">
-          <div className="flex justify-between items-end gap-4 mt-6">
-            <div className="flex flex-col justify-center md:flex-row gap-4 flex-1">
+        <CardBody className="p-4 md:p-6 overflow-visible">
+          <div className="flex flex-col gap-4 mt-4 md:mt-6">
+            <div className="flex flex-col md:flex-row gap-4 w-full">
               <div className="w-full">
                 <InputChooseIcon
                   dataValue={formData.icon}
@@ -144,10 +146,10 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                   }
                 />
               </div>
-              <div>
+              <div className="w-full">
                 <Button
                   color="primary"
-                  className="p-7"
+                  className="w-full p-7"
                   startContent={
                     <Icon icon={editingId ? "Edit" : "Save"} size={18} />
                   }
@@ -159,30 +161,71 @@ export default function Contact({ data, setRefetch }: ContactProps) {
               </div>
             </div>
           </div>
-          <Table aria-label="Bảng thông tin liên hệ" className="mt-6">
-            <TableHeader>
-              <TableColumn>LOGO</TableColumn>
-              <TableColumn>ICON</TableColumn>
-              <TableColumn>THÔNG TIN</TableColumn>
-              <TableColumn>HÀNH ĐỘNG</TableColumn>
-            </TableHeader>
-            <TableBody>
+
+          <div className="overflow-x-auto mt-6">
+            <div className="hidden md:block">
+              <Table aria-label="Bảng thông tin liên hệ" className="min-w-full">
+                <TableHeader>
+                  <TableColumn>LOGO</TableColumn>
+                  <TableColumn>ICON</TableColumn>
+                  <TableColumn>THÔNG TIN</TableColumn>
+                  <TableColumn>HÀNH ĐỘNG</TableColumn>
+                </TableHeader>
+                <TableBody>
+                  {data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Icon icon={item.icon} />
+                      </TableCell>
+                      <TableCell>
+                        <span className="px-4 py-2">{item.icon}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="px-4 py-2 break-all">{item.type}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            color="primary"
+                            variant="light"
+                            size="sm"
+                            isIconOnly
+                            onClick={() => handleEdit(item)}
+                            startContent={<Icon icon="Edit" />}
+                          />
+                          <Button
+                            color="danger"
+                            variant="light"
+                            size="sm"
+                            isIconOnly
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <Icon icon="Trash" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="md:hidden">
               {data.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <Icon icon={item.icon} />
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-4 py-2">{item.icon}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-4 py-2">{item.type}</span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-sm p-4 mb-4"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Icon icon={item.icon} />
+                      <span className="font-medium">{item.icon}</span>
+                    </div>
+                    <div className="flex gap-1">
                       <Button
                         color="primary"
                         variant="light"
+                        size="sm"
                         isIconOnly
                         onClick={() => handleEdit(item)}
                         startContent={<Icon icon="Edit" />}
@@ -190,17 +233,21 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                       <Button
                         color="danger"
                         variant="light"
+                        size="sm"
                         isIconOnly
                         onClick={() => handleDelete(item.id)}
                       >
                         <Icon icon="Trash" />
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  <div className="break-all text-sm text-gray-600">
+                    {item.type}
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </div>
         </CardBody>
       </Card>
     </>

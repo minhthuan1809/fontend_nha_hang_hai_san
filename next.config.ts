@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         hostname: "scontent.fhan17-1.fna.fbcdn.net",
       },
       {
+        hostname: "res.cloudinary.com",
+        port: "", // Thêm port nếu cần thiết
+        pathname: "/**", // Thêm pathname để cho phép tất cả các đường dẫn
+      },
+      {
         hostname: "images.unsplash.com",
       },
       {
@@ -16,10 +21,11 @@ const nextConfig: NextConfig = {
         hostname: "picsum.photos",
       },
       {
-        hostname: "res.cloudinary.com",
+        hostname: "thegioihaisan.vn",
       },
       {
-        hostname: "thegioihaisan.vn",
+        hostname: "res.cloudinary.com", // Đảm bảo hostname này được thêm vào
+        pathname: "/**", // Thêm pathname để cho phép tất cả các đường dẫn
       },
     ],
   },

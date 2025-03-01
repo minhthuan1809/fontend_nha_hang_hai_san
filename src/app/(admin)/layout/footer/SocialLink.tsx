@@ -13,6 +13,7 @@ import {
   Input,
   Select,
   SelectItem,
+  Link,
 } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import Loading from "@/app/_shared/components/Loading";
@@ -188,36 +189,76 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
               </div>
             </div>
           </div>
-          <Table aria-label="Bảng liên kết mạng xã hội" className="mt-6">
-            <TableHeader>
-              <TableColumn>Icon</TableColumn>
-              <TableColumn>NỀN TẢNG</TableColumn>
-              <TableColumn>ĐƯỜNG DẪN</TableColumn>
-              <TableColumn>TARGET</TableColumn>
-              <TableColumn>HÀNH ĐỘNG</TableColumn>
-            </TableHeader>
-            <TableBody>
+          <div className="overflow-x-auto mt-6">
+            <div className="hidden md:block">
+              <Table aria-label="Bảng liên kết mạng xã hội" className="mt-6">
+                <TableHeader>
+                  <TableColumn>Icon</TableColumn>
+                  <TableColumn>NỀN TẢNG</TableColumn>
+                  <TableColumn>ĐƯỜNG DẪN</TableColumn>
+                  <TableColumn>TARGET</TableColumn>
+                  <TableColumn>HÀNH ĐỘNG</TableColumn>
+                </TableHeader>
+                <TableBody>
+                  {data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <span className="px-4 py-2">
+                          <Icon icon={item.platform} />
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="px-4 py-2">{item.platform}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Link href={item.url} target={"_blank"}>
+                          {item.url}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <span className="px-4 py-2">{item.target}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            color="primary"
+                            variant="light"
+                            isIconOnly
+                            onClick={() => handleEdit(item)}
+                            startContent={<Icon icon="Edit" />}
+                          />
+                          <Button
+                            color="danger"
+                            variant="light"
+                            isIconOnly
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <Icon icon="Trash" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="md:hidden">
               {data.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <span className="px-4 py-2">
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-sm p-4 mb-4"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
                       <Icon icon={item.platform} />
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-4 py-2">{item.platform}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-4 py-2">{item.url}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="px-4 py-2">{item.target}</span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
+                      <span className="font-medium">{item.platform}</span>
+                    </div>
+                    <div className="flex gap-1">
                       <Button
                         color="primary"
                         variant="light"
+                        size="sm"
                         isIconOnly
                         onClick={() => handleEdit(item)}
                         startContent={<Icon icon="Edit" />}
@@ -225,17 +266,30 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
                       <Button
                         color="danger"
                         variant="light"
+                        size="sm"
                         isIconOnly
                         onClick={() => handleDelete(item.id)}
                       >
                         <Icon icon="Trash" />
                       </Button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  <div className="space-y-1 text-sm text-gray-600">
+                    <div>
+                      <Link
+                        href={item.url}
+                        target={"_blank"}
+                        className="text-blue-500 break-all"
+                      >
+                        {item.url}
+                      </Link>
+                    </div>
+                    <div>Target: {item.target}</div>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </div>
         </CardBody>
       </Card>
     </>

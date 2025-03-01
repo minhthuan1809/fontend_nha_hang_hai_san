@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+
 import { getSectionHeaderHero } from "@/app/_service/client/layout";
 import Icon from "@/app/_shared/utils/Icon";
 import {
@@ -165,14 +165,13 @@ export default function Section_hero() {
               <CardBody className="p-6">
                 <div className="flex flex-col lg:flex-row gap-8">
                   <div className="relative w-full lg:w-1/3 aspect-video rounded-xl overflow-hidden">
-                    <Image
+                    <img
                       src={
                         item.tempImageUrl ||
                         item.image_url ||
                         "/placeholder.jpg"
                       }
                       alt={item.title || "Hình ảnh banner"}
-                      fill
                       className="object-cover transition-transform hover:scale-105"
                     />
                     <div

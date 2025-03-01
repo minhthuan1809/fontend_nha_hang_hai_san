@@ -97,3 +97,31 @@ export const getContact = async () => {
     };
   }
 };
+
+// get news
+export const getNews = async (limit: number, page: number) => {
+  try {
+    const response = await fetch(`${API}/news?limit=${limit}&page=${page}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu news",
+    };
+  }
+};
+
+// get news detail
+export const getNewsDetail = async (id: any) => {
+  try {
+    const response = await fetch(`${API}/news/${id}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu news detail",
+    };
+  }
+};

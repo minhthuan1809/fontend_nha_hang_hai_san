@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
 } from "@nextui-org/react";
-import Image from "next/image";
+
 import { useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
@@ -82,10 +82,9 @@ const AdminEditLogo = ({
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full md:w-auto flex justify-center items-center">
               <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-xl overflow-hidden shadow-md">
-                <Image
+                <img
                   src={brand?.logo_url || "/placeholder.png"}
                   alt={brand?.alt_text || "Logo thương hiệu"}
-                  fill
                   className="object-contain hover:scale-105 transition-transform duration-300"
                 />
                 <div

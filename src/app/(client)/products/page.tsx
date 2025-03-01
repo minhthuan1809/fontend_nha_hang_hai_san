@@ -318,7 +318,7 @@ const MenuPageContent = () => {
           <CartProduct filteredItems={filteredItems} />
         </div>
 
-        <Pagination />
+        {/* <Pagination /> */}
       </div>
     </div>
   );

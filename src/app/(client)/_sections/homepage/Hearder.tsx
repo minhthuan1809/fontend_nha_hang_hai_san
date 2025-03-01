@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import Image from "next/image";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Icon from "@/app/_shared/utils/Icon";
@@ -48,12 +48,10 @@ export default function SectionHearderHomepage() {
                 currentSlide === index ? "opacity-100" : "opacity-0"
               }`}
             >
-              <Image
+              <img
                 src={slide.image_url}
                 alt={`slide-${index}`}
-                fill
                 className="object-cover"
-                priority={index === 0}
               />
             </div>
           ))}

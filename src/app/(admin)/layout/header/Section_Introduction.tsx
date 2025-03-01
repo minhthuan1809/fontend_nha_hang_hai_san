@@ -8,8 +8,6 @@ import {
   Button,
   Input,
   Textarea,
-  Image,
-  Spinner,
 } from "@nextui-org/react";
 import { enqueueSnackbar } from "notistack";
 import Icon from "@/app/_shared/utils/Icon";
@@ -117,10 +115,7 @@ export default function Section_Introduction() {
               className=" relative group cursor-pointer overflow-hidden rounded-xl"
               onClick={() => setIsOpen(true)}
             >
-              <Image
-                isBlurred
-                shadow="md"
-                radius="lg"
+              <img
                 src={imageUrl || formData.image_url || "/placeholder.jpg"}
                 alt="Giới thiệu"
                 className="object-cover w-full h-[450px] transition-transform duration-300 group-hover:scale-105"

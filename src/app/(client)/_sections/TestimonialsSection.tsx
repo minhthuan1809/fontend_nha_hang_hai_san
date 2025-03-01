@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+
 import { Avatar } from "@nextui-org/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
@@ -39,7 +39,7 @@ export default function TestimonialsSection() {
           <div className="w-[70%] md:w-[40%] m-auto relative">
             <div className="relative">
               <div className="w-full h-full rounded-full relative overflow-hidden animate-spin-slow ">
-                <Image
+                <img
                   src={testimonials.images[0].image_url}
                   alt="Món ăn đặc trưng"
                   className="w-full h-auto object-cover"
