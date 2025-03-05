@@ -110,7 +110,7 @@ export default function CustomersSayTitle() {
 
   return (
     <>
-      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl border-blue-500 border-2">
+      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl  border-2">
         <CardHeader className=" p-6">
           <h1 className="text-2xl font-bold text-center text-gray-800">
             Tiêu đề

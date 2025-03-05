@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import ArticlesPage from "./Tiptap";
 import { getNews } from "@/app/_service/client/layout";
 import {
@@ -15,6 +15,7 @@ import {
   Chip,
   Card,
   CardBody,
+  Input,
 } from "@nextui-org/react";
 import Detail from "./detail";
 import { deleteNews } from "@/app/_service/admin/articles";
@@ -39,24 +40,29 @@ function NewsTable() {
     localStorage.getItem("openTiptap") === "true" || false
   );
   const [dataEdit, setDataEdit] = useState<any>(null);
+  const [search, setSearch] = useState("");
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getNews(20, pageParams, search);
+      if (data.ok) {
+        setNewsData(data.data);
+        setTotal(data.total_pages);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải dữ liệu:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [pageParams, reload, search]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await getNews(20, pageParams);
-        if (data.ok) {
-          setNewsData(data.data);
-          setTotal(data.total_pages);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tải dữ liệu:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [pageParams, reload]);
+    const timeout = setTimeout(() => {
+      fetchData();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [fetchData]);
 
   const formatDate = (dateString: any) => {
     const date = new Date(dateString);
@@ -70,7 +76,6 @@ function NewsTable() {
   };
 
   const handleViewDetail = (id: number) => {
-    console.log(id);
     setIsOpenDetail(true);
     setNewsDetail(id);
   };
@@ -98,20 +103,29 @@ function NewsTable() {
   }
 
   return (
-    <Card className="shadow-md">
-      <CardBody>
-        <div className="flex justify-between mb-4">
-          <h2 className="text-xl font-bold">Quản lý tin tức</h2>
-          <Button
-            color="primary"
-            className="bg-blue-600"
-            onClick={() => {
-              setOpenTiptap((pre) => !pre);
-              localStorage.setItem("openTiptap", "true");
-            }}
-          >
-            <Icon icon="Plus" size={18} /> Thêm mới
-          </Button>
+    <Card className="shadow-lg border border-gray-200 rounded-lg">
+      <CardBody className="hidden md:block">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">Quản lý tin tức</h2>
+          <div className="flex gap-2 items-center w-full sm:w-auto">
+            <Input
+              placeholder="Tìm kiếm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border border-gray-300 rounded-xl w-full"
+              startContent={<Icon icon="Search" />}
+            />
+            <Button
+              color="primary"
+              className="bg-blue-600 hover:bg-blue-700 transition duration-200"
+              onClick={() => {
+                setOpenTiptap((pre) => !pre);
+                localStorage.setItem("openTiptap", "true");
+              }}
+            >
+              Thêm mới
+            </Button>
+          </div>
         </div>
 
         <Table
@@ -136,7 +150,9 @@ function NewsTable() {
             <TableColumn className="font-bold">Hành động</TableColumn>
           </TableHeader>
           <TableBody
-            emptyContent={<div>Không có dữ liệu</div>}
+            emptyContent={
+              <div className="text-center text-gray-500">Không có dữ liệu</div>
+            }
             isLoading={loading}
           >
             {newsData.length === 0 ? (
@@ -151,13 +167,13 @@ function NewsTable() {
               </TableRow>
             ) : (
               newsData.map((item: any, index) => (
-                <TableRow key={item.id} className="hover:bg-gray-50">
+                <TableRow key={item.id}>
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
                   <TableCell className="font-medium max-w-xs truncate">
                     {item.title}
                   </TableCell>
                   <TableCell className="max-w-xs truncate">
-                    {item.description}
+                    {item.description.slice(0, 500)}...
                   </TableCell>
                   <TableCell>
                     <img
@@ -232,6 +248,102 @@ function NewsTable() {
           <Pagination total={total} page={page} />
         </div>
       </CardBody>
+
+      {/* // mobile */}
+      <Card className="block md:hidden shadow-lg rounded-lg overflow-hidden">
+        <CardBody className="p-6">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
+            Quản lý tin tức
+          </h1>
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-4 items-center">
+              <Input
+                placeholder="Tìm kiếm tin tức..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                startContent={<Icon icon="Search" />}
+              />
+              <Button
+                color="primary"
+                className="bg-blue-600 hover:bg-blue-700 transition duration-200 rounded-lg shadow-md px-4 py-2 text-white font-semibold"
+                onClick={() => {
+                  setOpenTiptap((pre) => !pre);
+                  localStorage.setItem("openTiptap", "true");
+                }}
+              >
+                Thêm mới
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 mt-4">
+            <ul className="space-y-4">
+              {newsData.map((item: any) => (
+                <li
+                  key={item.id}
+                  className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm p-4"
+                >
+                  <div className="w-full h-60 mb-4">
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-semibold text-lg">{item.title}</h2>
+                    <p className="text-gray-600">
+                      {item.description.slice(0, 200)}...
+                    </p>
+                    <p className="text-gray-500">
+                      {formatDate(item.created_at)}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 justify-between mt-2">
+                    <div className="flex gap-2">
+                      {" "}
+                      <Button
+                        isIconOnly
+                        color="primary"
+                        variant="light"
+                        aria-label="Xem chi tiết"
+                      >
+                        <Icon icon="Eye" size={20} />
+                      </Button>
+                      <Button
+                        isIconOnly
+                        color="warning"
+                        variant="light"
+                        aria-label="Chỉnh sửa"
+                      >
+                        <Icon icon="Edit" size={20} />
+                      </Button>
+                      <Button
+                        isIconOnly
+                        color="danger"
+                        variant="light"
+                        aria-label="Xóa"
+                      >
+                        <Icon icon="Trash2" size={20} />
+                      </Button>
+                    </div>
+
+                    <p
+                      className={`text-gray-500 text-sm border border-gray-200 rounded-lg  font-bold flex items-center justify-center px-2 py-1 ${
+                        item.status === "1"
+                          ? "bg-green-500 text-white"
+                          : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {item.status === "1" ? "Đã đăng" : "Bản nháp"}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </CardBody>
+      </Card>
     </Card>
   );
 }

@@ -75,7 +75,7 @@ export default function CustomerChooseItem({
     setLoadingId(null);
   };
   return (
-    <div className="mt-4 flex flex-col items-center w-full border-2 rounded-lg p-4 border-blue-500">
+    <div className="mt-4 flex flex-col items-center w-full border-2 rounded-lg p-4 ">
       <div className="w-full overflow-x-auto">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold mb-4">Thẻ</h1>

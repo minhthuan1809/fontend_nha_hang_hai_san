@@ -172,7 +172,7 @@ export default function Section_hero() {
                         "/placeholder.jpg"
                       }
                       alt={item.title || "Hình ảnh banner"}
-                      className="object-cover transition-transform hover:scale-105"
+                      className="object-cover transition-transform hover:scale-105 w-full h-full"
                     />
                     <div
                       className="absolute inset-0 w-full h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer"

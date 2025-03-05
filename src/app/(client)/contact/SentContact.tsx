@@ -1,27 +1,53 @@
-'use client'
-import React, { useState } from 'react'
-import { Button } from '@nextui-org/react'
-import { Input, Textarea } from '@nextui-org/react'
-import Icon from '@/app/_shared/utils/Icon'
+"use client";
+import React, { useState } from "react";
+import { Button } from "@nextui-org/react";
+import { Input, Textarea } from "@nextui-org/react";
+import Icon from "@/app/_shared/utils/Icon";
+import { CreateContact } from "@/app/_service/client/layout";
+import { enqueueSnackbar } from "notistack";
 
 export default function SentContact() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        title: '',
-        message: ''
-    });
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(formData);
-    };
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    title: "",
+    message: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
+  const handleCreateContact = async () => {
+    setIsLoading(true);
+    const res = await CreateContact(formData);
+    if (res.ok) {
+      enqueueSnackbar(res.message, {
+        variant: "success",
+      });
+      setFormData({
+        name: "",
+        email: "",
+        title: "",
+        message: "",
+      });
+    } else {
+      enqueueSnackbar(res.message, {
+        variant: "error",
+      });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="bg-white ">
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <h3 className='text-2xl font-bold text-amber-500'>Gửi gmail cho chúng tôi</h3>
+        <h3 className="text-2xl font-bold text-amber-500">
+          Gửi gmail cho chúng tôi
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             type="text"
@@ -29,18 +55,22 @@ export default function SentContact() {
             label="Họ và tên"
             placeholder="Nhập họ và tên của bạn"
             radius="sm"
-            startContent={<Icon icon="User" className="text-amber-600" size={20}/>}
+            startContent={
+              <Icon icon="User" className="text-amber-600" size={20} />
+            }
             value={formData.name}
             onChange={handleChange}
           />
-          
+
           <Input
-            type="email" 
+            type="email"
             name="email"
             label="Email"
             placeholder="Nhập email của bạn"
             radius="sm"
-            startContent={<Icon icon="Mail" className="text-amber-600" size={20}/>}
+            startContent={
+              <Icon icon="Mail" className="text-amber-600" size={20} />
+            }
             value={formData.email}
             onChange={handleChange}
           />
@@ -52,7 +82,9 @@ export default function SentContact() {
           label="Tiêu đề"
           placeholder="Nhập tiêu đề"
           radius="sm"
-          startContent={<Icon icon="NotebookPen" className="text-amber-600" size={20}/>}
+          startContent={
+            <Icon icon="NotebookPen" className="text-amber-600" size={20} />
+          }
           value={formData.title}
           onChange={handleChange}
         />
@@ -67,14 +99,16 @@ export default function SentContact() {
           onChange={handleChange}
         />
 
-        <Button 
+        <Button
           size="lg"
           className="w-full bg-amber-600 text-white transition-colors duration-300 font-medium"
           type="submit"
+          onClick={handleCreateContact}
+          isLoading={isLoading}
         >
           Gửi tin nhắn
         </Button>
       </form>
     </div>
-  )
+  );
 }

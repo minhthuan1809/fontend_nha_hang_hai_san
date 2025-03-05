@@ -48,8 +48,7 @@ export default function Section_Introduction() {
   const callapi = async (data: any) => {
     try {
       const res = await updateIntroduction(data);
-      console.log(data);
-      console.log(res);
+
       if (res.ok) {
         enqueueSnackbar(res.message, { variant: "success" });
       } else {

@@ -1,4 +1,5 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
+const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
 // Lấy dữ liệu navbar
 export const getNavbar = async () => {
@@ -99,9 +100,11 @@ export const getContact = async () => {
 };
 
 // get news
-export const getNews = async (limit: number, page: number) => {
+export const getNews = async (limit: number, page: number, search: string) => {
   try {
-    const response = await fetch(`${API}/news?limit=${limit}&page=${page}`);
+    const response = await fetch(
+      `${API}/news?limit=${limit}&page=${page}&search=${search}`
+    );
     const data = await response.json();
     return data;
   } catch (error) {
@@ -122,6 +125,46 @@ export const getNewsDetail = async (id: any) => {
     return {
       ok: false,
       message: "Đã xảy ra lỗi khi lấy dữ liệu news detail",
+    };
+  }
+};
+
+// contacts
+export const CreateContact = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/send_contacts`, {
+      method: "POST",
+      headers: {
+        // "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: data.name,
+        gmail: data.email,
+        title: data.title,
+        content: data.message,
+      }),
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi tạo contact",
+    };
+  }
+};
+
+// get about
+export const getAbout = async () => {
+  try {
+    const response = await fetch(`${API}/about`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu about",
     };
   }
 };

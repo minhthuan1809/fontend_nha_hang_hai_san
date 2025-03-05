@@ -13,7 +13,7 @@ export default function Footer() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getFooter();
-      console.log(response);
+
       if (response.ok) {
         setData(response.data);
       }

@@ -42,12 +42,23 @@ export default function Detail({
           </h2>
         </DrawerHeader>
         <DrawerBody>
-          {newsDetail ? (
+          {newsDetail && newsDetail.description ? (
             <div className="mt-4">
               <div
                 className="prose"
                 dangerouslySetInnerHTML={{
-                  __html: newsDetail.description,
+                  __html: newsDetail.description
+                    .replace(/<ol>/g, '<ol class="list-decimal pl-4">')
+                    .replace(/<ul>/g, '<ul class="list-disc">')
+                    .replace(
+                      /<blockquote>/g,
+                      '<blockquote class="border-gray-300 pl-4 border-solid m-2 italic border-l-2">""'
+                    )
+                    .replace(/<\/blockquote>/g, '""</blockquote>')
+                    .replace(/<p>/g, '<p class="mb-4">')
+                    .replace(/<h1>/g, '<h1 class="text-2xl font-bold mb-2">')
+                    .replace(/<h2>/g, '<h2 class="text-xl font-bold mb-2">')
+                    .replace(/<h3>/g, '<h3 class="text-lg font-bold mb-2">'),
                 }}
               />
             </div>

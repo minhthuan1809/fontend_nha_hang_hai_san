@@ -25,7 +25,6 @@ export default function SectionHearderHomepage() {
       if (response.ok) {
         setSliderData(response.data);
       }
-      console.log(response);
     };
     fetchHeroData();
   }, []);
@@ -51,7 +50,7 @@ export default function SectionHearderHomepage() {
               <img
                 src={slide.image_url}
                 alt={`slide-${index}`}
-                className="object-cover"
+                className="object-cover w-full h-full "
               />
             </div>
           ))}

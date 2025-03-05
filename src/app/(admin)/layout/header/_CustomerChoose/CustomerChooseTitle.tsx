@@ -48,8 +48,6 @@ export default function CustomerChooseTitle() {
   const callApi = async (data: any) => {
     setIsLoading(true);
     const response = await updateCustomerChooseSection(data);
-    console.log("response", response);
-    console.log("data", data);
 
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });
@@ -88,7 +86,7 @@ export default function CustomerChooseTitle() {
 
   return (
     <>
-      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl border-blue-500 border-2">
+      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl  border-2">
         <CardHeader className=" p-6">
           <h1 className="text-2xl font-bold text-center text-gray-800">
             Tiêu đề

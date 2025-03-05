@@ -20,7 +20,6 @@ const Modal_detail_img_banner: React.FC<ModalProps> = ({
   onOpenChange,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
       <ModalContent>
@@ -37,8 +36,9 @@ const Modal_detail_img_banner: React.FC<ModalProps> = ({
             <img
               src={img_url || "/placeholder.jpg"}
               alt="Chi tiết banner"
-              className="object-contain"
+              className="object-contain w-full h-full"
               loading="lazy"
+              onLoad={() => setIsLoading(false)}
             />
           </div>
         </ModalBody>

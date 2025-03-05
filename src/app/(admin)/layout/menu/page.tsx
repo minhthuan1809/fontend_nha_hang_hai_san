@@ -128,14 +128,14 @@ const LayoutsPage = () => {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <div className="flex gap-1  justify-center">
+                        <div className="flex justify-center">
                           <Button
                             size="sm"
-                            variant="bordered"
+                            variant="light"
                             onPress={() => handleEdit(item)}
                             className="text-xs md:text-sm"
                           >
-                            Sửa
+                            <Icon icon="Edit" className="text-primary" />
                           </Button>
                           <Button
                             size="sm"

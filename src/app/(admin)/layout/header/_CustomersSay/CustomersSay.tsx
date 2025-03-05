@@ -104,7 +104,7 @@ export default function CustomersSay({
   const handleAddNew = async () => {
     setIsLoading(true);
     const image_url = await uploadImageToCloudinary(newData.image_url);
-    console.log(image_url);
+
     if (image_url.secure_url) {
       const response = await newCustomerSection({
         name: newData.title,
@@ -130,7 +130,7 @@ export default function CustomersSay({
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-gray-100 md:p-8 border-2 border-blue-500 rounded-lg shadow-lg mt-4 ư">
+    <div className="bg-gradient-to-b from-gray-50 to-gray-100 md:p-8 border-2 rounded-lg shadow-lg mt-4 ư">
       <div className="w-full mx-auto">
         <div className="flex items-center justify-between my-[2rem] mx-[1rem] ">
           <h1 className="text-2xl font-bold text-center text-gray-800">
@@ -157,7 +157,7 @@ export default function CustomersSay({
                     <img
                       src={imageUrls[index] || "/placeholder.jpg"}
                       alt={item.title || "Hình ảnh banner"}
-                      className="object-cover transition-transform hover:scale-105"
+                      className="object-cover transition-transform hover:scale-105 w-full h-full object-center "
                     />
                     <div
                       className="absolute inset-0 w-full h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer"

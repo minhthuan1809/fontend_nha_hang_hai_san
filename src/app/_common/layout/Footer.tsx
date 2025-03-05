@@ -41,7 +41,6 @@ export default function Footer() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
   };
 
   return (

@@ -87,6 +87,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       icon: "FileText",
     },
     {
+      name: "Liên Hệ",
+      href: "/contacts",
+      icon: "PhoneCall",
+    },
+    {
       name: "Giao Diện",
       href: "/layout",
       icon: "Palette",
@@ -97,21 +102,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           icon: "Menu",
         },
         {
-          name: "Header",
+          name: "Trang Chủ",
           href: "/layout/header?section=hero",
           icon: "Layout",
         },
         {
-          name: "Footer",
+          name: "Chân Trang",
           href: "/layout/footer",
           icon: "Footprints",
         },
+        {
+          name: "Giới Thiệu",
+          href: "/layout/about",
+          icon: "Info",
+        },
       ],
-    },
-    {
-      name: "Liên Hệ",
-      href: "/contact",
-      icon: "PhoneCall",
     },
   ];
 

@@ -101,7 +101,6 @@ export const updateLogo = async (data: any) => {
 
 export const updateCustomerSection = async (data: any) => {
   try {
-    console.log("data", data);
     const response = await fetch(
       `${API_URL}/customer_section/customer_img_section`,
       {

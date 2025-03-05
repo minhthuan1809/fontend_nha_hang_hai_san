@@ -8,12 +8,13 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import TableHeader from "@tiptap/extension-table-header";
 import Icon from "@/app/_shared/utils/Icon";
-import { Button, Checkbox, Input } from "@nextui-org/react";
+import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
 import InputChangerImg from "@/app/_shared/components/ui/InputChangerImg";
 import { createNews, updateNews } from "@/app/_service/admin/articles";
 import { enqueueSnackbar } from "notistack";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
 import { getNewsDetail } from "@/app/_service/client/layout";
+import InputTiptap from "./InputTiptap";
 
 export default function ArticlesPage({
   onClose,
@@ -44,7 +45,7 @@ export default function ArticlesPage({
         if (response.ok) {
           setDataEdit(response.data);
           setTitle(response.data.title);
-          setIsShow(response.data.status);
+          setIsShow(response.data.status === 1 ? true : false);
         } else {
           enqueueSnackbar("Failed to fetch news details", { variant: "error" });
         }
@@ -263,15 +264,7 @@ export default function ArticlesPage({
                 onChange={setImage}
                 dataInput={image || dataEdit?.image_url}
               />
-              <Input
-                className="w-full"
-                placeholder="Nhập tiêu đề"
-                label="Tiêu đề"
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                variant="bordered"
-              />
+              <InputTiptap title={title} setTitle={setTitle} />
               <div className="flex items-center">
                 <div className="flex gap-4">
                   <Checkbox isSelected={isShow} onValueChange={setIsShow}>
@@ -443,7 +436,7 @@ export default function ArticlesPage({
                     ) {
                       editor.commands.setContent("");
                       onClose();
-                      localStorage.removeItem("dataEdit");
+                      localStorage.removeItem("dataEditTiptap");
                       localStorage.removeItem("openTiptap");
                     }
                   } else {
@@ -509,10 +502,10 @@ export default function ArticlesPage({
   return (
     <div className="border rounded-lg bg-white shadow-lg">
       <style>{editorStyles}</style>
-      <div className="sticky top-0 z-10">
+      <div>
         <MenuBar />
       </div>
-      <div className="border-t">
+      <div className="border-t h-[calc(100vh-10rem)] overflow-y-auto">
         <EditorContent editor={editor} className="editor-content" />
       </div>
       <div className="border-t p-3 text-xs text-gray-500 flex justify-between">

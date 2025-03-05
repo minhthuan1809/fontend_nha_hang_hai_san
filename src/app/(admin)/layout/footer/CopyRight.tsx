@@ -53,7 +53,7 @@ export default function CopyRight({
 
       setIsLoading(true);
       const response = await setCopyRightFooter(dataCopyRight);
-      console.log(response);
+
       if (!response || !response.ok) {
         enqueueSnackbar(
           response?.message || "Đã xảy ra lỗi khi xử lý phản hồi",

@@ -11,7 +11,7 @@ const MenuPageContent = () => {
   const searchParams = useSearchParams();
   const [menuItems, setMenuItems] = useState([
     {
-      name: "Cá mặt quỷ chiên giòn",
+      name: "Cá mặt quỷ chiên giòn 1",
       price: "180.000 đ",
       image: "https://picsum.photos/200",
       hot: true,
@@ -161,7 +161,6 @@ const MenuPageContent = () => {
       rating: 4.9,
       category: "crab",
       quantity: 0,
-      inStock: false,
       status: false,
     },
   ]);

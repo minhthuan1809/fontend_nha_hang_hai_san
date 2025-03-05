@@ -82,11 +82,13 @@ const AdminEditLogo = ({
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full md:w-auto flex justify-center items-center">
               <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-xl overflow-hidden shadow-md">
-                <img
-                  src={brand?.logo_url || "/placeholder.png"}
-                  alt={brand?.alt_text || "Logo thương hiệu"}
-                  className="object-contain hover:scale-105 transition-transform duration-300"
-                />
+                <div className="w-full h-full overflow-hidden">
+                  <img
+                    src={brand?.logo_url || "/placeholder.png"}
+                    alt={brand?.alt_text || "Logo thương hiệu"}
+                    className="object-contain w-full h-full hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
                 <div
                   onClick={handleChoseImage}
                   className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 cursor-pointer opacity-0 hover:opacity-100 transition-opacity duration-300"
