@@ -1,177 +1,26 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useCallback } from "react";
 import CartProduct from "@/app/_shared/components/ui/Cart";
 import Pagination from "@/app/_shared/components/ui/Pagination";
 import Navigation from "@/app/_shared/components/ui/Navigation";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getProducts } from "@/app/_service/client/layout";
+import Icon from "@/app/_shared/utils/Icon";
 
 const MenuPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [menuItems, setMenuItems] = useState([
-    {
-      name: "Cá mặt quỷ chiên giòn 1",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      status: false,
-    },
-  ]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const page = parseInt(searchParams.get("page") || "1");
 
-  const [searchTerm, setSearchTerm] = useState(
-    searchParams.get("search") || ""
-  );
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "");
   const [categoryFilter, setCategoryFilter] = useState(
     searchParams.get("category") || ""
   );
+
   const [filteredItems, setFilteredItems] = useState(menuItems);
   const updateURL = (params: {
     search?: string;
@@ -179,7 +28,6 @@ const MenuPageContent = () => {
     category?: string;
   }) => {
     const url = new URLSearchParams(searchParams.toString());
-
     Object.entries(params).forEach(([key, value]) => {
       if (value) {
         url.set(key, value);
@@ -237,6 +85,19 @@ const MenuPageContent = () => {
     { value: "price-desc", label: "Giá giảm dần" },
     { value: "rating", label: "Đánh giá cao" },
   ];
+
+  const fetchData = useCallback(async () => {
+    const response = await getProducts(page, searchTerm);
+    setMenuItems(response.data);
+    setTotalPage(response.total_pages);
+  }, [page, searchTerm]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetchData();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [fetchData]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -302,7 +163,8 @@ const MenuPageContent = () => {
 
           {/* Results Status */}
           <div className="text-sm text-gray-500">
-            Hiển thị {filteredItems.length} món ăn
+            Hiển thị {filteredItems.filter((item) => !item.status).length} món
+            ăn
             {categoryFilter && ` trong danh mục `}
             <strong className="text-amber-500  p-1">
               {categoryFilter &&
@@ -317,7 +179,7 @@ const MenuPageContent = () => {
           <CartProduct filteredItems={filteredItems} />
         </div>
 
-        {/* <Pagination /> */}
+        <Pagination page={1} total={totalPage} />
       </div>
     </div>
   );

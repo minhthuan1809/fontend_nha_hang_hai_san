@@ -168,3 +168,42 @@ export const getAbout = async () => {
     };
   }
 };
+
+// get products
+export const getProducts = async (page: number, search: string) => {
+  try {
+    const response = await fetch(
+      `${API}/products?limit=30&page=${page}&search=${search}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu products",
+    };
+  }
+};
+
+// get products detail
+export const getProductsDetail = async (id: any) => {
+  try {
+    const response = await fetch(`${API}/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu products detail",
+    };
+  }
+};
