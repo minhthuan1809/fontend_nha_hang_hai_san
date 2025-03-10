@@ -17,6 +17,7 @@ import {
   updateItemOrderingProcess,
 } from "@/app/_service/admin/about";
 import { enqueueSnackbar } from "notistack";
+import { getCookie } from "cookies-next";
 
 export default function OrderProcessMobile({ data, setRefetch }: any) {
   const [dataItem, setDataItem] = useState<any>(null);
@@ -24,6 +25,7 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
   const [loading, setLoading] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedItemToDelete, setSelectedItemToDelete] = useState(null);
+  const token = getCookie("token");
 
   useEffect(() => {
     setDataItem(data);
@@ -31,7 +33,11 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
 
   const handleEdit = async () => {
     setLoading(true);
-    const response = await updateItemOrderingProcess(dataItem, dataItem?.id);
+    const response = await updateItemOrderingProcess(
+      dataItem,
+      dataItem?.id,
+      token as string
+    );
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       enqueueSnackbar(response.message, { variant: "success" });
@@ -44,7 +50,7 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
 
   const handleAddItem = async () => {
     setLoading(true);
-    const response = await setAboutOrderingProcess(dataItem);
+    const response = await setAboutOrderingProcess(dataItem, token as string);
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setDataItem(null);
@@ -56,7 +62,10 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
   };
 
   const handleDeleteItem = async () => {
-    const response = await deleteItemOrderingProcess(selectedItemToDelete);
+    const response = await deleteItemOrderingProcess(
+      selectedItemToDelete,
+      token as string
+    );
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setDeleteModalOpen(false);

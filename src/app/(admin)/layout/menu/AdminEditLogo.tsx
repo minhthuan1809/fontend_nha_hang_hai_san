@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
 } from "@nextui-org/react";
-
+import { getCookie } from "cookies-next";
 import { useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
@@ -21,6 +21,7 @@ const AdminEditLogo = ({
   setBrand: any;
   setRefresh: any;
 }) => {
+  const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChoseImage = () => {
@@ -45,11 +46,14 @@ const AdminEditLogo = ({
     setIsLoading(true);
     const response = await uploadImageToCloudinary(brand.logo_url);
     if (response.secure_url) {
-      const responseUpdate = await updateLogo({
-        logo_url: response.secure_url,
-        brand_name: brand.brand_name,
-        alt_text: brand.alt_text,
-      });
+      const responseUpdate = await updateLogo(
+        {
+          logo_url: response.secure_url,
+          brand_name: brand.brand_name,
+          alt_text: brand.alt_text,
+        },
+        token as unknown as string
+      );
       if (responseUpdate.ok) {
         enqueueSnackbar(responseUpdate?.message, {
           variant: "success",

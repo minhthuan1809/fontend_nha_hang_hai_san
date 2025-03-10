@@ -21,6 +21,7 @@ import {
   newCustomerSection,
 } from "@/app/_service/admin/home";
 import ModalAddImg from "../modal/Modal_Add_Img";
+import { getCookie } from "cookies-next";
 
 export default function CustomersSay({
   data,
@@ -29,6 +30,7 @@ export default function CustomersSay({
   data: any[];
   setRefresh: (value: any) => void;
 }) {
+  const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [_img_url, setImgUrl] = useState("");
@@ -57,7 +59,7 @@ export default function CustomersSay({
   // xóa customer section
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa banner này không?")) return;
-    const response = await deleteCustomerSection(id);
+    const response = await deleteCustomerSection(id, token as string);
     enqueueSnackbar(response.message, {
       variant: response.ok ? "success" : "error",
     });
@@ -68,11 +70,20 @@ export default function CustomersSay({
   const handleEdit = async (id: string, index: number) => {
     // api edit customer section
     const callApiEditCustomerSection = async (id: string, data: any) => {
-      const response = await editCustomerSection(id, data);
-      enqueueSnackbar(response.message, {
-        variant: response.ok ? "success" : "error",
-      });
-      if (response.ok) setRefresh((prev: any) => !prev);
+      const response = await editCustomerSection(
+        id,
+        data,
+        token as unknown as string
+      );
+
+      if (response.ok) {
+        setRefresh((prev: any) => !prev);
+        enqueueSnackbar(response.message, {
+          variant: "success",
+        });
+      } else {
+        enqueueSnackbar(response.message, { variant: "error" });
+      }
     };
 
     // nếu hình ảnh không thay đổi thì chỉ cần update name và description
@@ -106,11 +117,14 @@ export default function CustomersSay({
     const image_url = await uploadImageToCloudinary(newData.image_url);
 
     if (image_url.secure_url) {
-      const response = await newCustomerSection({
-        name: newData.title,
-        description: newData.description,
-        image_url: image_url.secure_url,
-      });
+      const response = await newCustomerSection(
+        {
+          name: newData.title,
+          description: newData.description,
+          image_url: image_url.secure_url,
+        },
+        token as unknown as string
+      );
       enqueueSnackbar(response.message, {
         variant: response.ok ? "success" : "error",
       });

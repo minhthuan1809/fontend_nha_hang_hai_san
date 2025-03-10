@@ -17,7 +17,7 @@ import {
 } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import ModalAddEditItem from "../modal/ModalAddEditItem";
-
+import { getCookie } from "cookies-next";
 export default function CustomerChooseItem({
   data,
   setRefresh,
@@ -25,6 +25,7 @@ export default function CustomerChooseItem({
   data: any;
   setRefresh: any;
 }) {
+  const token = getCookie("token");
   const [editingItem, setEditingItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -33,16 +34,12 @@ export default function CustomerChooseItem({
     description: "",
     icon: "",
   });
-  const [errors, setErrors] = useState({
-    title: "",
-    description: "",
-    icon: "",
-  });
+
   // handle delete
   const handleDelete = async (id: any) => {
     if (!confirm("Bạn có chắc chắn muốn xóa mục này không?")) return;
     setLoadingId(id);
-    const response = await deleteCustomerChooseSectionItem(id);
+    const response = await deleteCustomerChooseSectionItem(id, token as string);
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });
       setRefresh((prev: any) => !prev);
@@ -64,7 +61,10 @@ export default function CustomerChooseItem({
     e.preventDefault();
 
     setLoadingId("submit");
-    const response = await updateCustomerChooseSection(formData);
+    const response = await updateCustomerChooseSection(
+      formData,
+      token as unknown as string
+    );
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });
       setRefresh((prev: any) => !prev);

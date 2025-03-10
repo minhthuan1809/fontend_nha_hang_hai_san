@@ -24,6 +24,7 @@ import Pagination from "@/app/_shared/components/ui/Pagination";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_shared/components/Loading";
 import Icon from "@/app/_shared/utils/Icon";
+import { getCookie } from "cookies-next";
 
 function NewsTable() {
   const [newsData, setNewsData] = useState([]);
@@ -41,6 +42,7 @@ function NewsTable() {
   );
   const [dataEdit, setDataEdit] = useState<any>(null);
   const [search, setSearch] = useState("");
+  const token = getCookie("token");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -82,7 +84,7 @@ function NewsTable() {
 
   const handleDeleteNews = async (id: number) => {
     if (!confirm("Bạn có chắc là muốn xóa không ?")) return;
-    const response = await deleteNews(id);
+    const response = await deleteNews(id, token as string);
     if (response.ok) {
       setReload(!reload);
       enqueueSnackbar(response.message, { variant: "success" });

@@ -20,8 +20,10 @@ import ModalUrl from "./ModalUrl";
 import { getNavbar } from "@/app/_service/client/layout";
 import Loading from "@/app/_shared/components/Loading";
 import Icon from "@/app/_shared/utils/Icon";
+import { getCookie } from "cookies-next";
 
 const LayoutsPage = () => {
+  const token = getCookie("token");
   const [refresh, setRefresh] = useState(false);
   const [brand, setBrand] = useState<any>(null);
   const [navigation, setNavigation] = useState<any[]>([]);
@@ -38,7 +40,7 @@ const LayoutsPage = () => {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Bạn có chắc chắn muốn xóa menu này không?")) return;
-    const response = await deleteMenu(id);
+    const response = await deleteMenu(id, token as string);
     enqueueSnackbar(response.message, {
       variant: response.ok ? "success" : "error",
     });

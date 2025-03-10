@@ -21,6 +21,7 @@ import {
   editContactFooter,
 } from "@/app/_service/admin/footer";
 import { enqueueSnackbar } from "notistack";
+import { getCookie } from "cookies-next";
 
 interface ContactItem {
   id: string;
@@ -40,7 +41,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
     type: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
-
+  const token = getCookie("token");
   const resetForm = () => {
     setFormData({ icon: "", type: "" });
     setEditingId(null);
@@ -58,8 +59,12 @@ export default function Contact({ data, setRefetch }: ContactProps) {
       }
 
       const response = editingId
-        ? await editContactFooter(editingId, formData)
-        : await createContactFooter(formData);
+        ? await editContactFooter(
+            editingId,
+            formData,
+            token as unknown as string
+          )
+        : await createContactFooter(formData, token as unknown as string);
 
       if (!response.ok) {
         enqueueSnackbar(response.message || "Đã xảy ra lỗi", {
@@ -86,7 +91,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa thông tin liên hệ này?")) return;
     try {
-      const response = await deleteContactFooter(id);
+      const response = await deleteContactFooter(id, token as string);
       if (!response.ok) {
         enqueueSnackbar(response.message || "Đã xảy ra lỗi", {
           variant: "error",

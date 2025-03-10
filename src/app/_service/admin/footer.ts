@@ -1,8 +1,7 @@
 const API_URL = process.env.NEXT_PUBLIC_API_CLIENT_URL;
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
 // create contact footer
-export const createContactFooter = async (data: any) => {
+export const createContactFooter = async (data: any, token: string) => {
   const response = await fetch(`${API_URL}/footer/contacts`, {
     method: "POST",
     headers: {
@@ -15,7 +14,7 @@ export const createContactFooter = async (data: any) => {
 };
 
 // delete contact footer
-export const deleteContactFooter = async (id: string) => {
+export const deleteContactFooter = async (id: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/footer/contacts/${id}`, {
       method: "DELETE",
@@ -32,7 +31,11 @@ export const deleteContactFooter = async (id: string) => {
 };
 
 // edit contact footer
-export const editContactFooter = async (id: string, data: any) => {
+export const editContactFooter = async (
+  id: string,
+  data: any,
+  token: string
+) => {
   try {
     const response = await fetch(`${API_URL}/footer/contacts/${id}`, {
       method: "PUT",
@@ -50,7 +53,7 @@ export const editContactFooter = async (id: string, data: any) => {
 };
 
 // create social link footer
-export const createSocialLinkFooter = async (data: any) => {
+export const createSocialLinkFooter = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/footer/social`, {
       method: "POST",
@@ -68,7 +71,7 @@ export const createSocialLinkFooter = async (data: any) => {
 };
 
 // delete social link footer
-export const deleteSocialLinkFooter = async (id: string) => {
+export const deleteSocialLinkFooter = async (id: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/footer/social/${id}`, {
       method: "DELETE",
@@ -85,7 +88,11 @@ export const deleteSocialLinkFooter = async (id: string) => {
 };
 
 // edit social link footer
-export const editSocialLinkFooter = async (id: string, data: any) => {
+export const editSocialLinkFooter = async (
+  id: string,
+  data: any,
+  token: string
+) => {
   try {
     const response = await fetch(`${API_URL}/footer/social/${id}`, {
       method: "PUT",
@@ -103,7 +110,7 @@ export const editSocialLinkFooter = async (id: string, data: any) => {
 };
 
 //put introduction footer
-export const setIntroductionFooter = async (data: any) => {
+export const setIntroductionFooter = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/footer/introduction`, {
       method: "PUT",
@@ -120,7 +127,7 @@ export const setIntroductionFooter = async (data: any) => {
   }
 };
 // put copy right footer
-export const setCopyRightFooter = async (data: any) => {
+export const setCopyRightFooter = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/footer/copyright`, {
       method: "PUT",

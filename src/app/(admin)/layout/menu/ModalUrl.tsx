@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-
+import { getCookie } from "cookies-next";
 const ModalUrl = ({
   isOpen,
   setIsOpen,
@@ -25,6 +25,7 @@ const ModalUrl = ({
   setDataEdit: React.Dispatch<React.SetStateAction<any>>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const token = getCookie("token");
   const [name, setName] = useState(dataEdit?.name || "");
   const [url, setUrl] = useState(dataEdit?.url || "");
   const [orderPosition, setOrderPosition] = useState(
@@ -58,11 +59,14 @@ const ModalUrl = ({
     } else {
       setLoading(true);
       try {
-        const res = await addMenu({
-          name,
-          url,
-          order_position: orderPosition,
-        });
+        const res = await addMenu(
+          {
+            name,
+            url,
+            order_position: orderPosition,
+          },
+          token as unknown as string
+        );
         if (res.ok) {
           enqueueSnackbar(res.message, {
             variant: "success",
@@ -87,11 +91,15 @@ const ModalUrl = ({
   const handleEdit = async () => {
     setLoading(true);
     try {
-      const res = await editMenu(dataEdit.id, {
-        name,
-        url,
-        order_position: orderPosition,
-      });
+      const res = await editMenu(
+        dataEdit.id,
+        {
+          name,
+          url,
+          order_position: orderPosition,
+        },
+        token as unknown as string
+      );
 
       if (res.ok) {
         enqueueSnackbar(res.message, {

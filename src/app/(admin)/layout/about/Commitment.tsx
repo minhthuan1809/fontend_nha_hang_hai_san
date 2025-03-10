@@ -3,16 +3,18 @@ import { updateAboutCommitment } from "@/app/_service/admin/about";
 import { Button, Input } from "@nextui-org/react";
 import { enqueueSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
+import { getCookie } from "cookies-next";
 
 export default function Commitment({ data, setRefetch }: any) {
   const [dataEdit, setDataEdit] = useState<any>();
   const [loading, setLoading] = useState(false);
+  const token = getCookie("token");
   useEffect(() => {
     setDataEdit(data);
   }, [data]);
 
   const handleSave = async () => {
-    const res = await updateAboutCommitment(dataEdit);
+    const res = await updateAboutCommitment(dataEdit, token as string);
     if (res.ok) {
       setRefetch((pre: any) => !pre);
       enqueueSnackbar(res.message, { variant: "success" });

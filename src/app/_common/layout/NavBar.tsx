@@ -11,13 +11,17 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   OverlayLoginStore,
   OverlayRegisterStore,
 } from "@/app/store/ZustandSStore";
 import { getNavbar } from "@/app/_service/client/layout";
 import Loading from "@/app/_shared/components/Loading";
+import { deleteCookie, getCookie } from "cookies-next";
+import { authUser, logout } from "@/app/_service/client/auth";
+import Icon from "@/app/_shared/utils/Icon";
+import { enqueueSnackbar } from "notistack";
 
 type Navbar = {
   brand: {
@@ -40,6 +44,9 @@ export default function App() {
   const { dataOverlayLogin, setOverlayLogin } = OverlayLoginStore();
   const { dataOverlayRegister, setOverlayRegister } = OverlayRegisterStore();
   const [navData, setNavData] = useState<Navbar | null>(null);
+  const token = getCookie("token");
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchNavbar = async () => {
@@ -51,10 +58,46 @@ export default function App() {
     fetchNavbar();
   }, []);
 
-  // Đóng menu khi chọn item trên mobile
+  useEffect(() => {
+    if (!token) return;
+    const fetchUser = async () => {
+      const response = await authUser(token as string);
+
+      if (response.ok) {
+        if (response.data.level === 2) {
+          setUser(response.data);
+        } else {
+          router.push("/admin");
+        }
+      } else {
+        setUser(null);
+        enqueueSnackbar(response.message, {
+          variant: "error",
+        });
+        deleteCookie("token");
+      }
+    };
+    fetchUser();
+  }, [token]);
+
   const handleNavItemClick = () => {
     if (isMobile) {
       setIsMenuOpen(false);
+    }
+  };
+
+  // Đăng xuất
+  const handleLogout = async () => {
+    const response = await logout(token as string);
+    if (response.ok) {
+      deleteCookie("token");
+      setUser(null);
+
+      router.push("/");
+    } else {
+      enqueueSnackbar("Đã xảy ra lỗi khi đăng xuất", {
+        variant: "error",
+      });
     }
   };
 
@@ -70,14 +113,16 @@ export default function App() {
       className="py-2 bg-white shadow-sm dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
       maxWidth="xl"
     >
-      <NavbarContent className="gap-0 sm:gap-2 overflow-hidden ">
-        <img
-          src={navData?.brand.logo_url}
-          alt={navData?.brand.alt_text}
-          width={80}
-          height={80}
-          className="bg-white "
-        />
+      <NavbarContent className="gap-0 sm:gap-2 overflow-hidden">
+        <Link href="/">
+          <img
+            src={navData?.brand.logo_url}
+            alt={navData?.brand.alt_text}
+            width={80}
+            height={80}
+            className="bg-white"
+          />
+        </Link>
       </NavbarContent>
 
       <NavbarContent
@@ -102,40 +147,95 @@ export default function App() {
       </NavbarContent>
 
       <NavbarContent justify="end" className="gap-2 sm:gap-4">
-        <div className="hidden sm:flex items-center gap-2">
-          <Button
-            className={`px-3 py-1 text-sm lg:text-base font-medium ${
-              dataOverlayLogin
-                ? "bg-amber-600 text-white"
-                : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
-            }`}
-            onClick={() => setOverlayLogin(!dataOverlayLogin)}
-            variant={dataOverlayLogin ? "solid" : "light"}
-          >
-            {navData.navigation[5]?.name || "Đăng Nhập"}
-          </Button>
-          <span className="text-gray-400 hidden md:block">/</span>
-          <Button
-            className={`px-3 py-1 text-sm lg:text-base font-medium hidden md:block ${
-              dataOverlayRegister
-                ? "bg-amber-600 text-white"
-                : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
-            }`}
-            onClick={() => setOverlayRegister(!dataOverlayRegister)}
-            variant={dataOverlayRegister ? "solid" : "light"}
-          >
-            {navData.navigation[6]?.name || "Đăng ký"}
-          </Button>
-        </div>
+        {!user ? (
+          <div className="hidden sm:flex items-center gap-2 cursor-pointer relative">
+            <Button
+              className={`px-3 py-1 text-sm lg:text-base font-medium ${
+                dataOverlayLogin
+                  ? "bg-amber-600 text-white"
+                  : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
+              }`}
+              onClick={() => setOverlayLogin(!dataOverlayLogin)}
+              variant={dataOverlayLogin ? "solid" : "light"}
+            >
+              {navData.navigation[5]?.name || "Đăng Nhập"}
+            </Button>
+            <span className="text-gray-400 hidden md:block">/</span>
+            <Button
+              className={`px-3 py-1 text-sm lg:text-base font-medium hidden md:block ${
+                dataOverlayRegister
+                  ? "bg-amber-600 text-white"
+                  : "bg-transparent text-gray-700 hover:text-amber-600 dark:text-gray-200 dark:hover:text-amber-400"
+              }`}
+              onClick={() => setOverlayRegister(!dataOverlayRegister)}
+              variant={dataOverlayRegister ? "solid" : "light"}
+            >
+              {navData.navigation[6]?.name || "Đăng ký"}
+            </Button>
+          </div>
+        ) : (
+          <div className="h-full items-center gap-2 hidden sm:flex group cursor-pointer relative ">
+            <div className="w-[3.5rem] h-[3.5rem] rounded-full overflow-hidden border border-gray-200 dark:border-gray-800">
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-gray-700 text-lg font-medium dark:text-gray-200">
+                {user?.name.charAt(0).toUpperCase() + user?.name.slice(1)}
+              </span>
+              <span className="text-gray-400 text-md truncate md:w-full w-[20vw] ">
+                {user?.email}
+              </span>
+            </div>
 
-        {/* Di chuyển nút toggle sang bên phải */}
+            <div
+              className="absolute top-[3.6rem] right-6 lg:-right-1
+              mt-2 bg-white dark:bg-gray-900 shadow-lg rounded-lg p-2 z-10 hidden group-hover:block hover:block"
+            >
+              <ul className="space-y-2 w-[15rem]">
+                <li>
+                  {[
+                    {
+                      name: "Thông tin tài khoản",
+                      icon: "CircleUser",
+                      url: "/account",
+                    },
+                    {
+                      name: "Lịch sử mua hàng",
+                      icon: "History",
+                      url: "/history",
+                    },
+                  ].map((item: any) => (
+                    <Link
+                      href={item.url}
+                      onClick={() => setOverlayLogin(!dataOverlayLogin)}
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-lg"
+                    >
+                      <Icon icon={item.icon} size={20} /> {item.name}
+                    </Link>
+                  ))}
+                </li>
+                <li
+                  onClick={handleLogout}
+                  className="flex text-red-500 items-center gap-2 px-4 py-2  hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 rounded-lg"
+                >
+                  <Icon icon="LogOut" size={20} /> Đăng xuất
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Menu mobile */}
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Đóng menu" : "Mở menu"}
           className="sm:hidden"
         />
       </NavbarContent>
 
-      {/* Menu mobile */}
       <NavbarMenu className="pt-4 pb-6 px-4 bg-white dark:bg-gray-900 overflow-auto max-h-[80vh]">
         {navData.navigation.slice(0, 5).map((item: any) => (
           <NavbarMenuItem key={item.id} className="my-1">
@@ -153,30 +253,32 @@ export default function App() {
           </NavbarMenuItem>
         ))}
 
-        <div className="flex flex-col gap-3 mt-6">
-          <Button
-            className={`w-full font-medium py-2 rounded-lg transition-colors bg-amber-600 text-white`}
-            onClick={() => {
-              setOverlayLogin(!dataOverlayLogin);
-              setIsMenuOpen(false);
-            }}
-          >
-            {navData.navigation[5]?.name || "Đăng nhập"}
-          </Button>
-          <Button
-            className={`w-full font-medium py-2 rounded-lg transition-colors ${
-              dataOverlayRegister
-                ? "bg-amber-600 text-white"
-                : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
-            }`}
-            onClick={() => {
-              setOverlayRegister(!dataOverlayRegister);
-              setIsMenuOpen(false);
-            }}
-          >
-            {navData.navigation[6]?.name || "Đăng ký"}
-          </Button>
-        </div>
+        {!user && (
+          <div className="flex flex-col gap-3 mt-6">
+            <Button
+              className="w-full font-medium py-2 rounded-lg transition-colors bg-amber-600 text-white"
+              onClick={() => {
+                setOverlayLogin(!dataOverlayLogin);
+                setIsMenuOpen(false);
+              }}
+            >
+              {navData.navigation[5]?.name || "Đăng nhập"}
+            </Button>
+            <Button
+              className={`w-full font-medium py-2 rounded-lg transition-colors ${
+                dataOverlayRegister
+                  ? "bg-amber-600 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
+              }`}
+              onClick={() => {
+                setOverlayRegister(!dataOverlayRegister);
+                setIsMenuOpen(false);
+              }}
+            >
+              {navData.navigation[6]?.name || "Đăng ký"}
+            </Button>
+          </div>
+        )}
       </NavbarMenu>
     </Navbar>
   );

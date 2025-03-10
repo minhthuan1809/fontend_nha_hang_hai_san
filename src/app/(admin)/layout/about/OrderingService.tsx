@@ -5,14 +5,20 @@ import React, { useState } from "react";
 import ModalEdit from "./modal/ModalEdit";
 import { getAboutOrdering } from "@/app/_service/admin/about";
 import { enqueueSnackbar } from "notistack";
+import { getCookie } from "cookies-next";
 
 export default function Space({ data, setRefetch }: any) {
   const [open, setOpen] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
+  const token = getCookie("token");
 
   // handle save
   const handleSave = async (updatedData: any) => {
-    const response = await getAboutOrdering(updatedData, updatedData?.id);
+    const response = await getAboutOrdering(
+      updatedData,
+      updatedData?.id,
+      token as string
+    );
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setOpen(false);

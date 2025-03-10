@@ -1,8 +1,8 @@
 const API_URL = process.env.NEXT_PUBLIC_API_CLIENT_URL;
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
+// const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
 // delete news
-export const deleteNews = async (id: any) => {
+export const deleteNews = async (id: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/news/${id}`, {
       method: "DELETE",
@@ -20,7 +20,7 @@ export const deleteNews = async (id: any) => {
 };
 
 // update news
-export const updateNews = async (id: any, data: any) => {
+export const updateNews = async (id: any, data: any, token: string) => {
   const response = await fetch(`${API_URL}/news/${id}`, {
     method: "PUT",
     headers: {
@@ -34,7 +34,7 @@ export const updateNews = async (id: any, data: any) => {
 };
 
 //  news detail
-export const createNews = async (data: any) => {
+export const createNews = async (data: any, token: string) => {
   const response = await fetch(`${API_URL}/news`, {
     method: "POST",
     headers: {

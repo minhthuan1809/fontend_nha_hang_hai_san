@@ -1,44 +1,74 @@
 "use client";
 import Icon from "@/app/_shared/utils/Icon";
-import {
-  Button,
-  Checkbox,
-  Input,
-} from "@nextui-org/react";
+import { Button, Checkbox, Input } from "@nextui-org/react";
 // thư viện
 import React, { useEffect } from "react";
-import { setCookie, deleteCookie } from "cookies-next";
-import { enqueueSnackbar, closeSnackbar } from "notistack";
+import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { enqueueSnackbar } from "notistack";
 // import component
 import InputPassword from "../../_shared/components/ui/InputPassword";
-import { OverlayForgotPasswordStore, OverlayLoginStore ,OverlayRegisterStore } from "@/app/store/ZustandSStore";
+import {
+  OverlayForgotPasswordStore,
+  OverlayLoginStore,
+  OverlayRegisterStore,
+} from "@/app/store/ZustandSStore";
+import { authLogin } from "@/app/_service/client/auth";
 
 // code xử lý
 export default function Login() {
   const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [remember, setRemember] = React.useState(false);
+  const [email, setEmail] = React.useState<string>(
+    getCookie("rememberEmail")?.toString() || "false"
+  );
+  const [remember, setRemember] = React.useState<any>(
+    getCookie("remember") || false
+  );
   const { dataOverlayLogin, setOverlayLogin } = OverlayLoginStore();
   const { setOverlayRegister } = OverlayRegisterStore();
-  const [isError, setIsError] = React.useState<any>({email: "", password: ""});
+  const [isError, setIsError] = React.useState<{
+    email: string;
+    password: string;
+  }>({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = React.useState(false);
 
   const { setOverlayForgotPassword } = OverlayForgotPasswordStore();
 
   useEffect(() => {
-    setFormLogin();
+    if (getCookie("rememberEmail") || getCookie("remember")) {
+      setIsError({ email: "", password: "" });
+      setPassword("");
+    } else {
+      setFormLogin();
+    }
   }, [dataOverlayLogin]);
+
+  // lưu email vào cookie
+  useEffect(() => {
+    console.log("remember", remember);
+
+    if (remember) {
+      setCookie("rememberEmail", email);
+      setCookie("remember", remember);
+    } else {
+      deleteCookie("rememberEmail");
+      deleteCookie("remember");
+    }
+  }, [remember, email]);
 
   // reset form login
   const setFormLogin = () => {
     setEmail("");
     setPassword("");
     setRemember(false);
-    setIsError({email: "", password: ""});
-  }
+    setIsError({ email: "", password: "" });
+  };
+
   // validate form login
   const checkValidate = () => {
-    let errors = {email: "", password: ""};
+    let errors = { email: "", password: "" };
     let isValid = true;
 
     if (email === "") {
@@ -61,23 +91,26 @@ export default function Login() {
     return isValid;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (checkValidate()) {
       setLoading(true);
-      // Xử lý đăng nhập khi validation thành công
-      enqueueSnackbar("Đăng nhập thành công!", { variant: "success" });
-      setLoading(false);
+      try {
+        const res = await authLogin({ email, password });
+        if (res.ok) {
+          setOverlayLogin(false);
+          enqueueSnackbar(res.message, { variant: "success" });
+          setCookie("token", res.token);
+        } else {
+          enqueueSnackbar(res.message, { variant: "error" });
+        }
+      } catch (error) {
+        console.log(error);
+        enqueueSnackbar("Đã xảy ra lỗi", { variant: "error" });
+      } finally {
+        setLoading(false);
+      }
     }
   };
-
-  // lưu email vào cookie
-  useEffect(() => {
-    if (remember) {
-      setCookie("rememberEmail", email);
-    } else {
-      deleteCookie("rememberEmail");
-    }
-  }, [remember, email]);
 
   // đóng overlay
   const handleCloseOverlay = () => {
@@ -106,16 +139,16 @@ export default function Login() {
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              if (isError.email) setIsError({...isError, email: ""});
+              if (isError.email) setIsError({ ...isError, email: "" });
             }}
           />
 
-          <InputPassword 
-            password={password} 
+          <InputPassword
+            password={password}
             placeholder="Nhập mật khẩu"
             setPassword={(value) => {
               setPassword(value);
-              if (isError.password) setIsError({...isError, password: ""});
+              if (isError.password) setIsError({ ...isError, password: "" });
             }}
             isInvalid={isError.password !== ""}
             errorMessage={isError.password}
@@ -126,29 +159,39 @@ export default function Login() {
           <Checkbox
             className="text-gray-600 text-sm sm:text-base"
             isSelected={remember}
-            onChange={() => setRemember(!remember)}>
+            onChange={() => setRemember(!remember)}
+          >
             Ghi nhớ tài khoản
           </Checkbox>
-          <span className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors text-sm sm:text-base" onClick={() => {
-            setOverlayLogin(false);
-            setOverlayForgotPassword(true);
-          }}>
-                Quên mật khẩu?
+          <span
+            className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors text-sm sm:text-base"
+            onClick={() => {
+              setOverlayLogin(false);
+              setOverlayForgotPassword(true);
+            }}
+          >
+            Quên mật khẩu?
           </span>
         </div>
 
         <Button
           className="w-full mt-8 bg-amber-600 text-white text-lg font-medium py-6"
-          onClick={handleLogin}>
-          {loading ? <Icon icon="Loader" className="animate-spin" /> : "Đăng nhập"}
+          onClick={handleLogin}
+          isLoading={loading}
+          disabled={loading}
+        >
+          Đăng nhập
         </Button>
 
         <div className="text-center mt-6 text-gray-600">
           Bạn chưa có tài khoản?{" "}
-          <span className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors" onClick={() => {
-            setOverlayLogin(false);
-            setOverlayRegister(true);
-          }}>
+          <span
+            className="text-amber-600 hover:text-amber-700 cursor-pointer font-medium transition-colors"
+            onClick={() => {
+              setOverlayLogin(false);
+              setOverlayRegister(true);
+            }}
+          >
             Đăng ký
           </span>
         </div>
@@ -157,7 +200,7 @@ export default function Login() {
   };
 
   if (!dataOverlayLogin) return null;
-  
+
   return (
     <>
       {/* Overlay cho desktop */}

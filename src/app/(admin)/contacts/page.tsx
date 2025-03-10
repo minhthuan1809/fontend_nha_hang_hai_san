@@ -20,6 +20,7 @@ import React, {
 } from "react";
 import ViewContactModal from "./ModalViewContact";
 import Icon from "@/app/_shared/utils/Icon";
+import { getCookie } from "cookies-next";
 
 function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -35,7 +36,7 @@ function Contacts() {
   const [reload, setReload] = useState(false);
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || 1;
-
+  const token = getCookie("token");
   const fetchContacts = useCallback(async () => {
     setIsLoading(true);
     const res = await getContacts(Number(page), Number(limit), searchTerm);
@@ -71,7 +72,7 @@ function Contacts() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Bạn có chắc chắn muốn xóa liên hệ này không?")) return;
-    const res = await deleteContact(id);
+    const res = await deleteContact(id, token as string);
     if (res.ok) {
       fetchContacts();
       enqueueSnackbar(res.message, {
@@ -86,7 +87,7 @@ function Contacts() {
 
   // handle read contact
   const handleReadContact = async (contact: any) => {
-    const data = await updateReadContact(contact.id);
+    const data = await updateReadContact(contact.id, token as string);
     if (data.ok) {
       setReload((prev) => !prev);
     } else {

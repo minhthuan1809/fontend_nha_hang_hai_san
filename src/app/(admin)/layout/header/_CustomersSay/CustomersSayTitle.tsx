@@ -11,7 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import Loading from "@/app/_shared/components/Loading";
 import CustomersSay from "./CustomersSay";
 import Modal_detail_img_banner from "../modal/Modal_detail_img_banner";
-
+import { getCookie } from "cookies-next";
 interface CustomerImage {
   id: string;
   image_url: string;
@@ -29,6 +29,7 @@ interface CustomerSection {
 }
 
 export default function CustomersSayTitle() {
+  const token = getCookie("token");
   const [data, setData] = useState<CustomerSection | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<CustomerImage | null>(
@@ -84,17 +85,20 @@ export default function CustomersSayTitle() {
         }
       }
 
-      const updateResponse = await updateCustomerSection({
-        image_url: finalImageUrl,
-        title: selectedImage?.title || "",
-      });
+      const updateResponse = await updateCustomerSection(
+        {
+          image_url: finalImageUrl,
+          title: selectedImage?.title || "",
+        },
+        token as unknown as string
+      );
 
       if (updateResponse?.ok) {
         enqueueSnackbar(updateResponse.message, { variant: "success" });
         setRefresh((prev: any) => !prev);
         setImageUrl(null);
       } else {
-        throw new Error("Cập nhật không thành công");
+        enqueueSnackbar(updateResponse.message, { variant: "error" });
       }
     } catch (error) {
       enqueueSnackbar("Lỗi khi cập nhật", { variant: "error" });

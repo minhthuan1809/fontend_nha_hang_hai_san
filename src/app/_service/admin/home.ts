@@ -1,7 +1,6 @@
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 const API_URL = process.env.NEXT_PUBLIC_API_CLIENT_URL;
 // Xóa section header
-export const deleteHeroSection = async (id: string) => {
+export const deleteHeroSection = async (id: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/hero_section/${id}`, {
       method: "DELETE",
@@ -20,7 +19,7 @@ export const deleteHeroSection = async (id: string) => {
 };
 
 // Thêm section header
-export const addHeroSection = async (data: any) => {
+export const addHeroSection = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/hero_section`, {
       method: "POST",
@@ -40,7 +39,11 @@ export const addHeroSection = async (data: any) => {
 };
 
 // Cập nhật section header
-export const updateHeroSection = async (id: string, data: any) => {
+export const updateHeroSection = async (
+  id: string,
+  data: any,
+  token: string
+) => {
   try {
     const response = await fetch(`${API_URL}/hero_section/${id}`, {
       method: "PUT",
@@ -60,7 +63,7 @@ export const updateHeroSection = async (id: string, data: any) => {
 };
 
 // new hero section
-export const newHeroSection = async (data: any) => {
+export const newHeroSection = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/hero_section`, {
       method: "POST",
@@ -80,7 +83,7 @@ export const newHeroSection = async (data: any) => {
 };
 
 // Cập nhật thông tin thương hiệu
-export const updateLogo = async (data: any) => {
+export const updateLogo = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/logo`, {
       method: "PUT",
@@ -99,7 +102,7 @@ export const updateLogo = async (data: any) => {
   }
 };
 
-export const updateCustomerSection = async (data: any) => {
+export const updateCustomerSection = async (data: any, token: string) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_section/customer_img_section`,
@@ -122,7 +125,7 @@ export const updateCustomerSection = async (data: any) => {
 };
 
 // delete customer section
-export const deleteCustomerSection = async (id: string) => {
+export const deleteCustomerSection = async (id: string, token: string) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_section/customer__section/${id}`,
@@ -144,7 +147,11 @@ export const deleteCustomerSection = async (id: string) => {
 };
 
 // sửa customer section
-export const editCustomerSection = async (id: string, data: any) => {
+export const editCustomerSection = async (
+  id: string,
+  data: any,
+  token: string
+) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_section/customer__section/${id}`,
@@ -166,7 +173,7 @@ export const editCustomerSection = async (id: string, data: any) => {
   }
 };
 // new khách hàng
-export const newCustomerSection = async (data: any) => {
+export const newCustomerSection = async (data: any, token: string) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_section/customer__section`,
@@ -189,7 +196,7 @@ export const newCustomerSection = async (data: any) => {
 };
 
 // Cập nhật giới thiệu
-export const updateIntroduction = async (data: any) => {
+export const updateIntroduction = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API_URL}/introduction_section`, {
       method: "PUT",
@@ -210,7 +217,7 @@ export const updateIntroduction = async (data: any) => {
 
 //customer_choose_section/customer__section
 
-export const updateCustomerChooseSection = async (data: any) => {
+export const updateCustomerChooseSection = async (data: any, token: string) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_choose_section/customer__section`,
@@ -251,7 +258,10 @@ export const getCustomerChooseSectionItem = async () => {
 };
 
 // delete customer choose section item
-export const deleteCustomerChooseSectionItem = async (id: string) => {
+export const deleteCustomerChooseSectionItem = async (
+  id: string,
+  token: string
+) => {
   try {
     const response = await fetch(
       `${API_URL}/customer_choose_section/item/${id}`,
@@ -273,7 +283,10 @@ export const deleteCustomerChooseSectionItem = async (id: string) => {
 };
 
 // add customer choose section item
-export const addCustomerChooseSectionItem = async (data: any) => {
+export const addCustomerChooseSectionItem = async (
+  data: any,
+  token: string
+) => {
   try {
     const response = await fetch(`${API_URL}/customer_choose_section/item`, {
       method: "POST",
@@ -295,7 +308,8 @@ export const addCustomerChooseSectionItem = async (data: any) => {
 // update customer choose section item
 export const updateCustomerChooseSectionItem = async (
   id: string,
-  data: any
+  data: any,
+  token: string
 ) => {
   try {
     const response = await fetch(

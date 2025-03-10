@@ -1,7 +1,6 @@
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 const API_URL = process.env.NEXT_PUBLIC_API_CLIENT_URL;
 // Thêm menu
-export const addMenu = async (menu: any) => {
+export const addMenu = async (menu: any, token: string) => {
   const response = await fetch(`${API_URL}/navbar`, {
     method: "POST",
     body: JSON.stringify(menu),
@@ -14,7 +13,7 @@ export const addMenu = async (menu: any) => {
 };
 
 // Chỉnh sửa menu
-export const editMenu = async (id: number, menu: any) => {
+export const editMenu = async (id: number, menu: any, token: string) => {
   const response = await fetch(`${API_URL}/navbar/${id}`, {
     method: "PUT",
     body: JSON.stringify(menu),
@@ -27,7 +26,7 @@ export const editMenu = async (id: number, menu: any) => {
 };
 
 // Xóa menu
-export const deleteMenu = async (id: number) => {
+export const deleteMenu = async (id: number, token: string) => {
   const response = await fetch(`${API_URL}/navbar/${id}`, {
     method: "DELETE",
     headers: {

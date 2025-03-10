@@ -17,8 +17,10 @@ import Modal_detail_img_banner from "./modal/Modal_detail_img_banner";
 import { getIntroduction } from "@/app/_service/client/layout";
 import Loading from "@/app/_shared/components/Loading";
 import { updateIntroduction } from "@/app/_service/admin/home";
+import { getCookie } from "cookies-next";
 
 export default function Section_Introduction() {
+  const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState<any>({});
@@ -47,7 +49,7 @@ export default function Section_Introduction() {
   // call api update introduction
   const callapi = async (data: any) => {
     try {
-      const res = await updateIntroduction(data);
+      const res = await updateIntroduction(data, token as unknown as string);
 
       if (res.ok) {
         enqueueSnackbar(res.message, { variant: "success" });

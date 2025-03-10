@@ -14,7 +14,7 @@ import {
   updateCustomerChooseSectionItem,
 } from "@/app/_service/admin/home";
 import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
-
+import { getCookie } from "cookies-next";
 export default function ModalAddEditItem({
   isOpen,
   setIsOpen,
@@ -28,6 +28,7 @@ export default function ModalAddEditItem({
   editingItem: any;
   setEditingItem: (value: any) => void;
 }) {
+  const token = getCookie("token");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -62,11 +63,15 @@ export default function ModalAddEditItem({
   // update
   const handleUpdate = async () => {
     setLoading(true);
-    const res = await updateCustomerChooseSectionItem(editingItem.id, {
-      title: formData.title,
-      description: formData.description,
-      icon: icon,
-    });
+    const res = await updateCustomerChooseSectionItem(
+      editingItem.id,
+      {
+        title: formData.title,
+        description: formData.description,
+        icon: icon,
+      },
+      token as unknown as string
+    );
     setLoading(false);
     if (res.ok) {
       enqueueSnackbar(res.message, { variant: "success" });
@@ -80,11 +85,14 @@ export default function ModalAddEditItem({
   // add
   const handleAdd = async () => {
     setLoading(true);
-    const res = await addCustomerChooseSectionItem({
-      title: formData.title,
-      description: formData.description,
-      icon: icon,
-    });
+    const res = await addCustomerChooseSectionItem(
+      {
+        title: formData.title,
+        description: formData.description,
+        icon: icon,
+      },
+      token as unknown as string
+    );
     setLoading(false);
     if (res.ok) {
       enqueueSnackbar(res.message, { variant: "success" });

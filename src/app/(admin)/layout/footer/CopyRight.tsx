@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader, Button, Input } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import { enqueueSnackbar } from "notistack";
-
+import { getCookie } from "cookies-next";
 interface CopyRightData {
   text: string;
 }
@@ -15,6 +15,7 @@ export default function CopyRight({
   data: CopyRightData;
   setRefetch: (prev: any) => void;
 }) {
+  const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
   const [dataCopyRight, setDataCopyRight] = useState("");
   const [errors, setErrors] = useState({
@@ -52,7 +53,10 @@ export default function CopyRight({
       }
 
       setIsLoading(true);
-      const response = await setCopyRightFooter(dataCopyRight);
+      const response = await setCopyRightFooter(
+        dataCopyRight,
+        token as unknown as string
+      );
 
       if (!response || !response.ok) {
         enqueueSnackbar(

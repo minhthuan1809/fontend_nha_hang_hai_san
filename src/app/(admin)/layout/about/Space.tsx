@@ -26,7 +26,7 @@ import {
 } from "@/app/_service/admin/about";
 import { enqueueSnackbar } from "notistack";
 import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
-
+import { getCookie } from "cookies-next";
 export default function SpaceMobile({ data, setRefetch }: any) {
   const [open, setOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -39,10 +39,15 @@ export default function SpaceMobile({ data, setRefetch }: any) {
     description: "",
   });
   const [loading, setLoading] = useState(false);
+  const token = getCookie("token");
 
   // handle save
   const handleSave = async (updatedData: any) => {
-    const response = await getAboutSpace(updatedData, updatedData?.id);
+    const response = await getAboutSpace(
+      updatedData,
+      updatedData?.id,
+      token as string
+    );
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setOpen(false);
@@ -55,7 +60,7 @@ export default function SpaceMobile({ data, setRefetch }: any) {
   // thêm item
   const handleAddItem = async () => {
     setLoading(true);
-    const response = await createItem(dataItem);
+    const response = await createItem(dataItem, token as string);
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setOpen(false);
@@ -74,7 +79,7 @@ export default function SpaceMobile({ data, setRefetch }: any) {
   };
   // handle edit
   const handleEdit = async () => {
-    const response = await updateItem(dataItem, dataItem.id);
+    const response = await updateItem(dataItem, dataItem.id, token as string);
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setDataItem({
@@ -90,7 +95,7 @@ export default function SpaceMobile({ data, setRefetch }: any) {
   };
   // delete item
   const handleDeleteItem = async () => {
-    const response = await deleteItem(selectedItemToDelete);
+    const response = await deleteItem(selectedItemToDelete, token as string);
     if (response.ok) {
       setRefetch((prev: any) => !prev);
       setDeleteModalOpen(false);

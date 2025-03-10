@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon from "../_shared/utils/Icon";
 import { cn } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { deleteCookie, getCookie } from "cookies-next";
+import { logout } from "../_service/client/auth";
+import { enqueueSnackbar } from "notistack";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -11,6 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Check if mobile and handle resize
   useEffect(() => {
@@ -92,6 +96,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       icon: "PhoneCall",
     },
     {
+      name: "Phân Quyền",
+      href: "/permissions",
+      icon: "Shield",
+    },
+    {
       name: "Giao Diện",
       href: "/layout",
       icon: "Palette",
@@ -122,6 +131,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const toggleSubmenu = (name: string) => {
     setActiveMenu(activeMenu === name ? null : name);
+  };
+
+  // Đăng xuất
+  const handleLogout = async () => {
+    const response = await logout(getCookie("token") as string);
+    if (response.ok) {
+      deleteCookie("token");
+      router.push("/");
+      enqueueSnackbar(response.message, {
+        variant: "success",
+      });
+    } else {
+      enqueueSnackbar(response.message, {
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -323,7 +348,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             >
               <Icon icon="LogOut" className="w-5 h-5" />
               {(!isCollapsed || isMobile) && (
-                <span className="font-medium">Đăng Xuất</span>
+                <span className="font-medium" onClick={handleLogout}>
+                  Đăng Xuất
+                </span>
               )}
             </button>
           </div>

@@ -9,8 +9,10 @@ import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudin
 import { updateCustomerChooseSection } from "@/app/_service/admin/home";
 import { enqueueSnackbar } from "notistack";
 import CustomerChooseItem from "./CustomerChooseItem";
+import { getCookie } from "cookies-next";
 
 export default function CustomerChooseTitle() {
+  const token = getCookie("token");
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,10 @@ export default function CustomerChooseTitle() {
 
   const callApi = async (data: any) => {
     setIsLoading(true);
-    const response = await updateCustomerChooseSection(data);
+    const response = await updateCustomerChooseSection(
+      data,
+      token as unknown as string
+    );
 
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });

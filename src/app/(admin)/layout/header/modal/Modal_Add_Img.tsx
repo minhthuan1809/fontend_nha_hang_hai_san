@@ -102,7 +102,12 @@ export default function ModalAddImg({
           <Button color="danger" variant="light" onPress={onClose}>
             Hủy
           </Button>
-          <Button color="primary" isLoading={isLoading} onClick={addNew}>
+          <Button
+            color="primary"
+            isLoading={isLoading}
+            onClick={addNew}
+            disabled={isLoading}
+          >
             Thêm mới
           </Button>
         </ModalFooter>

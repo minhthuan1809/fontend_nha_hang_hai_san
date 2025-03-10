@@ -23,8 +23,8 @@ import {
   editSocialLinkFooter,
 } from "@/app/_service/admin/footer";
 import { enqueueSnackbar } from "notistack";
-import InputChangerImg from "@/app/_shared/components/ui/InputChangerImg";
 import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
+import { getCookie } from "cookies-next";
 
 export const targets = [
   { key: "_blank", label: "_blank" },
@@ -52,7 +52,7 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
     target: "_blank",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
-
+  const token = getCookie("token");
   const resetForm = () => {
     setFormData({ platform: "", url: "", target: "_blank" });
     setEditingId(null);
@@ -70,8 +70,12 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
       }
 
       const response = editingId
-        ? await editSocialLinkFooter(editingId, formData)
-        : await createSocialLinkFooter(formData);
+        ? await editSocialLinkFooter(
+            editingId,
+            formData,
+            token as unknown as string
+          )
+        : await createSocialLinkFooter(formData, token as unknown as string);
 
       if (!response.ok) {
         enqueueSnackbar(response.message || "Đã xảy ra lỗi", {
@@ -98,7 +102,7 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa liên kết mạng xã hội này?")) return;
     try {
-      const response = await deleteSocialLinkFooter(id);
+      const response = await deleteSocialLinkFooter(id, token as string);
       if (!response.ok) {
         enqueueSnackbar(response.message || "Đã xảy ra lỗi", {
           variant: "error",

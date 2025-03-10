@@ -15,6 +15,7 @@ import { enqueueSnackbar } from "notistack";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
 import { getNewsDetail } from "@/app/_service/client/layout";
 import InputTiptap from "./InputTiptap";
+import { getCookie } from "cookies-next";
 
 export default function ArticlesPage({
   onClose,
@@ -36,7 +37,7 @@ export default function ArticlesPage({
   const [isShow, setIsShow] = useState(true);
   const [dataEdit, setDataEdit] = useState<any>(null);
   const dataEditId = localStorage.getItem("dataEditTiptap");
-
+  const token = getCookie("token");
   // Fetch edit data
   useEffect(() => {
     if (idEdit || dataEditId) {
@@ -119,12 +120,15 @@ export default function ArticlesPage({
     try {
       const image_url = await uploadImageToCloudinary(image);
       if (image_url.secure_url) {
-        const response = await createNews({
-          title,
-          description: content,
-          image_url: image_url.secure_url,
-          status: isShow,
-        });
+        const response = await createNews(
+          {
+            title,
+            description: content,
+            image_url: image_url.secure_url,
+            status: isShow,
+          },
+          token as string
+        );
 
         if (response.ok) {
           enqueueSnackbar(response.message, { variant: "success" });
@@ -143,7 +147,7 @@ export default function ArticlesPage({
 
   // Call API to update news
   const callApiUpdateNews = async (id: number, data: any) => {
-    const response = await updateNews(id, data);
+    const response = await updateNews(id, data, token as string);
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });
       setReload();

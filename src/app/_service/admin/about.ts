@@ -1,7 +1,7 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
+// const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
-export const updateAbout = async (data: any) => {
+export const updateAbout = async (data: any, token: string) => {
   const response = await fetch(`${API}/about/story`, {
     method: "PUT",
     headers: {
@@ -15,7 +15,7 @@ export const updateAbout = async (data: any) => {
 };
 
 // get about space
-export const getAboutSpace = async (data: any, id: any) => {
+export const getAboutSpace = async (data: any, id: any, token: string) => {
   const response = await fetch(`${API}/about/space/${id}`, {
     method: "PUT",
     headers: {
@@ -29,7 +29,7 @@ export const getAboutSpace = async (data: any, id: any) => {
 };
 
 // get about ordering
-export const getAboutOrdering = async (data: any, id: any) => {
+export const getAboutOrdering = async (data: any, id: any, token: string) => {
   const response = await fetch(`${API}/about/OrderingService/${id}`, {
     method: "PUT",
     headers: {
@@ -42,7 +42,7 @@ export const getAboutOrdering = async (data: any, id: any) => {
   return _data;
 };
 //create item
-export const createItem = async (data: any) => {
+export const createItem = async (data: any, token: string) => {
   const response = await fetch(`${API}/about/Item`, {
     method: "POST",
     headers: {
@@ -56,7 +56,7 @@ export const createItem = async (data: any) => {
 };
 
 // delete item
-export const deleteItem = async (id: any) => {
+export const deleteItem = async (id: any, token: string) => {
   const response = await fetch(`${API}/about/Item/${id}`, {
     method: "DELETE",
     headers: {
@@ -69,7 +69,7 @@ export const deleteItem = async (id: any) => {
 };
 
 // update item
-export const updateItem = async (data: any, id: any) => {
+export const updateItem = async (data: any, id: any, token: string) => {
   const response = await fetch(`${API}/about/Item/${id}`, {
     method: "PUT",
     headers: {
@@ -83,7 +83,7 @@ export const updateItem = async (data: any, id: any) => {
 };
 
 // get about ordering process
-export const setAboutOrderingProcess = async (data: any) => {
+export const setAboutOrderingProcess = async (data: any, token: string) => {
   const response = await fetch(`${API}/about/OrderProcess`, {
     method: "POST",
     headers: {
@@ -97,7 +97,7 @@ export const setAboutOrderingProcess = async (data: any) => {
 };
 
 // delete item
-export const deleteItemOrderingProcess = async (id: any) => {
+export const deleteItemOrderingProcess = async (id: any, token: string) => {
   const response = await fetch(`${API}/about/OrderProcess/${id}`, {
     method: "DELETE",
     headers: {
@@ -109,7 +109,11 @@ export const deleteItemOrderingProcess = async (id: any) => {
   return _data;
 };
 // update item
-export const updateItemOrderingProcess = async (data: any, id: any) => {
+export const updateItemOrderingProcess = async (
+  data: any,
+  id: any,
+  token: string
+) => {
   const response = await fetch(`${API}/about/OrderProcess/${id}`, {
     method: "PUT",
     headers: {
@@ -123,7 +127,7 @@ export const updateItemOrderingProcess = async (data: any, id: any) => {
 };
 
 // get about commitment
-export const updateAboutCommitment = async (data: any) => {
+export const updateAboutCommitment = async (data: any, token: string) => {
   const response = await fetch(`${API}/about/Commitment`, {
     method: "PUT",
     headers: {

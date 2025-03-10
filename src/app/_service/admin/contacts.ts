@@ -1,5 +1,5 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
+// const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
 // get contacts
 export const getContacts = async (
@@ -8,19 +8,14 @@ export const getContacts = async (
   search: string
 ) => {
   const res = await fetch(
-    `${API}/send_contacts?page=${page}&limit=${limit}&search=${search}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    `${API}/send_contacts?page=${page}&limit=${limit}&search=${search}`
   );
   const data = await res.json();
   return data;
 };
 
 // delete contact
-export const deleteContact = async (id: any) => {
+export const deleteContact = async (id: any, token: string) => {
   const res = await fetch(`${API}/send_contacts/${id}`, {
     method: "DELETE",
     headers: {
@@ -33,7 +28,7 @@ export const deleteContact = async (id: any) => {
 };
 
 // update read contact
-export const updateReadContact = async (id: any) => {
+export const updateReadContact = async (id: any, token: string) => {
   const res = await fetch(`${API}/send_contacts/read/${id}`, {
     method: "PUT",
     headers: {

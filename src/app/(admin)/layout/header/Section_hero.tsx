@@ -21,8 +21,10 @@ import {
 } from "@/app/_service/admin/home";
 import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
 import ModalAddImg from "./modal/Modal_Add_Img";
+import { getCookie } from "cookies-next";
 
 export default function Section_hero() {
+  const token = getCookie("token");
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -53,17 +55,17 @@ export default function Section_hero() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa banner này không?")) return;
-    const response = await deleteHeroSection(id);
-    if (response) {
-      enqueueSnackbar("Xóa banner thành công", {
+    const response = await deleteHeroSection(id, token as string);
+    if (response.ok) {
+      enqueueSnackbar(response.message, {
         variant: "success",
       });
+      setRefresh(!refresh);
     } else {
-      enqueueSnackbar("Xóa banner thất bại", {
+      enqueueSnackbar(response.message, {
         variant: "error",
       });
     }
-    setRefresh(!refresh);
   };
 
   const handleImageClick = (index: number) => {
@@ -85,45 +87,60 @@ export default function Section_hero() {
     input.click();
   };
 
+  const CallApi = async (id: string, data: any) => {
+    setIsLoading(true);
+
+    const response = await updateHeroSection(
+      id,
+      data,
+      token as unknown as string
+    );
+    if (response.ok) {
+      enqueueSnackbar(response?.message, { variant: "success" });
+      setRefresh(!refresh);
+    } else {
+      enqueueSnackbar(response?.message, { variant: "error" });
+    }
+    setIsLoading(false);
+  };
+  // lưu thay đổi
   const handleSaveChanges = async (id: string, index: number) => {
     if (!data[index].tempImageUrl) {
-      enqueueSnackbar("Vui lòng chọn hình ảnh trước khi lưu", {
-        variant: "error",
+      CallApi(id, {
+        image_url: data[index].image_url,
+        title: data[index].title,
+        description: data[index].description,
       });
       return;
     }
-    setIsLoading(true);
     try {
       const imageUrl = await uploadImageToCloudinary(data[index].tempImageUrl);
       if (imageUrl.secure_url) {
-        const response = await updateHeroSection(id, {
+        CallApi(id, {
           image_url: imageUrl.secure_url,
           title: data[index].title,
           description: data[index].description,
         });
-        if (response.ok) {
-          enqueueSnackbar(response?.message, { variant: "success" });
-          setRefresh(!refresh);
-        } else {
-          enqueueSnackbar(response?.message, { variant: "error" });
-        }
       }
     } catch (error) {
       enqueueSnackbar("Lưu thay đổi thất bại", { variant: "error" });
     } finally {
-      setIsLoading(false);
     }
   };
 
   // thêm mới
   const handleAddNew = async () => {
+    setIsLoading(true);
     const imageUrl = await uploadImageToCloudinary(newData.image_url);
     if (imageUrl.secure_url) {
-      const response = await newHeroSection({
-        image_url: imageUrl.secure_url,
-        title: newData.title,
-        description: newData.description,
-      });
+      const response = await newHeroSection(
+        {
+          image_url: imageUrl.secure_url,
+          title: newData.title,
+          description: newData.description,
+        },
+        token as unknown as string
+      );
       if (response.ok) {
         enqueueSnackbar(response.message, { variant: "success" });
         setRefresh(!refresh);
@@ -139,6 +156,7 @@ export default function Section_hero() {
     } else {
       enqueueSnackbar("Lưu thay đổi thất bại", { variant: "error" });
     }
+    setIsLoading(false);
   };
 
   return (

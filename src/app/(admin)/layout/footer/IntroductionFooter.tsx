@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import { enqueueSnackbar } from "notistack";
-
+import { getCookie } from "cookies-next";
 interface IntroductionData {
   title: string;
   description: string;
@@ -23,6 +23,7 @@ export default function IntroductionFooter({
   data: IntroductionData;
   setRefetch: (prev: any) => void;
 }) {
+  const token = getCookie("token");
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -75,7 +76,10 @@ export default function IntroductionFooter({
       }
 
       setIsLoading(true);
-      const response = await setIntroductionFooter(formData);
+      const response = await setIntroductionFooter(
+        formData,
+        token as unknown as string
+      );
 
       if (!response.ok) {
         enqueueSnackbar(response.message || "Đã xảy ra lỗi", {
