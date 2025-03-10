@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
 import Icon from "@/app/_shared/utils/Icon";
 import Loading from "@/app/_shared/components/Loading";
@@ -33,45 +25,56 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
 
   const handleEdit = async () => {
     setLoading(true);
-    const response = await updateItemOrderingProcess(
-      dataItem,
-      dataItem?.id,
-      token as string
-    );
-    if (response.ok) {
-      setRefetch((prev: any) => !prev);
-      enqueueSnackbar(response.message, { variant: "success" });
-      setEdit(false);
-    } else {
-      enqueueSnackbar(response.message, { variant: "error" });
+    try {
+      const response = await updateItemOrderingProcess(
+        dataItem,
+        dataItem?.id,
+        token as string
+      );
+      if (response.ok) {
+        setRefetch((prev: any) => !prev);
+        enqueueSnackbar(response.message, { variant: "success" });
+        setEdit(false);
+      } else {
+        enqueueSnackbar(response.message, { variant: "error" });
+      }
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra", { variant: "error" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleAddItem = async () => {
     setLoading(true);
-    const response = await setAboutOrderingProcess(dataItem, token as string);
-    if (response.ok) {
-      setRefetch((prev: any) => !prev);
-      setDataItem(null);
-      enqueueSnackbar(response.message, { variant: "success" });
-    } else {
-      enqueueSnackbar(response.message, { variant: "error" });
+    try {
+      const response = await setAboutOrderingProcess(dataItem, token as string);
+      if (response.ok) {
+        setRefetch((prev: any) => !prev);
+        setDataItem(null);
+        enqueueSnackbar(response.message, { variant: "success" });
+      } else {
+        enqueueSnackbar(response.message, { variant: "error" });
+      }
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra", { variant: "error" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const handleDeleteItem = async () => {
-    const response = await deleteItemOrderingProcess(
-      selectedItemToDelete,
-      token as string
-    );
-    if (response.ok) {
-      setRefetch((prev: any) => !prev);
-      setDeleteModalOpen(false);
-      enqueueSnackbar(response.message, { variant: "success" });
-    } else {
-      enqueueSnackbar(response.message, { variant: "error" });
+  const handleDeleteItem = async (id: any) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa mục này không?")) return;
+    try {
+      const response = await deleteItemOrderingProcess(id, token as string);
+      if (response.ok) {
+        setRefetch((prev: any) => !prev);
+        enqueueSnackbar(response.message, { variant: "success" });
+      } else {
+        enqueueSnackbar(response.message, { variant: "error" });
+      }
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra", { variant: "error" });
     }
   };
 
@@ -166,8 +169,7 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
                     color="danger"
                     variant="light"
                     onPress={() => {
-                      setSelectedItemToDelete(space?.id);
-                      setDeleteModalOpen(true);
+                      handleDeleteItem(space?.id);
                     }}
                     aria-label={`Xóa ${space?.title}`}
                   >
@@ -179,30 +181,6 @@ export default function OrderProcessMobile({ data, setRefetch }: any) {
           </div>
         </div>
       </div>
-
-      {/* Confirmation Modal for Delete */}
-      <Modal
-        isOpen={deleteModalOpen}
-        onOpenChange={setDeleteModalOpen}
-        placement="center"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Xác nhận xóa</ModalHeader>
-              <ModalBody>Bạn có chắc chắn muốn xóa mục này không?</ModalBody>
-              <ModalFooter>
-                <Button color="default" variant="light" onPress={onClose}>
-                  Hủy
-                </Button>
-                <Button color="danger" onPress={handleDeleteItem}>
-                  Xóa
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </div>
   );
 }

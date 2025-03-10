@@ -39,7 +39,14 @@ function Contacts() {
   const token = getCookie("token");
   const fetchContacts = useCallback(async () => {
     setIsLoading(true);
-    const res = await getContacts(Number(page), Number(limit), searchTerm);
+    const res = await getContacts(
+      Number(page),
+      Number(limit),
+      searchTerm,
+      token as string
+    );
+    console.log("res", res);
+
     if (res.ok) {
       setContacts(res.data || []);
       setTotalPages(res.total_pages);

@@ -5,10 +5,16 @@ const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
 export const getContacts = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
+  token: string
 ) => {
   const res = await fetch(
-    `${API}/send_contacts?page=${page}&limit=${limit}&search=${search}`
+    `${API}/send_contacts?page=${page}&limit=${limit}&search=${search}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   const data = await res.json();
   return data;

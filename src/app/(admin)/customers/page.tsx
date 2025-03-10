@@ -106,7 +106,6 @@ function CustomerContent({
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) return;
     const response = await deleteUser(token, id);
-    console.log(response);
 
     if (response.ok) {
       enqueueSnackbar(response.message, {

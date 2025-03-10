@@ -21,9 +21,10 @@ import { getCookie } from "cookies-next";
 import Pagination from "@/app/_shared/components/ui/Pagination";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_shared/components/Loading";
-import CheckRole from "@/app/_shared/components/ui/CheckRole";
+
 import { enqueueSnackbar } from "notistack";
 import NotFound from "@/app/not-found";
+import CheckRole from "@/app/_shared/components/CheckRole";
 
 function PermissionPage() {
   const [roles, setRoles] = useState([]);
@@ -123,8 +124,6 @@ function PermissionPage() {
 
   // Cập nhật quyền
   const handleUpdate = async () => {
-    console.log("permissions", permissions);
-
     const data = {
       name: name,
       permissions: permissions,

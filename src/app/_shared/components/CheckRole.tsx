@@ -66,6 +66,8 @@ export default function CheckRole({
         put_header: false,
         post_header: false,
         delete_header: false,
+        get_contacts: false,
+        delete_contacts: false,
       });
     }
   }, [data]);
@@ -219,7 +221,29 @@ export default function CheckRole({
             </Checkbox>
           </div>
         </Card>
+        <Card className="p-6 shadow-sm">
+          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+            <span className="w-1 h-6 bg-primary rounded-full"></span>
+            Quản lý liên hệ
+          </h2>
+          <div className="space-x-10 pl-3">
+            <Checkbox
+              isSelected={permissions.get_contacts}
+              onValueChange={() => handlePermissionChange("get_contacts")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xem liên hệ
+            </Checkbox>
 
+            <Checkbox
+              isSelected={permissions.delete_contacts}
+              onValueChange={() => handlePermissionChange("delete_contacts")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xóa liên hệ
+            </Checkbox>
+          </div>
+        </Card>
         <Card className="p-6 shadow-sm">
           <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>

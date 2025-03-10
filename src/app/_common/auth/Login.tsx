@@ -47,8 +47,6 @@ export default function Login() {
 
   // lưu email vào cookie
   useEffect(() => {
-    console.log("remember", remember);
-
     if (remember) {
       setCookie("rememberEmail", email);
       setCookie("remember", remember);

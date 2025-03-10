@@ -1,7 +1,7 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
 // const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
 
-export const updateAbout = async (data: any, token: string) => {
+export const updateAbout = async (data: any, token: any) => {
   const response = await fetch(`${API}/about/story`, {
     method: "PUT",
     headers: {

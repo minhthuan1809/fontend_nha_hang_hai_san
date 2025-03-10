@@ -105,7 +105,7 @@ export default function ModalAddImg({
           <Button
             color="primary"
             isLoading={isLoading}
-            onClick={addNew}
+            onPress={addNew}
             disabled={isLoading}
           >
             Thêm mới

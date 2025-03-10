@@ -33,7 +33,6 @@ export default function AddEditUser({
   setDataEdit: (value: any) => void;
   refetch: () => void;
 }) {
-  console.log("dataEdit", dataEdit);
   const [roles, setRoles] = useState<RoleType[]>([]);
   const [dataSubmit, setDataSubmit] = useState({
     fullName: dataEdit?.fullName || "",
@@ -92,7 +91,6 @@ export default function AddEditUser({
   const ApiCallCreate = async (data: any) => {
     setLoading(true);
     const addUserResponse = await addUser(token as string, data);
-    console.log("uploadImage", addUserResponse);
     if (addUserResponse.ok) {
       enqueueSnackbar(addUserResponse.message, {
         variant: "success",

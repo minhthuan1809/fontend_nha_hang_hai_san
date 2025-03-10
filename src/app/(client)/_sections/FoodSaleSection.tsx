@@ -17,7 +17,7 @@ const PopularFoodSection = () => {
       status: false,
     },
     {
-      name: "Ghẹ hấp xả", 
+      name: "Ghẹ hấp xả",
       price: "220.000 đ",
       image: "https://picsum.photos/200",
       hot: true,
@@ -29,7 +29,7 @@ const PopularFoodSection = () => {
     },
     {
       name: "Tôm chiên bột",
-      price: "280.000 đ", 
+      price: "280.000 đ",
       image: "https://picsum.photos/200",
       hot: true,
       rating: 4.7,
@@ -41,7 +41,7 @@ const PopularFoodSection = () => {
     {
       name: "Cá chiên phượng hoàng",
       price: "560.000 đ",
-      image: "https://picsum.photos/200", 
+      image: "https://picsum.photos/200",
       hot: false,
       rating: 4.5,
       category: "fish",
@@ -97,12 +97,12 @@ const PopularFoodSection = () => {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const filteredItems = 
-    activeFilter === "all" 
+  const filteredItems =
+    activeFilter === "all"
       ? menuItems
       : activeFilter === "hot"
-      ? menuItems.filter(item => item.hot)
-      : menuItems.filter(item => item.category === activeFilter);
+      ? menuItems.filter((item) => item.hot)
+      : menuItems.filter((item) => item.category === activeFilter);
 
   return (
     <div id="food-sale" className="w-full bg-gray-50 py-8 sm:py-12 md:py-16">
@@ -175,7 +175,6 @@ const PopularFoodSection = () => {
             >
               Cua/Ghẹ
             </button>
-        
           </div>
         </div>
 

@@ -1,8 +1,9 @@
 import { updateAbout } from "@/app/_service/admin/about";
 import { Button, Input, Textarea } from "@nextui-org/react";
-import { getCookie } from "cookies-next/server";
+import { getCookie } from "cookies-next";
+
 import { enqueueSnackbar } from "notistack";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function Story({
   data,
@@ -11,16 +12,17 @@ export default function Story({
   data: any;
   setRefetch: any;
 }) {
+  const token = getCookie("token");
   const [form, setForm] = useState({
     title: data.title,
     description_one: data.description_one,
     description_two: data.description_two,
   });
-  const token = getCookie("token");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
     setLoading(true);
-    const response = await updateAbout(form, token as unknown as string);
+    const response = await updateAbout(form, token as string);
+
     if (response.ok) {
       enqueueSnackbar(response.message, { variant: "success" });
       setRefetch((prev: any) => !prev);
