@@ -40,11 +40,7 @@ export default function CartProduct({
                 {/* Phần chứa hình ảnh */}
                 <div className="h-40 sm:h-52 overflow-hidden">
                   <img
-                    src={
-                      item.images && item.images[0]
-                        ? item.images[0]
-                        : "/default-image.jpg"
-                    }
+                    src={item.images[0]}
                     alt={item.name}
                     className="w-full h-[150px] sm:h-[200px] object-cover transform transition-transform duration-500"
                   />
