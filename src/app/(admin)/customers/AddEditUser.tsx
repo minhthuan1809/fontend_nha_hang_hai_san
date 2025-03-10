@@ -266,10 +266,19 @@ export default function AddEditUser({
               label="Vai trò"
               placeholder="Chọn vai trò"
               variant="bordered"
-              selectedKeys={[dataSubmit.roleId]}
-              onChange={(e) =>
-                setDataSubmit({ ...dataSubmit, roleId: e.target.value })
+              selectedKeys={
+                roles.some((role) => role.id === dataSubmit.roleId)
+                  ? [dataSubmit.roleId]
+                  : []
               }
+              onChange={(e) => {
+                const selectedRole = roles.find(
+                  (role) => role.id === e.target.value
+                );
+                if (selectedRole) {
+                  setDataSubmit({ ...dataSubmit, roleId: selectedRole.id });
+                }
+              }}
             >
               {roles.map((role) => (
                 <SelectItem key={role.id} value={role.id}>

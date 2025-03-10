@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import AddEditUser from "./AddEditUser";
 import Loading from "@/app/_shared/components/Loading";
+
 type UserType = {
   id: string;
   fullName: string;
@@ -36,57 +37,11 @@ function CustomerPage() {
   const [search, setSearch] = useState("");
   const token = getCookie("token") as string;
   const [total, setTotal] = useState(0);
-  const [dataEdit, setDataEdit] = useState<any | null>(null);
-
-  const SearchParamsWrapper = () => {
-    const page = Number(useSearchParams().get("page")) || 1;
-    return (
-      <CustomerContent
-        page={page}
-        users={users}
-        setUsers={setUsers}
-        search={search}
-        token={token}
-        total={total}
-        setTotal={setTotal}
-        dataEdit={dataEdit}
-        setDataEdit={setDataEdit}
-        setSearch={setSearch}
-      />
-    );
-  };
-
-  return (
-    <Suspense fallback={<Loading />}>
-      <SearchParamsWrapper />
-    </Suspense>
-  );
-}
-
-function CustomerContent({
-  page,
-  users,
-  setUsers,
-  search,
-  token,
-  total,
-  setTotal,
-  dataEdit,
-  setDataEdit,
-  setSearch,
-}: {
-  page: number;
-  users: UserType[];
-  setUsers: (users: UserType[]) => void;
-  search: string;
-  token: string;
-  total: number;
-  setTotal: (total: number) => void;
-  dataEdit: any;
-  setDataEdit: (data: any) => void;
-  setSearch: (search: string) => void;
-}) {
+  const [dataEdit, setDataEdit] = useState<UserType | null>(null);
   const [openAddEditUser, setOpenAddEditUser] = useState(false);
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const [page, setPage] = useState(currentPage);
 
   const fetchUser = useCallback(async () => {
     const response = await getUser(token, search, page, 20);
@@ -94,7 +49,7 @@ function CustomerContent({
       setUsers(response.data);
       setTotal(response.total_pages);
     }
-  }, [search, page, token, setUsers, setTotal]);
+  }, [search, page, token]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -192,8 +147,8 @@ function CustomerContent({
                       <div
                         className="flex gap-2 text-primary cursor-pointer"
                         onClick={() => {
-                          setOpenAddEditUser(true);
                           setDataEdit(item);
+                          setOpenAddEditUser(true);
                         }}
                       >
                         <Icon icon="Edit" />
@@ -218,7 +173,10 @@ function CustomerContent({
       <Pagination page={page} total={total} />
       {openAddEditUser && (
         <AddEditUser
-          onClose={setOpenAddEditUser}
+          onClose={() => {
+            setOpenAddEditUser(false);
+            setDataEdit(null);
+          }}
           dataEdit={dataEdit}
           setDataEdit={setDataEdit}
           refetch={fetchUser}
