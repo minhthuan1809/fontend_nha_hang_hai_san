@@ -37,12 +37,17 @@ function NewsTable() {
   const [reload, setReload] = useState(false);
   const searchParams = useSearchParams();
   const pageParams = Number(searchParams.get("page")) || 1;
-  const [openTiptap, setOpenTiptap] = useState(
-    localStorage.getItem("openTiptap") === "true" || false
-  );
+  const [openTiptap, setOpenTiptap] = useState(false);
   const [dataEdit, setDataEdit] = useState<any>(null);
   const [search, setSearch] = useState("");
   const token = getCookie("token");
+
+  useEffect(() => {
+    // Kiểm tra môi trường client trước khi truy cập localStorage
+    if (typeof window !== "undefined") {
+      setOpenTiptap(localStorage.getItem("openTiptap") === "true" || false);
+    }
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);

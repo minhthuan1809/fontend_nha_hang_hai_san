@@ -8,15 +8,12 @@ export default function CartProduct({
 }: {
   filteredItems: any[];
 }) {
-  if (
-    filteredItems.filter((item) => !item.status).length === 0 ||
-    filteredItems?.length === 0
-  ) {
+  if (!filteredItems || filteredItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px] ">
+      <div className="flex flex-col items-center justify-center min-h-[300px]">
         <Icon
           icon="ShoppingCart"
-          className="w-20 h-20 text-amber-300 mb-4 animate-pulse "
+          className="w-20 h-20 text-amber-300 mb-4 animate-pulse"
         />
         <p className="text-gray-600 text-xl font-medium">Chưa có sản phẩm</p>
         <p className="text-gray-400 text-sm mt-2">
@@ -30,34 +27,39 @@ export default function CartProduct({
     <div>
       <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 w-full">
         {filteredItems
-          ?.filter((item) => !item.status)
-          .map((item: any, index: any) => (
+          .filter((item) => item && !item.status)
+          .map((item: any, index: number) => (
             <div
               key={index}
               className="bg-white rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 group border border-gray-100"
             >
               <div className="relative">
-                {/* Phần chứa hình ảnh */}
                 <div className="h-40 sm:h-52 overflow-hidden">
                   <img
-                    src={item.images[0]}
-                    alt={item.name}
+                    src={
+                      item?.images?.[0] ||
+                      item?.image ||
+                      "https://picsum.photos/200"
+                    }
+                    alt={item?.name || "Sản phẩm"}
                     className="w-full h-[150px] sm:h-[200px] object-cover transform transition-transform duration-500"
                   />
-                  <Link
-                    href={`/products/${removeAccentsAndSpaces(item.name)}/${
-                      item.id
-                    }`}
-                    className=" hidden group-hover:flex absolute  top-0 left-0 w-full h-full bg-black/30 gap-2 items-center justify-center"
-                  >
-                    <span className="text-white border border-white px-2 py-1 rounded-md">
-                      Xem chi tiết
-                    </span>
-                  </Link>
+                  {item?.name && (
+                    <Link
+                      href={`/products/${removeAccentsAndSpaces(item.name)}/${
+                        item.id
+                      }`}
+                      className="hidden group-hover:flex absolute top-0 left-0 w-full h-full bg-black/30 gap-2 items-center justify-center"
+                    >
+                      <span className="text-white border border-white px-2 py-1 rounded-md">
+                        Xem chi tiết
+                      </span>
+                    </Link>
+                  )}
                 </div>
 
                 {/* Nhãn món hot */}
-                {item.hot && (
+                {item?.hot && (
                   <div className="absolute top-3 left-3">
                     <span className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1">
                       <Icon icon="Star" size={12} className="fill-white" />
@@ -67,7 +69,7 @@ export default function CartProduct({
                 )}
 
                 {/* Lớp phủ khi hết hàng */}
-                {item.quantity === "0" && (
+                {item?.quantity === "0" && (
                   <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center">
                     <div className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium transform -rotate-6 shadow-xl border border-red-400">
                       Tạm hết hàng
@@ -78,7 +80,7 @@ export default function CartProduct({
                 {/* Nhãn giá */}
                 <div className="absolute -bottom-3 right-3">
                   <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-md">
-                    {item.price}
+                    {item?.price}
                   </div>
                 </div>
               </div>
