@@ -10,7 +10,6 @@ export const authLogin = async (data: any) => {
       },
     });
     const _data = await response.json();
-    console.log(_data);
     return _data;
   } catch (error) {
     return {
