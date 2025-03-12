@@ -1,6 +1,6 @@
 "use client";
 import { getProducts } from "@/app/_service/client/layout";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   Button,
   Input,
@@ -25,7 +25,8 @@ import { getCookie } from "cookies-next";
 import { enqueueSnackbar } from "notistack";
 import DetailProduct from "./DetailProduct";
 import AddEditProduct from "./AddEditProduct";
-export default function ProductsPage() {
+
+function ProductsContent() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
@@ -345,5 +346,13 @@ export default function ProductsPage() {
         data={dataDetail}
       />
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ProductsContent />
+    </Suspense>
   );
 }
