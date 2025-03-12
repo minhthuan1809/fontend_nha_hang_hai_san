@@ -22,7 +22,7 @@ interface Ad {
 export default function AdsHomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [ads, setAds] = useState<Ad[]>([]);
-  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const [currentAd, setCurrentAd] = useState<Ad | null>(null);
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -33,7 +33,7 @@ export default function AdsHomePage() {
           setAds(activeAds);
           // Chọn ngẫu nhiên một quảng cáo khi lấy dữ liệu
           const randomIndex = Math.floor(Math.random() * activeAds.length);
-          setCurrentAdIndex(randomIndex);
+          setCurrentAd(activeAds[randomIndex]);
         }
       } catch (error) {
         console.error("Lỗi khi tải quảng cáo:", error);
@@ -66,22 +66,8 @@ export default function AdsHomePage() {
     }
   }, [ads]);
 
-  // Hàm chuyển đổi quảng cáo tiếp theo
-  const showNextAd = useCallback(() => {
-    setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
-  }, [ads.length]);
+  if (!ads.length || !currentAd) return null;
 
-  // Tự động chuyển đổi quảng cáo mỗi 5 giây
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const interval = setInterval(showNextAd, 5000);
-    return () => clearInterval(interval);
-  }, [isOpen, showNextAd]);
-
-  if (!ads.length) return null;
-
-  const currentAd = ads[currentAdIndex];
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (

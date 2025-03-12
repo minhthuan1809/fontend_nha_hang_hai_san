@@ -143,14 +143,11 @@ export const getNewsDetail = async (id: any) => {
 };
 
 // contacts
-export const CreateContact = async (data: any, token: string) => {
+export const CreateContact = async (data: any) => {
   try {
     const response = await fetch(`${API}/send_contacts`, {
       method: "POST",
-      headers: {
-        // "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+
       body: JSON.stringify({
         name: data.name,
         gmail: data.email,
