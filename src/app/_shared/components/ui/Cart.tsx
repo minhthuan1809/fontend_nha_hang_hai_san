@@ -36,11 +36,7 @@ export default function CartProduct({
               <div className="relative">
                 <div className="h-40 sm:h-52 overflow-hidden">
                   <img
-                    src={
-                      item?.images?.[0] ||
-                      item?.image ||
-                      "https://picsum.photos/200"
-                    }
+                    src={item?.images}
                     alt={item?.name || "Sản phẩm"}
                     className="w-full h-[150px] sm:h-[200px] object-cover transform transition-transform duration-500"
                   />

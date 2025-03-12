@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import AddEditUser from "./AddEditUser";
 import Loading from "@/app/_shared/components/Loading";
+import ModalDetailAcc from "./ModalDetailAcc";
 
 type UserType = {
   id: string;
@@ -42,7 +43,8 @@ function CustomerPage() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const [page, setPage] = useState(currentPage);
-
+  const [openDetailAcc, setOpenDetailAcc] = useState(false);
+  const [dataAccount, setDataAccount] = useState<any>(null);
   const fetchUser = useCallback(async () => {
     const response = await getUser(token, search, page, 20);
     if (response.ok) {
@@ -147,6 +149,16 @@ function CustomerPage() {
                       <div
                         className="flex gap-2 text-primary cursor-pointer"
                         onClick={() => {
+                          setDataAccount(item);
+                          setOpenDetailAcc(true);
+                          console.log(item);
+                        }}
+                      >
+                        <Icon icon="Eye" />
+                      </div>
+                      <div
+                        className="flex gap-2 text-primary cursor-pointer"
+                        onClick={() => {
                           setDataEdit(item);
                           setOpenAddEditUser(true);
                         }}
@@ -158,9 +170,6 @@ function CustomerPage() {
                         onClick={() => handleDelete(item.id)}
                       >
                         <Icon icon="Trash" />
-                      </div>
-                      <div className="flex gap-2 text-primary cursor-pointer">
-                        <Icon icon="Eye" />
                       </div>
                     </>
                   )}
@@ -182,6 +191,11 @@ function CustomerPage() {
           refetch={fetchUser}
         />
       )}
+      <ModalDetailAcc
+        open={openDetailAcc}
+        onClose={() => setOpenDetailAcc(false)}
+        data={dataAccount}
+      />
     </div>
   );
 }

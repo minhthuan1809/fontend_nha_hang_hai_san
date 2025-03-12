@@ -193,11 +193,7 @@ export const getProducts = async (page: number, search: string) => {
 // get products detail
 export const getProductsDetail = async (id: any) => {
   try {
-    const response = await fetch(`${API}/products/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`${API}/products/${id}`);
     const data = await response.json();
     return data;
   } catch (error) {

@@ -3,10 +3,10 @@ import React, { useState, useEffect, Suspense, useCallback } from "react";
 import CartProduct from "@/app/_shared/components/ui/Cart";
 import Pagination from "@/app/_shared/components/ui/Pagination";
 import Navigation from "@/app/_shared/components/ui/Navigation";
-import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getProducts } from "@/app/_service/client/layout";
 import Icon from "@/app/_shared/utils/Icon";
+import Loading from "@/app/_shared/components/Loading";
 
 const MenuPageContent = () => {
   const router = useRouter();
@@ -120,7 +120,7 @@ const MenuPageContent = () => {
                   }}
                 />
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <Search className="w-5 h-5 text-gray-400" />
+                  <Icon icon="Search" className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@ const MenuPageContent = () => {
 
 const MenuPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <MenuPageContent />
     </Suspense>
   );

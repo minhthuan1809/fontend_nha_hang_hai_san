@@ -13,7 +13,13 @@ import Loading from "@/app/_shared/components/Loading";
 import DescriptionDetailProduct from "./DescriptionDetailProduct";
 import SuggestProduct from "./SuggestProduct";
 
+interface Image {
+  id: number;
+  image_url: string;
+}
+
 interface Product {
+  id: number;
   name: string;
   description: string;
   price: string;
@@ -22,7 +28,10 @@ interface Product {
   category: string;
   hot: number;
   star: number;
-  images: string[];
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+  images: Image[];
 }
 
 export default function ProductDetailPage() {
@@ -127,7 +136,7 @@ export default function ProductDetailPage() {
               <div className="gallery-container">
                 <div className="h-[400px] flex items-center justify-center w-full rounded-xl overflow-hidden shadow-lg">
                   <img
-                    src={thumbsSwiper || product.images[0]}
+                    src={thumbsSwiper || product.images[0].image_url}
                     alt={`${product.name} - ảnh chính`}
                     className="h-full w-full object-cover transition-transform hover:scale-105"
                   />
@@ -141,14 +150,14 @@ export default function ProductDetailPage() {
                     watchSlidesProgress
                     className="thumbs-swiper mt-6"
                   >
-                    {product.images.map((image, index) => (
-                      <SwiperSlide key={index} className="cursor-pointer">
+                    {product.images.map((image) => (
+                      <SwiperSlide key={image.id} className="cursor-pointer">
                         <div className="h-24 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-500 transition-colors">
                           <img
-                            src={image}
-                            alt={`${product.name} thumbnail ${index + 1}`}
+                            src={image.image_url}
+                            alt={`${product.name} thumbnail ${image.id}`}
                             className="h-full w-full object-cover"
-                            onClick={() => setThumbsSwiper(image)}
+                            onClick={() => setThumbsSwiper(image.image_url)}
                           />
                         </div>
                       </SwiperSlide>

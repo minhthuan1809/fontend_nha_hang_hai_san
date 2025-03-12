@@ -46,7 +46,7 @@ export default function CustomersSayTitle() {
       if (response?.ok) {
         setData(response.data);
         if (response.data.images?.[0]) {
-          setSelectedImage(response.data.images[0]);
+          setSelectedImage(response.data.images);
         }
       }
     } catch (error) {
