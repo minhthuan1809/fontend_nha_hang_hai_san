@@ -78,6 +78,7 @@ const MenuPageContent = () => {
     { value: "shrimp", label: "Tôm" },
     { value: "crab", label: "Cua/Ghẹ" },
     { value: "squid", label: "Mực" },
+    { value: "drink", label: "Đồ uống" },
   ];
 
   const sortOptions = [

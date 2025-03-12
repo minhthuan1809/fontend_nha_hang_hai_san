@@ -20,6 +20,7 @@ import { enqueueSnackbar } from "notistack";
 import AddEditUser from "./AddEditUser";
 import Loading from "@/app/_shared/components/Loading";
 import ModalDetailAcc from "./ModalDetailAcc";
+import No_found from "../No_found";
 
 type UserType = {
   id: string;
@@ -45,11 +46,15 @@ function CustomerPage() {
   const [page, setPage] = useState(currentPage);
   const [openDetailAcc, setOpenDetailAcc] = useState(false);
   const [dataAccount, setDataAccount] = useState<any>(null);
+  const [role, setRole] = useState<any>(null);
   const fetchUser = useCallback(async () => {
     const response = await getUser(token, search, page, 20);
     if (response.ok) {
       setUsers(response.data);
       setTotal(response.total_pages);
+      setRole(false);
+    } else {
+      setRole(true);
     }
   }, [search, page, token]);
 
@@ -84,6 +89,9 @@ function CustomerPage() {
     { name: "TRẠNG THÁI", uid: "status" },
     { name: "CHỨC NĂNG", uid: "function" },
   ];
+  if (role) {
+    return <No_found />;
+  }
 
   return (
     <div className="p-6">

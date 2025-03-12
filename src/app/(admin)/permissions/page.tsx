@@ -23,8 +23,8 @@ import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_shared/components/Loading";
 
 import { enqueueSnackbar } from "notistack";
-import NotFound from "@/app/not-found";
 import CheckRole from "@/app/_shared/components/CheckRole";
+import No_found from "../No_found";
 
 function PermissionPage() {
   const [roles, setRoles] = useState([]);
@@ -142,7 +142,7 @@ function PermissionPage() {
     }
   };
   if (error) {
-    return <NotFound />;
+    return <No_found />;
   }
   if (loading) {
     return <Loading />;

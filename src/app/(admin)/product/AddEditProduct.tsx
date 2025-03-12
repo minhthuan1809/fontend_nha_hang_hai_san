@@ -281,6 +281,7 @@ export default function AddEditProduct({
               { key: "shrimp", value: "Tôm" },
               { key: "crab", value: "Cua/Ghẹ" },
               { key: "squid", value: "Mực" },
+              { key: "drink", value: "Đồ uống" },
             ].map((item) => (
               <SelectItem key={item.key} value={item.key}>
                 {item.value}

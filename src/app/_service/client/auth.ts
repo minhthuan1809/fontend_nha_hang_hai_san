@@ -41,6 +41,9 @@ export const authRegister = async (data: any) => {
     const response = await fetch(`${API}/auth/register`, {
       method: "POST",
       body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const _data = await response.json();
     return _data;
@@ -51,6 +54,46 @@ export const authRegister = async (data: any) => {
     };
   }
 };
+
+// Gửi lại mã xác thực
+export const authResendEmailCode = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/auth/register?resend=true`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi gửi lại mã xác thực",
+    };
+  }
+};
+// Xác thực email
+export const authVerifyEmailCode = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/auth/register?verify=true`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi xác thực email",
+    };
+  }
+};
+
 // Đăng xuất
 export const logout = async (token: string) => {
   try {
