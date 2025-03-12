@@ -1,5 +1,18 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
-const token = process.env.NEXT_PUBLIC_TOKEN_SECRET;
+
+//ads
+export const getAds = async () => {
+  try {
+    const response = await fetch(`${API}/ads`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu ads",
+    };
+  }
+};
 
 // Lấy dữ liệu navbar
 export const getNavbar = async () => {
@@ -130,7 +143,7 @@ export const getNewsDetail = async (id: any) => {
 };
 
 // contacts
-export const CreateContact = async (data: any) => {
+export const CreateContact = async (data: any, token: string) => {
   try {
     const response = await fetch(`${API}/send_contacts`, {
       method: "POST",
@@ -173,12 +186,7 @@ export const getAbout = async () => {
 export const getProducts = async (page: number, search: string) => {
   try {
     const response = await fetch(
-      `${API}/products?limit=30&page=${page}&search=${search}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      `${API}/products?limit=30&page=${page}&search=${search}`
     );
     const data = await response.json();
     return data;

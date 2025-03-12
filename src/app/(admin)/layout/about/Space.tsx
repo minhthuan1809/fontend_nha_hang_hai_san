@@ -14,8 +14,6 @@ import InputChooseIcon from "@/app/_shared/components/ui/InputChooseIcon";
 import { getCookie } from "cookies-next";
 
 export default function SpaceMobile({ data, setRefetch }: any) {
-  console.log(data, "thuan");
-
   const [open, setOpen] = useState(false);
   const [dataEdit, setDataEdit] = useState(null);
   const [edit, setEdit] = useState(false);

@@ -45,7 +45,6 @@ function Contacts() {
       searchTerm,
       token as string
     );
-    console.log("res", res);
 
     if (res.ok) {
       setContacts(res.data || []);

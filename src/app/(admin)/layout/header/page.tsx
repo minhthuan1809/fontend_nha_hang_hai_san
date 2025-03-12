@@ -8,6 +8,7 @@ import { Tooltip } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import CustomerChooseTitle from "./_CustomerChoose/CustomerChooseTitle";
 import Loading from "@/app/_shared/components/Loading";
+import Ads from "./Ads";
 
 const PageContent = () => {
   const searchParams = useSearchParams();
@@ -15,6 +16,11 @@ const PageContent = () => {
   const router = useRouter();
 
   const data = [
+    {
+      icon: "MonitorDot",
+      path: "?section=ads",
+      title: "Quảng Cáo",
+    },
     {
       icon: "Image",
       path: "?section=hero",
@@ -66,6 +72,7 @@ const PageContent = () => {
       {section === "introduction" && <Section_Introduction />}
       {section === "customers-say" && <CustomersSayTitle />}
       {section === "customer-choose" && <CustomerChooseTitle />}
+      {section === "ads" && <Ads />}
     </div>
   );
 };
