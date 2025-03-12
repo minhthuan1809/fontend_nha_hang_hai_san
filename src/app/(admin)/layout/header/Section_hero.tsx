@@ -184,11 +184,7 @@ export default function Section_hero() {
                 <div className="flex flex-col lg:flex-row gap-8">
                   <div className="relative w-full lg:w-1/3 aspect-video rounded-xl overflow-hidden">
                     <img
-                      src={
-                        item.tempImageUrl ||
-                        item.image_url ||
-                        "/placeholder.jpg"
-                      }
+                      src={item.tempImageUrl || item.image_url}
                       alt={item.title || "Hình ảnh banner"}
                       className="object-cover transition-transform hover:scale-105 w-full h-full"
                     />

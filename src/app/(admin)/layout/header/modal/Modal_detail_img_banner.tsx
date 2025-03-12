@@ -34,7 +34,7 @@ const Modal_detail_img_banner: React.FC<ModalProps> = ({
               </div>
             )}
             <img
-              src={img_url || "/placeholder.jpg"}
+              src={img_url}
               alt="Chi tiết banner"
               className="object-contain w-full h-full"
               loading="lazy"

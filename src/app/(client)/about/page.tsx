@@ -14,7 +14,6 @@ const AboutDetail = () => {
   useEffect(() => {
     const fetchAbout = async () => {
       const data = await getAbout();
-      console.log("data", data);
       if (data.ok) {
         setAboutData(data.data.layout_story[0]);
         setOrderingProcess(data.data.layout_ordering_process);

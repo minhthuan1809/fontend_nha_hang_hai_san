@@ -23,7 +23,6 @@ export default function DetailProduct({
   const [activeImage, setActiveImage] = useState("");
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       getProductsDetail(data.id).then((res: any) => {
         if (res.ok) {

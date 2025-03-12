@@ -12,6 +12,7 @@ import Loading from "@/app/_shared/components/Loading";
 import CustomersSay from "./CustomersSay";
 import Modal_detail_img_banner from "../modal/Modal_detail_img_banner";
 import { getCookie } from "cookies-next";
+
 interface CustomerImage {
   id: string;
   image_url: string;
@@ -38,6 +39,7 @@ export default function CustomersSayTitle() {
   const [imageUrl, setImageUrl] = useState<any | null>(null);
   const [refresh, setRefresh] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const fetchCustomerData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -45,8 +47,9 @@ export default function CustomersSayTitle() {
 
       if (response?.ok) {
         setData(response.data);
-        if (response.data.images?.[0]) {
-          setSelectedImage(response.data.images);
+        if (response.data.images && response.data.images.length > 0) {
+          setSelectedImage(response.data.images[0]);
+          setImageUrl(response.data.images[0].image_url);
         }
       }
     } catch (error) {
@@ -78,7 +81,7 @@ export default function CustomersSayTitle() {
 
       let finalImageUrl = selectedImage?.image_url || "";
 
-      if (imageUrl) {
+      if (imageUrl && imageUrl !== selectedImage?.image_url) {
         const uploadResponse = await uploadImageToCloudinary(imageUrl);
         if (uploadResponse.secure_url) {
           finalImageUrl = uploadResponse.secure_url;
@@ -95,8 +98,10 @@ export default function CustomersSayTitle() {
 
       if (updateResponse?.ok) {
         enqueueSnackbar(updateResponse.message, { variant: "success" });
-        setRefresh((prev: any) => !prev);
-        setImageUrl(null);
+        setRefresh((prev) => !prev);
+        if (imageUrl !== selectedImage?.image_url) {
+          setImageUrl(null);
+        }
       } else {
         enqueueSnackbar(updateResponse.message, { variant: "error" });
       }
@@ -114,8 +119,8 @@ export default function CustomersSayTitle() {
 
   return (
     <>
-      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl  border-2">
-        <CardHeader className=" p-6">
+      <Card className="mx-auto shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl border-2">
+        <CardHeader className="p-6">
           <h1 className="text-2xl font-bold text-center text-gray-800">
             Tiêu đề
           </h1>
@@ -126,7 +131,7 @@ export default function CustomersSayTitle() {
               {selectedImage?.image_url || imageUrl ? (
                 <div className="relative group">
                   <div
-                    className="absolute inset-0 w-full z-40 h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer  rounded-lg"
+                    className="absolute inset-0 w-full z-40 h-full hover:bg-black/50 flex items-center justify-center group cursor-pointer rounded-lg"
                     onClick={() => {
                       setIsOpen(true);
                       setImageUrl(imageUrl || selectedImage?.image_url);
@@ -134,19 +139,18 @@ export default function CustomersSayTitle() {
                   >
                     <Icon
                       icon="ZoomIn"
-                      className=" text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
                       size={50}
                     />
                   </div>
                   <img
                     src={imageUrl || selectedImage?.image_url}
                     alt={selectedImage?.title || "Khách hàng đánh giá"}
-                    className="object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
-                    height={300}
+                    className="object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02] w-[300px] h-[300px]"
                   />
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-[300px] bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border-2 border-dashed border-gray-300">
+                <div className="flex items-center justify-center h-[300px] w-[300px] bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg border-2 border-dashed border-gray-300">
                   <Icon icon="Camera" className="w-12 h-12 text-gray-400" />
                 </div>
               )}

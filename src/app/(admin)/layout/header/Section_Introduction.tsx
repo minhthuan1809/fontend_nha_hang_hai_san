@@ -117,7 +117,7 @@ export default function Section_Introduction() {
               onClick={() => setIsOpen(true)}
             >
               <img
-                src={imageUrl || formData.image_url || "/placeholder.jpg"}
+                src={imageUrl || formData.image_url}
                 alt="Giới thiệu"
                 className="object-cover w-full h-[450px] transition-transform duration-300 group-hover:scale-105"
               />

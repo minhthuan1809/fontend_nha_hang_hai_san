@@ -1,7 +1,5 @@
 const API = process.env.NEXT_PUBLIC_API_CLIENT_URL;
 export const deleteProduct = async (id: string, token: string) => {
-  console.log(id);
-
   const res = await fetch(`${API}/products/${id}`, {
     method: "DELETE",
     headers: {
@@ -69,7 +67,6 @@ export const addProduct = async (product: any, token: string) => {
     },
   });
   const data = await res.json();
-  console.log(data);
 
   return data;
 };

@@ -169,7 +169,7 @@ export default function CustomersSay({
                 <div className="flex flex-col lg:flex-row gap-8">
                   <div className="relative w-full lg:w-1/3 aspect-video rounded-xl overflow-hidden">
                     <img
-                      src={imageUrls[index] || "/placeholder.jpg"}
+                      src={imageUrls[index]}
                       alt={item.title || "Hình ảnh banner"}
                       className="object-cover transition-transform hover:scale-105 w-full h-full object-center "
                     />

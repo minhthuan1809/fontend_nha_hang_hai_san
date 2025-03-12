@@ -84,7 +84,6 @@ function ProductsContent() {
     setLoading(true);
     try {
       const res = await deleteProduct(id, token as string);
-      console.log(res);
 
       if (res.ok) {
         setReload(!reload);

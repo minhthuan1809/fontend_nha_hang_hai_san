@@ -151,7 +151,6 @@ function CustomerPage() {
                         onClick={() => {
                           setDataAccount(item);
                           setOpenDetailAcc(true);
-                          console.log(item);
                         }}
                       >
                         <Icon icon="Eye" />
