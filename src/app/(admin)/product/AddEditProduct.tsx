@@ -252,6 +252,7 @@ export default function AddEditProduct({
             onChange={(e) => setForm({ ...form, price: e.target.value })}
             className="w-full"
             size="lg"
+            type="number"
             variant="bordered"
             endContent={<span className="text-gray-500">₫</span>}
           />
@@ -265,6 +266,7 @@ export default function AddEditProduct({
             className="w-full"
             size="lg"
             variant="bordered"
+            type="number"
           />
           <Select
             label="Danh mục sản phẩm"
