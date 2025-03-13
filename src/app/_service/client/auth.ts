@@ -112,3 +112,57 @@ export const logout = async (token: string) => {
     };
   }
 };
+
+// quên mật khẩu
+export const authForgotPassword = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/forgotpass?sendcode=true`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi quên mật khẩu",
+    };
+  }
+};
+
+// xác thực mã OTP
+export const authVerifyForgotPassword = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/forgotpass?verify=true`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi xác thực mã OTP",
+    };
+  }
+};
+
+// thay đổi mật khẩu
+export const authChangePassword = async (data: any) => {
+  try {
+    const response = await fetch(`${API}/forgotpass?reset=true`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi thay đổi mật khẩu",
+    };
+  }
+};

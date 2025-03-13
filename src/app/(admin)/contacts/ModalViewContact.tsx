@@ -46,7 +46,7 @@ function ViewContactModal({
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={() => onOpenChange(false)}>
+          <Button color="danger" onPress={() => onOpenChange(false)}>
             Đóng
           </Button>
         </ModalFooter>
