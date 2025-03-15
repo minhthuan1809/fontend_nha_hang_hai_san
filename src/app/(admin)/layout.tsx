@@ -128,6 +128,23 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       icon: "Users",
     },
     {
+      name: "Mã Giảm Giá",
+      href: "/discount",
+      icon: "DollarSign",
+      submenu: [
+        {
+          name: "Tạo Mã Giảm Giá",
+          href: "/discount/code",
+          icon: "DollarSign",
+        },
+        {
+          name: "Lịch Sử Sử Dụng",
+          href: "/discount/history",
+          icon: "Calendar",
+        },
+      ],
+    },
+    {
       name: "Bài Viết",
       href: "/articles",
       icon: "FileText",

@@ -76,3 +76,23 @@ export const MinusQuantity = async (token: string, id: number) => {
     };
   }
 };
+
+// create order
+export const createOrder = async (token: string, data: any) => {
+  try {
+    const response = await fetch(`${API}/order`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const _data = await response.json();
+    return _data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi tạo đơn hàng",
+    };
+  }
+};

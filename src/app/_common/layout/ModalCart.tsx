@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Icon from "@/app/_shared/utils/Icon";
 import {
   CartStore,
@@ -16,6 +16,7 @@ import {
   Button,
   Divider,
   Tooltip,
+  Checkbox,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { addCard, deleteCard, MinusQuantity } from "@/app/_service/client/card";
@@ -32,12 +33,19 @@ export default function ModalCart() {
     (state: any) => state.dataRefreshCart
   );
   const setRefreshCart = RefreshCartStore((state: any) => state.setRefreshCart);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
 
-  // Tính tổng tiền
+  console.log(dataCart);
+
+  // Tính tổng tiền cho các sản phẩm được chọn
   const calculateTotal = () => {
     if (!dataCart?.data?.length) return 0;
     return dataCart.data.reduce(
-      (total: number, item: any) => total + item.price * item.quantity,
+      (total: number, item: any) =>
+        selectedItems.includes(item.id)
+          ? total + item.price * item.quantity
+          : total,
       0
     );
   };
@@ -50,6 +58,25 @@ export default function ModalCart() {
     }).format(amount);
   };
 
+  // Xử lý chọn tất cả
+  const handleSelectAll = (checked: boolean) => {
+    setSelectAll(checked);
+    if (checked) {
+      setSelectedItems(dataCart?.data?.map((item: any) => item.id) || []);
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  // Xử lý chọn từng sản phẩm
+  const handleSelectItem = (id: number, checked: boolean) => {
+    if (checked) {
+      setSelectedItems([...selectedItems, id]);
+    } else {
+      setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
+    }
+  };
+
   // Xóa sản phẩm trong giỏ hàng
   const handleDeleteCart = (id: number) => {
     deleteCard(token as string, id).then((data) => {
@@ -58,6 +85,7 @@ export default function ModalCart() {
           variant: "success",
         });
         setRefreshCart(!dataRefreshCart);
+        setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
       } else {
         enqueueSnackbar(data.message, {
           variant: "error",
@@ -87,6 +115,13 @@ export default function ModalCart() {
       }
     });
   };
+
+  const handleDataCart = () => {
+    localStorage.setItem("dataCart", JSON.stringify(selectedItems));
+    setOverlayCart(false);
+    router.push("/cart");
+  };
+
   return (
     <Drawer
       isOpen={dataOverlayCart}
@@ -102,20 +137,30 @@ export default function ModalCart() {
       <DrawerContent>
         {(onClose) => (
           <>
-            <DrawerHeader className="flex flex-col gap-3 pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Icon
-                    icon="ShoppingCart"
-                    size={24}
-                    className="text-amber-400"
-                  />
-                  <h3 className="text-xl font-semibold">Giỏ hàng của bạn</h3>
+            <DrawerHeader className="flex flex-col gap-3">
+              <div className="w-[95%]">
+                <div className="flex items-center justify-between ">
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      icon="ShoppingCart"
+                      size={24}
+                      className="text-amber-400"
+                    />
+                    <h3 className="text-xl font-semibold">Giỏ hàng của bạn</h3>
+                  </div>
+                  {dataCart?.data?.length > 0 && (
+                    <Checkbox
+                      isSelected={selectAll}
+                      onValueChange={handleSelectAll}
+                    >
+                      Chọn tất cả
+                    </Checkbox>
+                  )}
                 </div>
               </div>
               <Divider className="bg-ar-100" />
             </DrawerHeader>
-
+            <div className="border-b border-ar-100 "></div>
             <DrawerBody className="px-4">
               {dataCart?.data?.length ? (
                 dataCart.data.map((item: any) => (
@@ -123,6 +168,12 @@ export default function ModalCart() {
                     key={item.id}
                     className="flex items-center gap-3 mb-5 p-3 rounded-lg border border-ar-100 bg-white shadow-sm hover:shadow-md transition-all"
                   >
+                    <Checkbox
+                      isSelected={selectedItems.includes(item.id)}
+                      onValueChange={(checked) =>
+                        handleSelectItem(item.id, checked)
+                      }
+                    ></Checkbox>
                     <div className="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 relative">
                       <img
                         src={item.image}
@@ -209,7 +260,7 @@ export default function ModalCart() {
               )}
             </DrawerBody>
 
-            {dataCart?.data?.length > 0 && (
+            {selectedItems.length > 0 && (
               <>
                 <Divider className="bg-amber-400" />
 
@@ -238,11 +289,21 @@ export default function ModalCart() {
                       variant="bordered"
                       color="warning"
                       className="flex-1 sm:flex-none"
-                      onPress={onClose}
+                      onPress={() => {
+                        onClose();
+                        setOverlayCart(false);
+                        router.push("/products");
+                      }}
                     >
                       Tiếp tục mua sắm
                     </Button>
-                    <Button color="warning" className="flex-1 sm:flex-none">
+                    <Button
+                      color="warning"
+                      className="flex-1 sm:flex-none"
+                      onPress={() => {
+                        handleDataCart();
+                      }}
+                    >
                       <Icon icon="CreditCard" size={18} className="mr-1" />
                       Thanh toán
                     </Button>
