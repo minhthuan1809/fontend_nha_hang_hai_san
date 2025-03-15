@@ -13,6 +13,7 @@ export default function page() {
   const [img, setImg] = useState<any>(null);
   const token = getCookie("token");
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
 
   const callApi = async (data: any) => {
     try {
@@ -39,7 +40,7 @@ export default function page() {
     if (!img) {
       callApi({
         avatar: dataUsers.avatar,
-        name: dataUsers.name,
+        fullName: name,
       });
       return;
     }
@@ -48,7 +49,7 @@ export default function page() {
     if (res.secure_url) {
       callApi({
         avatar: res.secure_url,
-        name: dataUsers.name,
+        fullName: name,
       });
     } else {
       enqueueSnackbar("Lỗi khi đẩy ảnh lên ", {
@@ -97,7 +98,12 @@ export default function page() {
             </Tooltip>
           }
         />
-        <Input label="Họ tên" value={dataUsers.name} variant="bordered" />
+        <Input
+          label="Họ tên"
+          value={name || dataUsers.name}
+          onChange={(e) => setName(e.target.value)}
+          variant="bordered"
+        />
       </div>
       <div className="flex justify-end items-center mt-4">
         <Button

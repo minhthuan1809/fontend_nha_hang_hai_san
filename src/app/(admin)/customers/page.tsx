@@ -116,7 +116,7 @@ function CustomerPage() {
             <TableColumn key={column.uid}>{column.name}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={users}>
+        <TableBody items={users} emptyContent="Không tìm thấy khách hàng">
           {(item: UserType) => (
             <TableRow key={item.id}>
               <TableCell>

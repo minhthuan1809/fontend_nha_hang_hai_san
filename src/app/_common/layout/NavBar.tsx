@@ -75,6 +75,7 @@ export default function App() {
           router.push("/admin");
         }
       } else {
+        router.push("/");
         setUser(null);
         enqueueSnackbar(response.message, {
           variant: "error",
@@ -103,6 +104,7 @@ export default function App() {
       enqueueSnackbar("Đã xảy ra lỗi khi đăng xuất", {
         variant: "error",
       });
+      router.push("/");
     }
   };
 

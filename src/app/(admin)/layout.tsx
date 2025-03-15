@@ -2,54 +2,101 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Icon from "../_shared/utils/Icon";
-import { cn } from "@nextui-org/react";
+import { cn, Tooltip } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteCookie, getCookie } from "cookies-next";
-import { logout } from "../_service/client/auth";
+import { authUser, logout } from "../_service/client/auth";
 import { enqueueSnackbar } from "notistack";
+import NotFound from "../not-found";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false); // Thay đổi giá trị mặc định thành false
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+  const [dataUsers, setDataUsers] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  // Kiểm tra quyền admin trước khi render giao diện
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAuth = async () => {
+      try {
+        const token = getCookie("token");
+
+        if (!token) {
+          if (mounted) {
+            setIsAdmin(true);
+            setIsLoading(false);
+          }
+          return;
+        }
+
+        const res = await authUser(token as string);
+        console.log(res);
+
+        if (mounted) {
+          setDataUsers(res.data);
+          if (!res.ok || res.data.level === 2) {
+            setIsAdmin(true);
+            deleteCookie("token");
+          }
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (mounted) {
+          router.push("/");
+          deleteCookie("token");
+        }
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      mounted = false;
+    };
+  }, [router]);
 
   // Check if mobile and handle resize
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-      }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const isMobileView = window.innerWidth < 768;
+        setIsMobile(isMobileView);
+        if (!isMobileView) {
+          setIsMobileMenuOpen(false);
+        }
+      }, 100);
     };
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
 
   const menuItems = [
     {
-      name: "Trang Chủ",
-      href: "/",
-      icon: "Home",
-    },
-    {
-      name: "Dashboard",
+      name: "Tổng quan",
       href: "/dashboard",
       icon: "LayoutDashboard",
       submenu: [
@@ -66,24 +113,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       ],
     },
     {
+      name: "Đơn Hàng",
+      href: "/orders",
+      icon: "Package",
+    },
+    {
       name: "Sản Phẩm",
       href: "/product",
       icon: "ShoppingBag",
     },
     {
-      name: "Danh Mục",
-      href: "/categories",
-      icon: "FolderTree",
-    },
-    {
       name: "Khách Hàng",
       href: "/customers",
       icon: "Users",
-    },
-    {
-      name: "Đơn Hàng",
-      href: "/orders",
-      icon: "Package",
     },
     {
       name: "Bài Viết",
@@ -133,34 +175,52 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     setActiveMenu(activeMenu === name ? null : name);
   };
 
-  // Đăng xuất
   const handleLogout = async () => {
-    const response = await logout(getCookie("token") as string);
-    if (response.ok) {
-      deleteCookie("token");
-      router.push("/");
-      enqueueSnackbar(response.message, {
-        variant: "success",
-      });
-    } else {
-      enqueueSnackbar(response.message, {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+      const token = getCookie("token") as string;
+      const response = await logout(token);
+
+      if (response.ok) {
+        deleteCookie("token");
+        router.push("/");
+        enqueueSnackbar(response.message, {
+          variant: "success",
+        });
+      } else {
+        enqueueSnackbar(response.message, {
+          variant: "error",
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar("Đã xảy ra lỗi khi đăng xuất", {
         variant: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  if (isLoading) {
+    return null;
+  }
+
+  if (isAdmin) {
+    return <NotFound />;
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg bg-white shadow-lg hover:bg-gray-100 transition-colors"
-        aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+        aria-label={isMobileMenuOpen ? "Đóng menu" : "Mở menu"}
       >
         <Icon icon={isMobileMenuOpen ? "X" : "Menu"} className="w-6 h-6" />
       </button>
 
-      {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
@@ -168,7 +228,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 flex flex-col",
@@ -180,13 +239,31 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           isMobile ? "w-72" : isCollapsed ? "w-20" : "w-72"
         )}
       >
-        {/* Logo area */}
-        <div className="h-16 border-b flex items-center justify-between px-6">
+        <div className="h-16 border-b flex items-center justify-between px-6 cursor-pointer">
           {(!isCollapsed || isMobile) && (
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Admin
-            </h2>
+            <div
+              className="flex items-center gap-2"
+              onClick={() => router.push("/settings")}
+            >
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-600">
+                <img
+                  src={dataUsers?.avatar}
+                  alt="logo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm text-black">{dataUsers?.name}</span>
+                <span className="text-sm text-gray-500 flex items-center gap-1">
+                  Cấp bậc :
+                  <span className="text-sm text-green-600">
+                    {dataUsers?.level === 3 ? "Cao nhất" : "Admin"}
+                  </span>
+                </span>
+              </div>
+            </div>
           )}
+
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="p-2 rounded-lg hover:bg-gray-100 transition-colors hidden md:block"
@@ -201,7 +278,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {menuItems.map((item) => (
             <div key={item.name}>
@@ -254,7 +330,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     )}
                   </button>
 
-                  {/* Submenu */}
                   {activeMenu === item.name && (!isCollapsed || isMobile) && (
                     <div className="ml-4 space-y-1">
                       {item.submenu.map((subitem) => (
@@ -276,7 +351,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             } group-hover:text-blue-600 transition-colors`}
                           >
                             <Icon icon={subitem.icon} />
-                            {}
                           </div>
                           <span
                             className={
@@ -324,23 +398,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           ))}
         </nav>
 
-        {/* Logout button */}
         <div>
-          <div className="p-4">
-            <button
-              className={cn(
-                "w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-lg p-3 transition-all duration-200 hover:shadow-lg",
-                isCollapsed && !isMobile ? "px-2" : "px-4"
-              )}
-            >
-              <Icon icon="Settings" className="w-5 h-5" />
-              {(!isCollapsed || isMobile) && (
-                <span className="font-medium">Cài Đặt</span>
-              )}
-            </button>
-          </div>
           <div className="p-4 border-t">
             <button
+              onClick={handleLogout}
+              disabled={isLoading}
               className={cn(
                 "w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg p-3 transition-all duration-200 hover:shadow-lg",
                 isCollapsed && !isMobile ? "px-2" : "px-4"
@@ -348,8 +410,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             >
               <Icon icon="LogOut" className="w-5 h-5" />
               {(!isCollapsed || isMobile) && (
-                <span className="font-medium" onClick={handleLogout}>
-                  Đăng Xuất
+                <span className="font-medium">
+                  {isLoading ? (
+                    <div className="animate-spin">
+                      <Icon icon="LoaderCircle" />
+                    </div>
+                  ) : (
+                    "Đăng Xuất"
+                  )}
                 </span>
               )}
             </button>
@@ -357,7 +425,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </aside>
 
-      {/* Main content */}
       <main
         className={cn(
           "flex-1 transition-all duration-300",

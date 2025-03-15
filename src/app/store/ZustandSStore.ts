@@ -1,3 +1,5 @@
+"use client";
+
 import { create } from "zustand";
 
 interface OverlayLoginState {
@@ -13,7 +15,10 @@ interface OverlayForgotPasswordState {
   dataOverlayForgotPassword: boolean;
   setOverlayForgotPassword: (data: boolean) => void;
 }
-
+interface OverlayCartState {
+  dataOverlayCart: boolean;
+  setOverlayCart: (data: boolean) => void;
+}
 interface LoadingState {
   dataLoading: boolean;
   setLoading: (data: boolean) => void;
@@ -43,6 +48,24 @@ export const OverlayForgotPasswordStore = create<OverlayForgotPasswordState>(
       set({ dataOverlayForgotPassword: data }),
   })
 );
+
+// overlay cart
+export const OverlayCartStore = create<OverlayCartState>((set) => ({
+  dataOverlayCart: false,
+  setOverlayCart: (data) => set({ dataOverlayCart: data }),
+}));
+
+// data cart
+export const CartStore = create<any>((set) => ({
+  dataCart: [],
+  setDataCart: (data: any) => set({ dataCart: data }),
+}));
+
+// refresh cart
+export const RefreshCartStore = create((set) => ({
+  dataRefreshCart: false,
+  setRefreshCart: (data: boolean) => set({ dataRefreshCart: data }),
+}));
 
 // store để refresh dữ liệu
 export const refreshStore = create((set) => ({

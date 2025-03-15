@@ -1,13 +1,24 @@
+"use client";
+
 import React from "react";
 import Icon from "../../utils/Icon";
 import Link from "next/link";
 import { removeAccentsAndSpaces } from "../../utils/removeAccentsAndSpaces";
+import { addCard } from "@/app/_service/client/card";
+import { getCookie } from "cookies-next";
+import { RefreshCartStore } from "@/app/store/ZustandSStore";
+import { enqueueSnackbar } from "notistack";
 
 export default function CartProduct({
   filteredItems,
 }: {
   filteredItems: any[];
 }) {
+  const token = getCookie("token");
+  const { dataRefreshCart, setRefreshCart } = RefreshCartStore() as {
+    dataRefreshCart: boolean;
+    setRefreshCart: (value: boolean) => void;
+  };
   if (!filteredItems || filteredItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px]">
@@ -23,6 +34,16 @@ export default function CartProduct({
     );
   }
 
+  const handleAddCard = (id: number) => {
+    addCard(token as string, id).then((data) => {
+      if (data.ok) {
+        setRefreshCart(!dataRefreshCart);
+        enqueueSnackbar(data.message, { variant: "success" });
+      } else {
+        enqueueSnackbar(data.message, { variant: "error" });
+      }
+    });
+  };
   return (
     <div>
       <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 w-full">
@@ -122,6 +143,7 @@ export default function CartProduct({
                   {/* Nút thêm vào giỏ hàng */}
                   <button
                     disabled={item.quantity === "0"}
+                    onClick={() => handleAddCard(item.id)}
                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
                       item.quantity === "0"
                         ? "bg-gray-100 cursor-not-allowed"

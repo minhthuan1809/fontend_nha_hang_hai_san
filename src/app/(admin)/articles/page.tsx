@@ -207,7 +207,7 @@ function NewsTable() {
                           color="primary"
                           variant="light"
                           aria-label="Xem chi tiết"
-                          onClick={() => handleViewDetail(item.id)}
+                          onPress={() => handleViewDetail(item.id)}
                         >
                           <Icon icon="Eye" size={18} />
                         </Button>
@@ -218,7 +218,7 @@ function NewsTable() {
                           color="warning"
                           variant="light"
                           aria-label="Chỉnh sửa"
-                          onClick={() => {
+                          onPress={() => {
                             setDataEdit(item.id);
                             setOpenTiptap((pre) => !pre);
                             localStorage.setItem("openTiptap", "true");
@@ -234,7 +234,7 @@ function NewsTable() {
                           color="danger"
                           variant="light"
                           aria-label="Xóa"
-                          onClick={() => handleDeleteNews(item.id)}
+                          onPress={() => handleDeleteNews(item.id)}
                         >
                           <Icon icon="Trash2" size={18} />
                         </Button>
