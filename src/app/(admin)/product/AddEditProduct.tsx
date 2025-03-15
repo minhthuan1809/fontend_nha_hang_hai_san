@@ -14,6 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { uploadImageToCloudinaryAddProduct } from "@/app/_service/admin/upload_img_cloudinary";
 import TipTapEditor from "@/app/_shared/components/ui/TipTapEditor";
 import Icon from "@/app/_shared/utils/Icon";
+import { dataFilter } from "@/app/_shared/utils/dataFilter";
 
 export default function AddEditProduct({
   onClose,
@@ -276,13 +277,7 @@ export default function AddEditProduct({
             size="lg"
             variant="bordered"
           >
-            {[
-              { key: "fish", value: "Cá" },
-              { key: "shrimp", value: "Tôm" },
-              { key: "crab", value: "Cua/Ghẹ" },
-              { key: "squid", value: "Mực" },
-              { key: "drink", value: "Đồ uống" },
-            ].map((item) => (
+            {dataFilter.map((item) => (
               <SelectItem key={item.key} value={item.key}>
                 {item.value}
               </SelectItem>

@@ -106,7 +106,7 @@ function CustomerPage() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Button color="primary" onClick={() => setOpenAddEditUser(true)}>
+        <Button color="primary" onPress={() => setOpenAddEditUser(true)}>
           <Icon icon="Plus" /> Thêm
         </Button>
       </div>

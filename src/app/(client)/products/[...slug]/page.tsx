@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto ">
       <div className="flex justify-between mb-6">
         <div>
           {product.hot === 1 && (
@@ -134,7 +134,7 @@ export default function ProductDetailPage() {
           <div className="md:w-1/2 p-6">
             {product.images && product.images.length > 0 ? (
               <div className="gallery-container">
-                <div className="h-[400px] flex items-center justify-center w-full rounded-xl overflow-hidden shadow-lg">
+                <div className="h-[600px] flex items-center justify-center w-full rounded-xl overflow-hidden shadow-lg">
                   <img
                     src={thumbsSwiper || product.images[0].image_url}
                     alt={`${product.name} - ảnh chính`}
@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
                   >
                     {product.images.map((image) => (
                       <SwiperSlide key={image.id} className="cursor-pointer">
-                        <div className="h-24 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-500 transition-colors">
+                        <div className="h-32 border-2 border-gray-200 rounded-lg overflow-hidden hover:border-amber-500 transition-colors">
                           <img
                             src={image.image_url}
                             alt={`${product.name} thumbnail ${image.id}`}

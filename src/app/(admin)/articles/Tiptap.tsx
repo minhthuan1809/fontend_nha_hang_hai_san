@@ -73,6 +73,7 @@ export default function ArticlesPage({
             "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-8 focus:outline-none min-h-[70vh]",
         },
       },
+      immediatelyRender: false,
       onUpdate: ({ editor }) => {
         const words = editor
           .getText()
@@ -404,7 +405,7 @@ export default function ArticlesPage({
               <div className="text-sm text-gray-500">{wordCount} từ</div>
 
               <Button
-                onClick={() => {
+                onPress={() => {
                   if (idEdit || dataEditId) {
                     saveContentEdit();
                   } else {
@@ -431,7 +432,7 @@ export default function ArticlesPage({
                 )}
               </Button>
               <Button
-                onClick={() => {
+                onPress={() => {
                   if (editor.getHTML()) {
                     if (
                       confirm(

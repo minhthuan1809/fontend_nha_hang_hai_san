@@ -93,7 +93,10 @@ export default function Login() {
     if (checkValidate()) {
       setLoading(true);
       try {
-        const res = await authLogin({ email, password });
+        const res = await authLogin({
+          email: email.trim().toLowerCase(),
+          password: password.trim(),
+        });
         if (res.ok) {
           setOverlayLogin(false);
           enqueueSnackbar(res.message, { variant: "success" });
@@ -134,7 +137,7 @@ export default function Login() {
               input: "text-lg",
               inputWrapper: "shadow-sm",
             }}
-            value={email}
+            value={email.trim().toLowerCase()}
             onChange={(e) => {
               setEmail(e.target.value);
               if (isError.email) setIsError({ ...isError, email: "" });
@@ -145,7 +148,7 @@ export default function Login() {
             password={password}
             placeholder="Nhập mật khẩu"
             setPassword={(value) => {
-              setPassword(value);
+              setPassword(value.trim());
               if (isError.password) setIsError({ ...isError, password: "" });
             }}
             isInvalid={isError.password !== ""}
@@ -174,7 +177,7 @@ export default function Login() {
 
         <Button
           className="w-full mt-8 bg-amber-600 text-white text-lg font-medium py-6"
-          onClick={handleLogin}
+          onPress={handleLogin}
           isLoading={loading}
           disabled={loading}
         >

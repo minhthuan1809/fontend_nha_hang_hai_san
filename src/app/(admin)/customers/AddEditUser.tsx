@@ -1,4 +1,4 @@
-import { uploadImageToCloudinary } from "@/app/_service/admin/upload_img_cloudinary";
+import { uploadImageToCloudinaryAvatar } from "@/app/_service/admin/upload_img_cloudinary";
 import { addUser, editUser, getSelectRole } from "@/app/_service/admin/user";
 import InputChangerImg from "@/app/_shared/components/ui/InputChangerImg";
 import {
@@ -122,7 +122,7 @@ export default function AddEditUser({
       });
       return;
     }
-    const uploadImage = await uploadImageToCloudinary(avatar);
+    const uploadImage = await uploadImageToCloudinaryAvatar(avatar);
     if (uploadImage.secure_url) {
       ApiCallCreate({
         fullName: dataSubmit.fullName,
@@ -172,7 +172,7 @@ export default function AddEditUser({
         avatar: dataEdit.avatar,
       });
     } else {
-      const uploadImage = await uploadImageToCloudinary(avatar);
+      const uploadImage = await uploadImageToCloudinaryAvatar(avatar);
       if (uploadImage.secure_url) {
         CallApi(dataEdit.id, {
           fullName: dataSubmit.fullName,

@@ -195,7 +195,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                             variant="light"
                             size="sm"
                             isIconOnly
-                            onClick={() => handleEdit(item)}
+                            onPress={() => handleEdit(item)}
                             startContent={<Icon icon="Edit" />}
                           />
                           <Button
@@ -203,7 +203,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                             variant="light"
                             size="sm"
                             isIconOnly
-                            onClick={() => handleDelete(item.id)}
+                            onPress={() => handleDelete(item.id)}
                           >
                             <Icon icon="Trash" />
                           </Button>
@@ -232,7 +232,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                         variant="light"
                         size="sm"
                         isIconOnly
-                        onClick={() => handleEdit(item)}
+                        onPress={() => handleEdit(item)}
                         startContent={<Icon icon="Edit" />}
                       />
                       <Button
@@ -240,7 +240,7 @@ export default function Contact({ data, setRefetch }: ContactProps) {
                         variant="light"
                         size="sm"
                         isIconOnly
-                        onClick={() => handleDelete(item.id)}
+                        onPress={() => handleDelete(item.id)}
                       >
                         <Icon icon="Trash" />
                       </Button>

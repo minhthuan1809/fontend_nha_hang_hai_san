@@ -72,33 +72,30 @@ export default function ModalDetailAcc({
             </div>
           </div>
 
-          <Table className="mt-4">
+          <Table className="mt-4" aria-label="Danh sách địa chỉ">
             <TableHeader>
-              <TableColumn className="text-center">STT</TableColumn>
-              <TableColumn className="text-center">SDT</TableColumn>
-              <TableColumn className="text-center">Địa chỉ</TableColumn>
+              <TableColumn>STT</TableColumn>
+              <TableColumn>SDT</TableColumn>
+              <TableColumn>Địa chỉ</TableColumn>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>
-                  <div
-                    className="cursor-pointer hover:text-primary transition-all duration-300 hover:underline"
-                    onClick={() => {
-                      navigator.clipboard.writeText("0909090909");
-                      enqueueSnackbar("Đã copy số điện thoại", {
-                        variant: "success",
-                      });
-                    }}
-                  >
-                    0909090909
-                  </div>
-                </TableCell>
-                <TableCell>
-                  tòa nhà saigon centre – tháp 2, 67 lê lợi, phường bến nghé,
-                  quận 1,
-                </TableCell>
-              </TableRow>
+              {data?.address && data.address.length > 0 ? (
+                data.address.map((item: any, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.phone}</TableCell>
+                    <TableCell>{item.address}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow className="text-center">
+                  <TableCell className="text-center ">-</TableCell>
+                  <TableCell className="text-center">
+                    Không có dữ liệu
+                  </TableCell>
+                  <TableCell className="text-center">-</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </ModalBody>

@@ -34,7 +34,9 @@ export default function ForgotPassword() {
     if (email) {
       try {
         setLoading(true);
-        const res = await authForgotPassword({ email });
+        const res = await authForgotPassword({
+          email: email.trim().toLowerCase(),
+        });
         if (res.ok) {
           setShowOtp(true);
           enqueueSnackbar(res.message, {

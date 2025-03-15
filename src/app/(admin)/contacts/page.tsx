@@ -267,40 +267,47 @@ function Contacts() {
                     history.map((item: any, index: number) => (
                       <div
                         key={index}
-                        className="border-b  transition-all duration-200 p-6 cursor-pointer hover:bg-gray-100"
-                        onClick={() => {
-                          setDataModalContact(item);
-                          setViewModalOpen(true);
-                        }}
+                        className="border-b transition-all duration-200 p-6 cursor-pointer hover:bg-gray-100"
                       >
                         <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <div className="font-semibold text-lg text-gray-900">
-                              {item.gmail}
+                          <div
+                            onClick={() => {
+                              setDataModalContact(item);
+                              setViewModalOpen(true);
+                            }}
+                          >
+                            <div className="flex items-center gap-2">
+                              <div className="font-semibold text-lg text-gray-900">
+                                {item.gmail}
+                              </div>
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {new Date(item.created_at).toLocaleString(
+                                "vi-VN"
+                              )}
                             </div>
                           </div>
-                          <div className="text-sm text-gray-600">
-                            {new Date(item.created_at).toLocaleString("vi-VN")}
-                          </div>
-                        </div>
 
-                        <div className="mb-4">
-                          <div className="font-medium text-gray-900 mb-1">
-                            Tiêu đề : {item.title}
-                          </div>
-                          <div className="text-gray-600 line-clamp-2">
-                            Nội dung : {item.content.slice(0, 250)}
+                          <div className="mb-4">
+                            <div className="font-medium text-gray-900 mb-1">
+                              Tiêu đề : {item.title}
+                            </div>
+                            <div className="text-gray-600 line-clamp-2">
+                              Nội dung : {item.content.slice(0, 250)}
+                            </div>
                           </div>
                         </div>
-                        <span
-                          className="text-red-500 cursor-pointer hover:text-red-600 hover:underline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleDeleteHistory(item.id);
-                          }}
-                        >
-                          Xóa
-                        </span>
+                        <div className="text-right">
+                          <span
+                            className="text-red-500 cursor-pointer hover:text-red-600 hover:underline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteHistory(item.id);
+                            }}
+                          >
+                            Xóa
+                          </span>
+                        </div>
                       </div>
                     ))
                   )}

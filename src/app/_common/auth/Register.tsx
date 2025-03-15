@@ -117,8 +117,8 @@ export default function Register() {
         setLoading(true);
         const res = await authRegister({
           fullname: name,
-          email: email,
-          password: password,
+          email: email.trim().toLowerCase(),
+          password: password.trim(),
         });
 
         if (res.ok) {
@@ -150,7 +150,7 @@ export default function Register() {
     try {
       const res = await authVerifyEmailCode({
         code: +code,
-        email: emailOTP,
+        email: emailOTP.trim().toLowerCase(),
       });
 
       if (res.ok) {
@@ -186,7 +186,7 @@ export default function Register() {
     if (timeRemaining >= 0) return;
     try {
       const res = await authResendEmailCode({
-        email: emailOTP,
+        email: emailOTP.trim().toLowerCase(),
       });
 
       if (res.ok) {
@@ -253,6 +253,7 @@ export default function Register() {
                 type="text"
                 placeholder="Nhập tên của bạn"
                 size="lg"
+                maxLength={50}
                 startContent={
                   <Icon icon="User" className="text-2xl text-gray-400" />
                 }
@@ -282,7 +283,7 @@ export default function Register() {
                   input: "text-lg",
                   inputWrapper: "shadow-sm",
                 }}
-                value={email}
+                value={email.trim().toLowerCase()}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (isError.email) setIsError({ ...isError, email: "" });
@@ -293,7 +294,7 @@ export default function Register() {
                 password={password}
                 placeholder="Nhập mật khẩu"
                 setPassword={(value) => {
-                  setPassword(value);
+                  setPassword(value.trim());
                   if (isError.password)
                     setIsError({ ...isError, password: "" });
                 }}
@@ -304,7 +305,7 @@ export default function Register() {
               <InputPassword
                 password={confirmPassword}
                 setPassword={(value) => {
-                  setConfirmPassword(value);
+                  setConfirmPassword(value.trim());
                   if (isError.confirmPassword)
                     setIsError({ ...isError, confirmPassword: "" });
                 }}

@@ -228,14 +228,14 @@ export default function SocialLink({ data, setRefetch }: SocialLinkProps) {
                             color="primary"
                             variant="light"
                             isIconOnly
-                            onClick={() => handleEdit(item)}
+                            onPress={() => handleEdit(item)}
                             startContent={<Icon icon="Edit" />}
                           />
                           <Button
                             color="danger"
                             variant="light"
                             isIconOnly
-                            onClick={() => handleDelete(item.id)}
+                            onPress={() => handleDelete(item.id)}
                           >
                             <Icon icon="Trash" />
                           </Button>

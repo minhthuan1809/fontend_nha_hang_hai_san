@@ -61,7 +61,6 @@ export default function Ads() {
 
   // bật tắt quảng cáo
   const handleToggleAd = async (adId: number, is_active: boolean) => {
-    console.log(adId, is_active);
     try {
       const res = await editAd(
         adId,

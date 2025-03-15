@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getProducts } from "@/app/_service/client/layout";
 import Icon from "@/app/_shared/utils/Icon";
 import Loading from "@/app/_shared/components/Loading";
+import { dataFilter } from "@/app/_shared/utils/dataFilter";
 
 const MenuPageContent = () => {
   const router = useRouter();
@@ -72,14 +73,6 @@ const MenuPageContent = () => {
 
     setFilteredItems(result);
   }, [searchTerm, sortBy, categoryFilter, menuItems]);
-
-  const categories = [
-    { value: "fish", label: "Cá" },
-    { value: "shrimp", label: "Tôm" },
-    { value: "crab", label: "Cua/Ghẹ" },
-    { value: "squid", label: "Mực" },
-    { value: "drink", label: "Đồ uống" },
-  ];
 
   const sortOptions = [
     { value: "price-asc", label: "Giá tăng dần" },
@@ -153,9 +146,9 @@ const MenuPageContent = () => {
                 }}
               >
                 <option value="">Tất cả danh mục</option>
-                {categories.map((category) => (
+                {dataFilter.map((category) => (
                   <option key={category.value} value={category.value}>
-                    {category.label}
+                    {category.value}
                   </option>
                 ))}
               </select>
@@ -169,7 +162,7 @@ const MenuPageContent = () => {
             {categoryFilter && ` trong danh mục `}
             <strong className="text-amber-500  p-1">
               {categoryFilter &&
-                categories.find((c) => c.value === categoryFilter)?.label}
+                dataFilter.find((c) => c.value === categoryFilter)?.value}
             </strong>
             {searchTerm && ` với từ khóa "${searchTerm}"`}
           </div>

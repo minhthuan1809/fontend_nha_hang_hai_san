@@ -25,6 +25,8 @@ import { getCookie } from "cookies-next";
 import { enqueueSnackbar } from "notistack";
 import DetailProduct from "./DetailProduct";
 import AddEditProduct from "./AddEditProduct";
+import { getEnabledCategories } from "trace_events";
+import { dataFilter } from "@/app/_shared/utils/dataFilter";
 
 function ProductsContent() {
   const [products, setProducts] = useState([]);
@@ -65,18 +67,9 @@ function ProductsContent() {
     return () => clearTimeout(timeout);
   }, [page, searchTerm, reload, categoryFilter]);
 
-  const categories = [
-    { key: "all", label: "Tất cả" },
-    { key: "fish", label: "Cá" },
-    { key: "meat", label: "Thịt" },
-    { key: "shrimp", label: "Tôm" },
-    { key: "crab", label: "Cua/Ghẹ" },
-    { key: "squid", label: "Mực" },
-  ];
-
   const getCategoryName = (key: string) => {
-    const category = categories.find((cat) => cat.key === key);
-    return category ? category.label : key;
+    const category = dataFilter.find((cat) => cat.key === key);
+    return category ? category.value : key;
   };
 
   const handleDeleteProduct = async (id: string) => {
@@ -145,7 +138,7 @@ function ProductsContent() {
                   className="min-w-[150px]"
                   startContent={<Icon icon="Filter" />}
                 >
-                  {getCategoryName(categoryFilter)}
+                  {getCategoryName(categoryFilter).replace("all", "Tất cả")}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -156,11 +149,14 @@ function ProductsContent() {
                   setCategoryFilter(Array.from(keys)[0].toString())
                 }
               >
-                {categories.map((category) => (
-                  <DropdownItem key={category.key}>
-                    {category.label}
-                  </DropdownItem>
-                ))}
+                <DropdownItem key="all">Tất cả</DropdownItem>
+                <>
+                  {dataFilter.map((category) => (
+                    <DropdownItem key={category.key}>
+                      {category.value}
+                    </DropdownItem>
+                  ))}
+                </>
               </DropdownMenu>
             </Dropdown>
           </div>
