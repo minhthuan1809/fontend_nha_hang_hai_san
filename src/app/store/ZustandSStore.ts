@@ -24,6 +24,11 @@ interface LoadingState {
   setLoading: (data: boolean) => void;
 }
 
+interface ReloadOrderState {
+  dataReloadOrder: boolean;
+  setReloadOrder: (cb: (prev: boolean) => boolean) => void;
+}
+
 // store để lưu dữ liệu người dùng
 export const useStore = create((set) => ({
   dataUsers: [],
@@ -71,4 +76,11 @@ export const RefreshCartStore = create((set) => ({
 export const refreshStore = create((set) => ({
   dataRefresh: false,
   setRefresh: (data: boolean) => set({ dataRefresh: data }),
+}));
+
+// reload order
+export const ReloadOrderStore = create<ReloadOrderState>((set) => ({
+  dataReloadOrder: false,
+  setReloadOrder: (cb: (prev: boolean) => boolean) =>
+    set((state) => ({ dataReloadOrder: cb(state.dataReloadOrder) })),
 }));

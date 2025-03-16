@@ -1,21 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Button,
-  Checkbox,
-  Input,
-  RadioGroup,
-  Radio,
-  Textarea,
-} from "@nextui-org/react";
+import { Button, Input, RadioGroup, Radio, Textarea } from "@nextui-org/react";
 import Link from "next/link";
 import Icon from "@/app/_shared/utils/Icon";
-import { useStore } from "@/app/store/ZustandSStore";
+import { ReloadOrderStore, useStore } from "@/app/store/ZustandSStore";
 import ModalViewAddress from "./ModalViewAddress";
 import { getDiscountByCoupon } from "@/app/_service/admin/discount";
 import { getCookie } from "cookies-next";
 import { enqueueSnackbar } from "notistack";
 import { createOrder } from "@/app/_service/client/card";
 import { useRouter } from "next/navigation";
+import ModalPayment from "./ModalPayment";
 
 export default function PayCart({ data, totalPrice }: any) {
   const { dataUsers } = useStore() as any;
@@ -25,9 +19,22 @@ export default function PayCart({ data, totalPrice }: any) {
   const [discount, setDiscount] = useState(0);
   const [coupon, setCoupon] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [loading, setLoading] = useState(false);
   const token = getCookie("token");
   const router = useRouter();
   const [note, setNote] = useState("");
+  const { setReloadOrder } = ReloadOrderStore();
+  let isOpenSession =
+    sessionStorage.getItem("setIsOpenModalPayment") === "true";
+  const [isOpenModalPayment, setIsOpenModalPayment] = useState(isOpenSession);
+  const [dataPayment, setDataPayment] = useState<any>(0);
+
+  useEffect(() => {
+    const savedPaymentMethod = localStorage.getItem("paymentMethod");
+    if (savedPaymentMethod) {
+      setPaymentMethod(savedPaymentMethod);
+    }
+  }, []);
 
   const fetchDiscount = useCallback(() => {
     if (token && coupon) {
@@ -48,7 +55,7 @@ export default function PayCart({ data, totalPrice }: any) {
         }
       });
     }
-  }, [coupon, token]);
+  }, [coupon]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -74,35 +81,65 @@ export default function PayCart({ data, totalPrice }: any) {
   // Xử lý khi thay đổi phương thức thanh toán
   const handlePaymentChange = (value: string) => {
     setPaymentMethod(value);
+    localStorage.setItem("paymentMethod", value);
   };
 
-  const handleCheckout = () => {
-    createOrder(token as string, {
-      user_id: dataUsers?.id,
-      name: dataUsers?.addresses[address]?.name,
-      phone: dataUsers?.addresses[address]?.phone,
-      address: dataUsers?.addresses[address]?.address,
-      discount_code: coupon,
-      discount_percent: discount,
-      final_total: finalTotalNumber,
-      free_of_charge: freeOfCharge,
-      payment_method: paymentMethod,
-      note: note,
-      products: data.map((item: any) => {
-        return {
-          product_id: item.product_id,
-          quantity: item.quantity,
-        };
-      }),
-    }).then((res) => {
+  useEffect(() => {
+    if (isOpenSession) {
+      setDataPayment(finalTotalNumber);
+    }
+  }, []);
+  const handleCreateOrder = async () => {
+    try {
+      setLoading(true);
+      const res = await createOrder(token as string, {
+        user_id: dataUsers?.id,
+        name: dataUsers?.addresses[address]?.name,
+        phone: dataUsers?.addresses[address]?.phone,
+        address: dataUsers?.addresses[address]?.address,
+        discount_code: coupon,
+        discount_percent: discount,
+        final_total: finalTotalNumber,
+        free_of_charge: freeOfCharge,
+        payment_method: paymentMethod,
+        note: note,
+        products: data.map((item: any) => {
+          return {
+            product_id: item.product_id,
+            quantity: item.quantity,
+          };
+        }),
+      });
+
       if (res.ok) {
+        setReloadOrder((prev: boolean) => !prev);
         router.push("/order-history");
         enqueueSnackbar(res.message, { variant: "success" });
         localStorage.removeItem("dataCart");
+        return;
       } else {
         enqueueSnackbar(res.message, { variant: "error" });
       }
-    });
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Có lỗi xảy ra khi tạo đơn hàng", { variant: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckout = () => {
+    if (paymentMethod === "cod") {
+      handleCreateOrder();
+    }
+    if (paymentMethod === "bank") {
+      sessionStorage.setItem("setIsOpenModalPayment", "true");
+      setIsOpenModalPayment(true);
+      setDataPayment(finalTotalNumber);
+      sessionStorage.removeItem("paymentDescription");
+      sessionStorage.removeItem("paymentCountdown");
+      sessionStorage.removeItem("paymentTimestamp");
+    }
   };
   return (
     <div className="bg-gray-50 rounded-lg shadow p-4">
@@ -225,6 +262,8 @@ export default function PayCart({ data, totalPrice }: any) {
           {/* Phần nút thanh toán */}
           <div className="mt-6 space-y-3">
             <Button
+              isLoading={loading}
+              isDisabled={loading}
               onPress={() => handleCheckout()}
               className="w-full bg-amber-500 text-white py-3 rounded-lg font-medium text-center block hover:bg-amber-600 transition-colors flex items-center justify-center"
             >
@@ -244,13 +283,25 @@ export default function PayCart({ data, totalPrice }: any) {
       </div>
 
       {/* Modal địa chỉ */}
-      <ModalViewAddress
-        isOpen={isOpen}
-        onOpenChange={() => setIsOpen(!isOpen)}
-        data={dataUsers?.addresses}
-        setAddress={setAddress}
-        address={address}
-      />
+      {isOpen && (
+        <ModalViewAddress
+          isOpen={isOpen}
+          onOpenChange={() => setIsOpen(!isOpen)}
+          data={dataUsers?.addresses}
+          setAddress={setAddress}
+          address={address}
+        />
+      )}
+
+      {/* Modal payment */}
+      {isOpenModalPayment && (
+        <ModalPayment
+          isOpen={isOpenModalPayment}
+          onOpenChange={() => setIsOpenModalPayment(!isOpenModalPayment)}
+          data={dataPayment}
+          PaymentSuccess={handleCreateOrder}
+        />
+      )}
     </div>
   );
 }

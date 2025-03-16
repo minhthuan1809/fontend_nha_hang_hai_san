@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -6,48 +7,65 @@ import {
   ModalBody,
   Chip,
 } from "@nextui-org/react";
+import ModalEditAddress from "@/app/(admin)/orders/confirm/ModalEditAddress";
 
-export default function ModalViewOder({ isOpen, onOpenChange, data }: any) {
-  console.log(data);
+export default function ModalViewOder({
+  isOpen,
+  onOpenChange,
+  data,
+  submitEditAddress,
+  _status,
+}: any) {
+  const [isOpenEditAddress, setIsOpenEditAddress] = useState(false);
   if (!data) return null;
 
   const formatCurrency = (value: string) => {
     return parseInt(value).toLocaleString("vi-VN") + "đ";
   };
 
-  const statusColorMap = {
+  const statusColorMap: {
+    [key: string]: {
+      bg: string;
+      text: string;
+      label: string;
+    };
+  } = {
     pending: {
       bg: "bg-yellow-100",
       text: "text-yellow-600",
       label: "Chờ xác nhận",
     },
+    processing: {
+      bg: "bg-blue-100",
+      text: "text-blue-600",
+      label: "Đang xử lý",
+    },
     completed: {
       bg: "bg-green-100",
       text: "text-green-600",
-      label: "Đang xử lý",
+      label: "Hoàn tất",
     },
-    cancelled: {
+    canceled: {
       bg: "bg-red-100",
       text: "text-red-600",
       label: "Đã hủy",
     },
   };
 
+  const status = data.status || "pending";
+  const statusColor = statusColorMap[status] || statusColorMap.pending;
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
       <ModalContent>
         <ModalHeader>
-          <div className="flex justify-between items-center w-full">
+          <div className="flex justify-between items-center w-[97%]">
             <h2 className="text-xl font-bold">Chi tiết đơn hàng #{data.id}</h2>
             <Chip
               size="lg"
-              className={`${
-                statusColorMap[data.status as keyof typeof statusColorMap].bg
-              } ${
-                statusColorMap[data.status as keyof typeof statusColorMap].text
-              } font-medium`}
+              className={`${statusColor.bg} ${statusColor.text} font-medium`}
             >
-              {statusColorMap[data.status as keyof typeof statusColorMap].label}
+              {statusColor.label}
             </Chip>
           </div>
         </ModalHeader>
@@ -67,17 +85,29 @@ export default function ModalViewOder({ isOpen, onOpenChange, data }: any) {
             </div>
 
             <div className="border rounded-lg p-4">
-              <h4 className="font-medium mb-3">Thông tin giao hàng</h4>
-              <p className="text-gray-600">Địa chỉ: {data.address}</p>
-              <p className="text-gray-600">
-                Ghi chú: {data.note || "Không có"}
-              </p>
-              <p className="text-gray-600">
-                Phương thức:{" "}
-                {data.payment_method === "cod"
-                  ? "Thanh toán khi nhận hàng"
-                  : "Chuyển khoản"}
-              </p>
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium mb-3">Thông tin giao hàng</h4>
+                {_status && (
+                  <span
+                    className="text-amber-600 font-medium cursor-pointer hover:text-amber-500 transition-colors hover:underline"
+                    onClick={() => setIsOpenEditAddress(true)}
+                  >
+                    Chỉnh sửa
+                  </span>
+                )}
+              </div>
+              <div>
+                <p className="text-gray-600">Địa chỉ: {data.address}</p>
+                <p className="text-gray-600">
+                  Ghi chú: {data.note || "Không có"}
+                </p>
+                <p className="text-gray-600">
+                  Phương thức:{" "}
+                  {data.payment_method === "cod"
+                    ? "Thanh toán khi nhận hàng"
+                    : "Chuyển khoản"}
+                </p>
+              </div>
             </div>
 
             <div className="border rounded-lg p-4 h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
@@ -135,6 +165,16 @@ export default function ModalViewOder({ isOpen, onOpenChange, data }: any) {
           </div>
         </ModalBody>
       </ModalContent>
+
+      {/* Modal edit address */}
+      {_status && (
+        <ModalEditAddress
+          isOpen={isOpenEditAddress}
+          onOpenChange={setIsOpenEditAddress}
+          data={data}
+          submit={submitEditAddress}
+        />
+      )}
     </Modal>
   );
 }

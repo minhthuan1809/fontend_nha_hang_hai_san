@@ -1,7 +1,7 @@
 "use client";
-import { confirmOrder, getAllOrder } from "@/app/_service/admin/order";
+import { confirmOrder, getHistoryOrder } from "@/app/_service/admin/order";
 import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -9,9 +9,7 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-  Chip,
   Button,
-  Pagination,
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
@@ -20,103 +18,57 @@ import {
   Card,
   CardBody,
   Tooltip,
-  Spinner,
+  Chip,
 } from "@nextui-org/react";
-import { SearchIcon, FilterIcon, EyeIcon } from "lucide-react";
-import ModalViewOder from "./ModalViewOder";
-import Loading from "@/app/_shared/components/Loading";
+import ModalViewOder from "../../../_shared/components/modals/ModalViewOder";
 import { enqueueSnackbar } from "notistack";
-
-interface User {
-  fullName: string;
-  email: string;
-  avatar: string;
-}
-
-interface Product {
-  id: number;
-  img: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-type OrderStatus = "pending" | "completed" | "cancelled";
-
-interface Order {
-  id: string;
-  user_id: string;
-  user: User;
-  name: string;
-  phone: string;
-  address: string;
-  discount_code: string;
-  discount_percent: string;
-  final_total: string;
-  free_of_charge: string;
-  payment_method: string;
-  status: OrderStatus;
-  products: Product[];
-  created_at: string;
-  updated_at: string;
-}
-
-export default function OrderPage() {
+import Icon from "@/app/_shared/utils/Icon";
+import { Order, OrderStatus } from "../type";
+import Pagination from "@/app/_shared/components/ui/Pagination";
+import { useSearchParams } from "next/navigation";
+export default function OrderHistoryPage() {
   const token = getCookie("token");
-  const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isOpen, setIsOpen] = useState(false);
   const [dataView, setDataView] = useState<Order | null>(null);
-  const rowsPerPage = 5;
-  const [refresh, setRefresh] = useState(false);
-  const [status, setStatus] = useState<{ status: string; id: string }[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const page = useSearchParams().get("page");
+  const currentPage = page ? parseInt(page) : 1;
 
-  useEffect(() => {
-    setLoading(true);
-    getAllOrder(token as string).then((res) => {
+  const fetchData = useCallback(async () => {
+    try {
+      const res = await getHistoryOrder(
+        token as string,
+        currentPage,
+        searchTerm
+      );
+
       if (res.ok) {
-        setOrders(res.data);
-        console.log(res.data);
-
         setFilteredOrders(res.data);
-        setStatus(
-          res.data.map((item: Order) => ({
-            status: item.status,
-            id: item.id,
-          }))
-        );
+        setTotalPages(res.pagination.total_pages);
+      } else {
+        setFilteredOrders([]);
+        setTotalPages(0);
       }
-      setLoading(false);
-    });
-  }, [token, refresh]);
+    } catch (error) {
+      console.error("Lỗi khi tải dữ liệu:", error);
+      enqueueSnackbar("Có lỗi xảy ra khi tải dữ liệu", { variant: "error" });
+    }
+  }, [token, searchTerm, currentPage]);
 
   useEffect(() => {
-    const filtered = orders.filter((order) => {
-      const matchesSearch =
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.phone.includes(searchTerm);
+    const time = setTimeout(() => {
+      fetchData();
+    }, 1000);
+    return () => clearTimeout(time);
+  }, [fetchData]);
 
-      const matchesStatus =
-        statusFilter === "all" || order.status === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-
-    setFilteredOrders(filtered);
-    setPage(1);
-  }, [searchTerm, statusFilter, orders]);
-
-  const pages = Math.ceil(filteredOrders.length / rowsPerPage);
-  const items = filteredOrders.slice(
-    (page - 1) * rowsPerPage,
-    page * rowsPerPage
-  );
+  const dataOder = filteredOrders.filter((item) => {
+    if (statusFilter === "all") return item;
+    return item.status === statusFilter;
+  });
 
   const formatCurrency = (value: string) => {
     return parseInt(value).toLocaleString("vi-VN") + "đ";
@@ -131,34 +83,6 @@ export default function OrderPage() {
       minute: "2-digit",
     });
   };
-
-  const handleConfirmOrder = async (id: any, number: any) => {
-    let _status;
-    if (number === 1) _status = status.find((item) => item.id === id)?.status;
-    else _status = "canceled";
-
-    if (_status) {
-      const res = await confirmOrder(
-        token as string,
-        id,
-        _status === "canceled"
-          ? "canceled"
-          : _status === "pending"
-          ? "processing"
-          : "completed"
-      );
-      if (res.ok) {
-        setRefresh((prev) => !prev);
-        enqueueSnackbar(res.message, { variant: "success" });
-      } else {
-        enqueueSnackbar(res.message, { variant: "error" });
-      }
-    }
-  };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <div className="p-6">
@@ -176,7 +100,9 @@ export default function OrderPage() {
                 placeholder="Tìm kiếm theo mã đơn, tên khách hàng..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                startContent={<SearchIcon className="w-5 h-5 text-gray-400" />}
+                startContent={
+                  <Icon icon="SearchIcon" className="w-5 h-5 text-gray-400" />
+                }
                 className="w-full sm:w-80"
                 size="lg"
               />
@@ -184,7 +110,7 @@ export default function OrderPage() {
                 <DropdownTrigger>
                   <Button
                     variant="flat"
-                    endContent={<FilterIcon className="w-5 h-5" />}
+                    endContent={<Icon icon="FilterIcon" className="w-5 h-5" />}
                     className="min-w-[140px]"
                     size="lg"
                   >
@@ -217,21 +143,6 @@ export default function OrderPage() {
 
           <Table
             aria-label="Bảng đơn hàng"
-            bottomContent={
-              pages > 1 ? (
-                <div className="flex justify-center py-4">
-                  <Pagination
-                    total={pages}
-                    page={page}
-                    onChange={(newPage) => setPage(newPage)}
-                    showControls
-                    classNames={{
-                      cursor: "bg-amber-500",
-                    }}
-                  />
-                </div>
-              ) : null
-            }
             classNames={{
               wrapper: "shadow-none",
               th: "bg-gray-50 text-gray-600",
@@ -244,10 +155,10 @@ export default function OrderPage() {
               <TableColumn>Sản phẩm</TableColumn>
               <TableColumn>Tổng tiền</TableColumn>
               <TableColumn>Thời gian</TableColumn>
-              <TableColumn align="center">Thao tác</TableColumn>
+              <TableColumn align="center">Trạng thái</TableColumn>
             </TableHeader>
             <TableBody emptyContent={"Không tìm thấy đơn hàng nào"}>
-              {items.map((order) => (
+              {dataOder.map((order) => (
                 <TableRow
                   key={order.id}
                   className="hover:bg-gray-50 cursor-pointer"
@@ -329,41 +240,37 @@ export default function OrderPage() {
                     </Tooltip>
                   </TableCell>
                   <TableCell className="flex items-center gap-2">
-                    <Button
-                      color="primary"
-                      variant="flat"
-                      className="w-full font-medium"
-                      size="md"
-                      onPress={() => handleConfirmOrder(order.id, 1)}
+                    <Chip
+                      color={`${
+                        order.status === "pending"
+                          ? "warning"
+                          : order.status === "completed"
+                          ? "success"
+                          : "danger"
+                      }`}
                     >
-                      {status
-                        .find((item) => item.id === order.id)
-                        ?.status.replace("pending", "Xác nhận")
-                        .replace("processing", "Đang xử lý")
-                        .replace("completed", "Hoàn thành")}
-                    </Button>
-                    {status.find((item) => item.id === order.id)?.status ===
-                      "pending" && (
-                      <Button
-                        color="danger"
-                        variant="flat"
-                        className="w-full font-medium"
-                        size="md"
-                        onPress={() => handleConfirmOrder(order.id, 0)}
-                      >
-                        Hủy
-                      </Button>
-                    )}
+                      {order.status
+                        .replace("pending", "Đang xử lý")
+                        .replace("completed", "Hoàn tất")
+                        .replace("canceled", "Đã hủy")}
+                    </Chip>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          <Pagination total={totalPages} page={currentPage} />
         </CardBody>
       </Card>
 
       {/* Modal view order */}
-      <ModalViewOder isOpen={isOpen} onOpenChange={setIsOpen} data={dataView} />
+      <ModalViewOder
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        data={dataView}
+        submitEditAddress={() => {}}
+        _status={false}
+      />
     </div>
   );
 }

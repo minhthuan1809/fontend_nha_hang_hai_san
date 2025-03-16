@@ -96,3 +96,17 @@ export const createOrder = async (token: string, data: any) => {
     };
   }
 };
+
+// lấy thông lịch sử đơn hàng
+export const getPaymentHistory = async () => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_SEPAY_URL}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy thông lịch sử đơn hàng",
+    };
+  }
+};

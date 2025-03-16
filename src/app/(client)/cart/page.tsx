@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import PayCart from "./PayCart";
 import Loading from "@/app/_shared/components/Loading";
+import ModalPayment from "./ModalPayment";
 
 export default function ShoppingCartPage() {
   const token = getCookie("token");
@@ -80,6 +81,8 @@ export default function ShoppingCartPage() {
               </div>
             </div>
           </div>
+
+          {/* Pay cart */}
           <PayCart
             data={data}
             totalPrice={totalPrice}

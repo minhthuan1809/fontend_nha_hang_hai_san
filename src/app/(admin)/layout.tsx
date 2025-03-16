@@ -116,6 +116,23 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       name: "Đơn Hàng",
       href: "/orders",
       icon: "Package",
+      submenu: [
+        {
+          name: "Xác nhận đơn hàng",
+          href: "/orders/confirm",
+          icon: "CheckCircle",
+        },
+        {
+          name: "Lịch Sử Đơn Hàng",
+          href: "/orders/history",
+          icon: "History",
+        },
+        {
+          name: "Lịch Sử Thanh Toán",
+          href: "/orders/history-pay",
+          icon: "History",
+        },
+      ],
     },
     {
       name: "Sản Phẩm",
