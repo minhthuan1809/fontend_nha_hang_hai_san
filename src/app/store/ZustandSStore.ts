@@ -77,10 +77,3 @@ export const refreshStore = create((set) => ({
   dataRefresh: false,
   setRefresh: (data: boolean) => set({ dataRefresh: data }),
 }));
-
-// reload order
-export const ReloadOrderStore = create<ReloadOrderState>((set) => ({
-  dataReloadOrder: false,
-  setReloadOrder: (cb: (prev: boolean) => boolean) =>
-    set((state) => ({ dataReloadOrder: cb(state.dataReloadOrder) })),
-}));

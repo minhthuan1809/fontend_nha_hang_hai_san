@@ -68,11 +68,13 @@ export default function ModalPayment({
       }
     }
   };
+
   useEffect(() => {
     if (isPaymentSuccess) {
       PaymentSuccess();
     }
   }, [isPaymentSuccess]);
+
   // Thiết lập đếm ngược
   useEffect(() => {
     if (countdown === 900) {

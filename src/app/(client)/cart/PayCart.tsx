@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Button, Input, RadioGroup, Radio, Textarea } from "@nextui-org/react";
 import Link from "next/link";
 import Icon from "@/app/_shared/utils/Icon";
-import { ReloadOrderStore, useStore } from "@/app/store/ZustandSStore";
+import { useStore } from "@/app/store/ZustandSStore";
 import ModalViewAddress from "./ModalViewAddress";
 import { getDiscountByCoupon } from "@/app/_service/admin/discount";
 import { getCookie } from "cookies-next";
@@ -17,13 +17,16 @@ export default function PayCart({ data, totalPrice }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [freeOfCharge, setFreeOfCharge] = useState(30000);
   const [discount, setDiscount] = useState(0);
-  const [coupon, setCoupon] = useState("");
+  const [coupon, setCoupon] = useState(() => {
+    const savedCoupon = sessionStorage.getItem("coupon");
+    return savedCoupon || "";
+  });
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [loading, setLoading] = useState(false);
   const token = getCookie("token");
   const router = useRouter();
   const [note, setNote] = useState("");
-  const { setReloadOrder } = ReloadOrderStore();
+
   let isOpenSession =
     sessionStorage.getItem("setIsOpenModalPayment") === "true";
   const [isOpenModalPayment, setIsOpenModalPayment] = useState(isOpenSession);
@@ -42,15 +45,21 @@ export default function PayCart({ data, totalPrice }: any) {
         if (res.ok) {
           if (res.data?.[0].status) {
             setDiscount(res.data[0].discount_percent);
+            sessionStorage.setItem("coupon", coupon);
+
             enqueueSnackbar("Áp dụng mã giảm giá thành công!", {
               variant: "success",
             });
           } else {
             setDiscount(0);
+            localStorage.removeItem("coupon");
+
             enqueueSnackbar("Mã giảm giá đã hết hạn!", { variant: "error" });
           }
         } else {
           setDiscount(0);
+          sessionStorage.removeItem("coupon");
+
           enqueueSnackbar("Mã giảm giá không hợp lệ!", { variant: "error" });
         }
       });
@@ -88,7 +97,7 @@ export default function PayCart({ data, totalPrice }: any) {
     if (isOpenSession) {
       setDataPayment(finalTotalNumber);
     }
-  }, []);
+  }, [discount]);
   const handleCreateOrder = async () => {
     try {
       setLoading(true);
@@ -112,10 +121,11 @@ export default function PayCart({ data, totalPrice }: any) {
       });
 
       if (res.ok) {
-        setReloadOrder((prev: boolean) => !prev);
         router.push("/order-history");
         enqueueSnackbar(res.message, { variant: "success" });
         localStorage.removeItem("dataCart");
+        sessionStorage.removeItem("coupon");
+
         return;
       } else {
         enqueueSnackbar(res.message, { variant: "error" });
