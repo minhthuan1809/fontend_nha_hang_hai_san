@@ -18,7 +18,7 @@ export default function ModalViewOder({
 }: any) {
   const [isOpenEditAddress, setIsOpenEditAddress] = useState(false);
   if (!data) return null;
-
+  let total = 0;
   const formatCurrency = (value: string) => {
     return parseInt(value).toLocaleString("vi-VN") + "đ";
   };
@@ -112,40 +112,42 @@ export default function ModalViewOder({
 
             <div className="border rounded-lg p-4 h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               <h4 className="font-medium mb-3">Sản phẩm</h4>
-              {data.products.map((product: any) => (
-                <div key={product.id} className="flex items-center gap-4 mb-4">
-                  <img
-                    src={product.img}
-                    alt={product.name}
-                    className="w-20 h-20 object-cover rounded-lg"
-                  />
-                  <div className="flex-1">
-                    <h5 className="font-medium">{product.name}</h5>
-                    <p className="text-gray-600">
-                      {product.price.toLocaleString("vi-VN")}đ x{" "}
-                      {product.quantity}
-                    </p>
-                    <p className="font-medium text-amber-600">
-                      ={" "}
-                      {(product.price * product.quantity).toLocaleString(
-                        "vi-VN"
-                      )}
-                      đ
-                    </p>
+              {data.products.map((product: any) => {
+                total += product.price * product.quantity;
+                return (
+                  <div
+                    key={product.id}
+                    className="flex items-center gap-4 mb-4"
+                  >
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <h5 className="font-medium">{product.name}</h5>
+                      <p className="text-gray-600">
+                        {product.price.toLocaleString("vi-VN")}đ x{" "}
+                        {product.quantity}
+                      </p>
+                      <p className="font-medium text-amber-600">
+                        ={" "}
+                        {(product.price * product.quantity).toLocaleString(
+                          "vi-VN"
+                        )}
+                        đ
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="border rounded-lg p-4">
               <h4 className="font-medium mb-3">Thanh toán</h4>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Tạm tính:</span>
-                <span>{formatCurrency(data.final_total)}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Phí vận chuyển:</span>
-                <span>{formatCurrency(data.free_of_charge)}</span>
+                <span>{formatCurrency(total.toString())}</span>
               </div>
               {data.discount_code && (
                 <div className="flex justify-between mb-2">
@@ -155,6 +157,10 @@ export default function ModalViewOder({
                   </span>
                 </div>
               )}
+              <div className="flex justify-between mb-2 border-t pt-2">
+                <span className="text-gray-600">Phí vận chuyển:</span>
+                <span>+{formatCurrency(data.free_of_charge)}</span>
+              </div>
               <div className="flex justify-between font-medium text-lg mt-2 pt-2 border-t">
                 <span>Tổng cộng:</span>
                 <span className="text-amber-600">

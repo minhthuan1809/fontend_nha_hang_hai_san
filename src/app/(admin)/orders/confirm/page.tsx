@@ -25,7 +25,6 @@ import Icon from "@/app/_shared/utils/Icon";
 import { Order, OrderStatus } from "../type";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/app/_shared/components/ui/Pagination";
-import { ReloadOrderStore } from "@/app/store/ZustandSStore";
 
 export default function OrderPage() {
   const token = getCookie("token");
