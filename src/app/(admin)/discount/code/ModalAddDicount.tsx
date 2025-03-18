@@ -29,7 +29,7 @@ interface ModalAddDiscountProps {
     status: boolean;
   };
   setIsEdit?: (isEdit: any) => void;
-  setRefresh?: (refresh: boolean) => void;
+  setRefresh?: (refresh: any) => void;
 }
 
 export default function ModalAddDicount({
@@ -45,13 +45,15 @@ export default function ModalAddDicount({
     start_time: "",
     end_time: "",
     quantity: "",
-    status: false,
+    status: true,
   });
   const [loading, setLoading] = useState(false);
   const token = getCookie("token");
 
   useEffect(() => {
     if (isEdit) {
+      console.log(isEdit.start_time);
+
       setForm({
         name: isEdit.name,
         discount_percent: isEdit.discount_percent,
@@ -89,7 +91,7 @@ export default function ModalAddDicount({
       const res = await updateDiscount(token as string, isEdit?.id, form);
 
       if (res.ok) {
-        setRefresh && setRefresh(true);
+        setRefresh && setRefresh((prev: any) => !prev);
         enqueueSnackbar(res.message, { variant: "success" });
         onClose();
       } else {
@@ -146,7 +148,10 @@ export default function ModalAddDicount({
             variant="bordered"
             label="Thời gian áp dụng"
             defaultValue={
-              form.start_time && form.end_time
+              form.start_time &&
+              form.end_time &&
+              form.start_time !== "" &&
+              form.end_time !== ""
                 ? {
                     start: parseDate(form.start_time.split(" ")[0]),
                     end: parseDate(form.end_time.split(" ")[0]),

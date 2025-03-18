@@ -159,7 +159,7 @@ export default function OrderPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="md:p-6">
       <Card className="mb-6 shadow-lg">
         <CardBody className="overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between mb-8 gap-4">

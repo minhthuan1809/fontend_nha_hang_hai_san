@@ -92,6 +92,7 @@ export const updateDiscount = async (token: string, id: any, data: any) => {
         quantity: data.quantity,
         start_time: data.start_time,
         end_time: data.end_time,
+        status: data.status,
       }),
     });
     const result = await res.json();
