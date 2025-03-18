@@ -18,6 +18,7 @@ import {
   Card,
   CardBody,
   Tooltip,
+  Chip,
 } from "@nextui-org/react";
 import ModalViewOder from "../../../_shared/components/modals/ModalViewOder";
 import { enqueueSnackbar } from "notistack";
@@ -36,6 +37,7 @@ export default function OrderPage() {
   const [refresh, setRefresh] = useState(false);
   const [status, setStatus] = useState<{ status: string; id: string }[]>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [loadingBtn, setLoadingBtn] = useState<{ [key: string]: boolean }>({});
   const page = useSearchParams().get("page");
   const currentPage = page ? parseInt(page) : 1;
 
@@ -93,6 +95,7 @@ export default function OrderPage() {
 
   const handleConfirmOrder = async (id: string, number: number) => {
     try {
+      setLoadingBtn((prev) => ({ ...prev, [`${id}-${number}`]: true }));
       let confirmResult = true;
       if (number === 0) {
         confirmResult = confirm("Bạn muốn hủy đơn hàng này?");
@@ -125,6 +128,8 @@ export default function OrderPage() {
       enqueueSnackbar("Có lỗi xảy ra khi xác nhận đơn hàng", {
         variant: "error",
       });
+    } finally {
+      setLoadingBtn((prev) => ({ ...prev, [`${id}-${number}`]: false }));
     }
   };
 
@@ -210,135 +215,260 @@ export default function OrderPage() {
             </div>
           </div>
 
-          <Table
-            aria-label="Bảng đơn hàng"
-            classNames={{
-              wrapper: "shadow-none",
-              th: "bg-gray-50 text-gray-600",
-              td: "py-4",
-            }}
-          >
-            <TableHeader>
-              <TableColumn>Mã đơn</TableColumn>
-              <TableColumn>Khách hàng</TableColumn>
-              <TableColumn>Sản phẩm</TableColumn>
-              <TableColumn>Tổng tiền</TableColumn>
-              <TableColumn>Thời gian</TableColumn>
-              <TableColumn align="center">Thao tác</TableColumn>
-            </TableHeader>
-            <TableBody emptyContent={"Không tìm thấy đơn hàng nào"}>
-              {dataOder.map((order) => (
-                <TableRow
-                  key={order.id}
-                  className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => {
-                    setDataView(order);
-                    setIsOpen(true);
-                  }}
-                >
-                  <TableCell className="font-medium text-amber-600">
-                    #{order.id}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={order.user.avatar}
-                        alt={order.user.fullName}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-amber-200"
-                      />
-                      <div>
-                        <p className="font-semibold text-gray-800">
-                          {order.user.fullName}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {order.user.email}
-                        </p>
-                        <Tooltip content={order.address} className="max-w-xs">
-                          <p className="text-sm text-gray-500 truncate max-w-[200px]">
-                            {order.phone}
-                          </p>
-                        </Tooltip>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-h-32 overflow-auto">
-                      <div className="flex items-center gap-3 mb-2">
+          {/* Bảng cho desktop */}
+          <div className="hidden md:block">
+            <Table
+              aria-label="Bảng đơn hàng"
+              classNames={{
+                wrapper: "shadow-none",
+                th: "bg-gray-50 text-gray-600",
+                td: "py-4",
+              }}
+            >
+              <TableHeader>
+                <TableColumn>Mã đơn</TableColumn>
+                <TableColumn>Khách hàng</TableColumn>
+                <TableColumn>Sản phẩm</TableColumn>
+                <TableColumn>Tổng tiền</TableColumn>
+                <TableColumn>Thời gian</TableColumn>
+                <TableColumn align="center">Thao tác</TableColumn>
+              </TableHeader>
+              <TableBody emptyContent={"Không tìm thấy đơn hàng nào"}>
+                {dataOder.map((order) => (
+                  <TableRow
+                    key={order.id}
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => {
+                      setDataView(order);
+                      setIsOpen(true);
+                    }}
+                  >
+                    <TableCell className="font-medium text-amber-600">
+                      #{order.id}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
                         <img
-                          src={order.products[0].img}
-                          alt={order.products[0].name}
-                          className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                          src={order.user.avatar}
+                          alt={order.user.fullName}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-amber-200"
                         />
                         <div>
-                          <p className="font-medium text-gray-800 line-clamp-1">
-                            {order.products[0].name}
+                          <p className="font-semibold text-gray-800">
+                            {order.user.fullName}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {order.products[0].price.toLocaleString("vi-VN")}đ x{" "}
-                            {order.products[0].quantity}
+                            {order.user.email}
                           </p>
-                          {order.products.length > 1 && (
-                            <span className="text-sm text-amber-600 font-medium">
-                              +{order.products.length - 1} sản phẩm khác
-                            </span>
-                          )}
+                          <Tooltip content={order.address} className="max-w-xs">
+                            <p className="text-sm text-gray-500 truncate max-w-[200px]">
+                              {order.phone}
+                            </p>
+                          </Tooltip>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <p className="font-semibold text-green-600 text-lg">
-                      {formatCurrency(order.final_total)}
-                    </p>
-                    {order.discount_code && (
-                      <p className="text-sm text-green-500 flex items-center gap-1">
-                        <span className="text-xs">🏷️</span>
-                        Mã: {order.discount_code} (-{order.discount_percent}%)
+                    </TableCell>
+                    <TableCell>
+                      <div className="max-h-32 overflow-auto">
+                        <div className="flex items-center gap-3 mb-2">
+                          <img
+                            src={order.products[0].img}
+                            alt={order.products[0].name}
+                            className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                          />
+                          <div>
+                            <p className="font-medium text-gray-800 line-clamp-1">
+                              {order.products[0].name}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {order.products[0].price.toLocaleString("vi-VN")}đ
+                              x {order.products[0].quantity}
+                            </p>
+                            {order.products.length > 1 && (
+                              <span className="text-sm text-amber-600 font-medium">
+                                +{order.products.length - 1} sản phẩm khác
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <p className="font-semibold text-green-600 text-lg">
+                        {formatCurrency(order.final_total)}
                       </p>
-                    )}
-                    <p className="text-sm text-gray-500">
-                      Ship: {formatCurrency(order.free_of_charge)}
-                    </p>
-                  </TableCell>
+                      {order.discount_code && (
+                        <p className="text-sm text-green-500 flex items-center gap-1">
+                          <span className="text-xs">🏷️</span>
+                          Mã: {order.discount_code} (-{order.discount_percent}%)
+                        </p>
+                      )}
+                      <p className="text-sm text-gray-500">
+                        Ship: {formatCurrency(order.free_of_charge)}
+                      </p>
+                    </TableCell>
 
-                  <TableCell>
-                    <Tooltip content={formatDate(order.created_at)}>
-                      <span className="text-gray-600">
-                        {new Date(order.created_at).toLocaleDateString("vi-VN")}
-                      </span>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    <Button
-                      color="primary"
-                      variant="flat"
-                      className="w-full font-medium"
-                      size="md"
-                      onPress={() => handleConfirmOrder(order.id, 1)}
-                    >
-                      {status
-                        .find((item) => item.id === order.id)
-                        ?.status.replace("pending", "Xác nhận")
-                        .replace("processing", "Đang xử lý")
-                        .replace("completed", "Hoàn thành")}
-                    </Button>
-                    {status.find((item) => item.id === order.id)?.status ===
-                      "pending" && (
+                    <TableCell>
+                      <Tooltip content={formatDate(order.created_at)}>
+                        <span className="text-gray-600">
+                          {new Date(order.created_at).toLocaleDateString(
+                            "vi-VN"
+                          )}
+                        </span>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell className="flex items-center gap-2">
                       <Button
-                        color="danger"
+                        color="primary"
                         variant="flat"
                         className="w-full font-medium"
                         size="md"
-                        onPress={() => handleConfirmOrder(order.id, 0)}
+                        isLoading={loadingBtn[`${order.id}-1`]}
+                        disabled={loadingBtn[`${order.id}-1`]}
+                        onPress={() => handleConfirmOrder(order.id, 1)}
                       >
-                        Hủy
+                        {status
+                          .find((item) => item.id === order.id)
+                          ?.status.replace("pending", "Xác nhận")
+                          .replace("processing", "Đang xử lý")
+                          .replace("completed", "Hoàn thành")}
                       </Button>
+                      {status.find((item) => item.id === order.id)?.status ===
+                        "pending" && (
+                        <Button
+                          color="danger"
+                          variant="flat"
+                          className="w-full font-medium"
+                          size="md"
+                          isLoading={loadingBtn[`${order.id}-0`]}
+                          disabled={loadingBtn[`${order.id}-0`]}
+                          onPress={() => handleConfirmOrder(order.id, 0)}
+                        >
+                          Hủy
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Danh sách cho mobile */}
+          <div className="grid grid-cols-1 gap-4 md:hidden">
+            {dataOder.map((order) => (
+              <Card
+                key={order.id}
+                className="p-4"
+                isPressable
+                onPress={() => {
+                  setDataView(order);
+                  setIsOpen(true);
+                }}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={order.user.avatar}
+                      alt={order.user.fullName}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-amber-200"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-800">
+                        {order.user.fullName}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {order.user.email}
+                      </p>
+                      <p className="text-sm text-gray-500">{order.phone}</p>
+                    </div>
+                  </div>
+                  <p className="font-medium text-amber-600">#{order.id}</p>
+                </div>
+
+                <div className="flex items-center gap-3 mb-4">
+                  <img
+                    src={order.products[0].img}
+                    alt={order.products[0].name}
+                    className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-800 line-clamp-1">
+                      {order.products[0].name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {order.products[0].price.toLocaleString("vi-VN")}đ x{" "}
+                      {order.products[0].quantity}
+                    </p>
+                    {order.products.length > 1 && (
+                      <span className="text-sm text-amber-600 font-medium">
+                        +{order.products.length - 1} sản phẩm khác
+                      </span>
                     )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  </div>
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Tổng tiền:</span>
+                    <span className="font-semibold text-green-600">
+                      {formatCurrency(order.final_total)}
+                    </span>
+                  </div>
+                  {order.discount_code && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500">Mã giảm giá:</span>
+                      <span className="text-green-500">
+                        {order.discount_code} (-{order.discount_percent}%)
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Phí ship:</span>
+                    <span>{formatCurrency(order.free_of_charge)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Thời gian:</span>
+                    <span className="text-sm">
+                      {new Date(order.created_at).toLocaleDateString("vi-VN")}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    color="primary"
+                    variant="flat"
+                    className="flex-1 font-medium"
+                    size="md"
+                    isLoading={loadingBtn[`${order.id}-1`]}
+                    disabled={loadingBtn[`${order.id}-1`]}
+                    onPress={() => handleConfirmOrder(order.id, 1)}
+                  >
+                    {status
+                      .find((item) => item.id === order.id)
+                      ?.status.replace("pending", "Xác nhận")
+                      .replace("processing", "Đang xử lý")
+                      .replace("completed", "Hoàn thành")}
+                  </Button>
+                  {status.find((item) => item.id === order.id)?.status ===
+                    "pending" && (
+                    <Button
+                      color="danger"
+                      variant="flat"
+                      className="flex-1 font-medium"
+                      size="md"
+                      isLoading={loadingBtn[`${order.id}-0`]}
+                      disabled={loadingBtn[`${order.id}-0`]}
+                      onPress={() => handleConfirmOrder(order.id, 0)}
+                    >
+                      Hủy
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
         </CardBody>
         <Pagination total={totalPages} page={currentPage} />
       </Card>

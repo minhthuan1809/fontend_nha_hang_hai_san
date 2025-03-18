@@ -13,6 +13,7 @@ import {
   Button,
   Badge,
   Chip,
+  Card,
 } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import { enqueueSnackbar } from "notistack";
@@ -82,18 +83,88 @@ export default function Page() {
           Thêm mã
         </Button>
       </div>
-      <Table aria-label="Bảng mã giảm giá">
-        <TableHeader>
-          {columns.map((column) => (
-            <TableColumn key={column.uid}>{column.name}</TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody emptyContent={"Không tìm thấy mã giảm giá nào"}>
-          {data?.map((row: any) => (
-            <TableRow key={row.id}>
-              <TableCell>
+
+      {/* Bảng cho desktop */}
+      <div className="hidden md:block">
+        <Table aria-label="Bảng mã giảm giá">
+          <TableHeader>
+            {columns.map((column) => (
+              <TableColumn key={column.uid}>{column.name}</TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody emptyContent={"Không tìm thấy mã giảm giá nào"}>
+            {data?.map((row: any) => (
+              <TableRow key={row.id}>
+                <TableCell>
+                  <div
+                    className="cursor-pointer hover:text-blue-500"
+                    onClick={() => {
+                      navigator.clipboard.writeText(row.code);
+                      enqueueSnackbar("Đã sao chép mã giảm giá", {
+                        variant: "success",
+                      });
+                    }}
+                  >
+                    {row.code}
+                  </div>
+                </TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.discount_percent}%</TableCell>
+                <TableCell>
+                  {new Date(row.start_time).toLocaleDateString("vi-VN", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </TableCell>
+                <TableCell>
+                  {new Date(row.end_time).toLocaleDateString("vi-VN", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </TableCell>
+                <TableCell>{row.quantity}</TableCell>
+                <TableCell>
+                  {row.status ? (
+                    <Chip color="success">Hoạt động</Chip>
+                  ) : (
+                    <Chip color="danger">Không hoạt động</Chip>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() => {
+                        setIsEdit(row);
+                        setIsOpen(true);
+                      }}
+                    >
+                      <Icon icon="Edit" />
+                    </div>
+                    <div
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => handleDeleteDiscount(row.id)}
+                    >
+                      <Icon icon="Trash" />
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Danh sách cho mobile */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {data?.map((row: any) => (
+          <Card key={row.id} className="p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
                 <div
-                  className="cursor-pointer hover:text-blue-500"
+                  className="font-medium cursor-pointer hover:text-blue-500"
                   onClick={() => {
                     navigator.clipboard.writeText(row.code);
                     enqueueSnackbar("Đã sao chép mã giảm giá", {
@@ -103,54 +174,66 @@ export default function Page() {
                 >
                   {row.code}
                 </div>
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.discount_percent}%</TableCell>
-              <TableCell>
-                {new Date(row.start_time).toLocaleDateString("vi-VN", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </TableCell>
-              <TableCell>
-                {new Date(row.end_time).toLocaleDateString("vi-VN", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </TableCell>
-              <TableCell>{row.quantity}</TableCell>
-              <TableCell>
-                {row.status ? (
-                  <Chip color="success">Hoạt động</Chip>
-                ) : (
-                  <Chip color="danger">Không hoạt động</Chip>
-                )}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <div
-                    className="text-blue-500 cursor-pointer"
-                    onClick={() => {
-                      setIsEdit(row);
-                      setIsOpen(true);
-                    }}
-                  >
-                    <Icon icon="Edit" />
-                  </div>
-                  <div
-                    className="text-red-500 cursor-pointer"
-                    onClick={() => handleDeleteDiscount(row.id)}
-                  >
-                    <Icon icon="Trash" />
-                  </div>
+                <p className="text-sm text-gray-500">{row.name}</p>
+              </div>
+              <div className="flex gap-2">
+                <div
+                  className="text-blue-500 cursor-pointer"
+                  onClick={() => {
+                    setIsEdit(row);
+                    setIsOpen(true);
+                  }}
+                >
+                  <Icon icon="Edit" />
                 </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                <div
+                  className="text-red-500 cursor-pointer"
+                  onClick={() => handleDeleteDiscount(row.id)}
+                >
+                  <Icon icon="Trash" />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Giảm giá:</span>
+                <span className="font-medium">{row.discount_percent}%</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-500">Thời gian:</span>
+                <div className="text-right">
+                  <p className="text-sm">
+                    {new Date(row.start_time).toLocaleDateString("vi-VN")}
+                  </p>
+                  <p className="text-sm">
+                    {new Date(row.end_time).toLocaleDateString("vi-VN")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Số lượng:</span>
+                <span>{row.quantity}</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Trạng thái:</span>
+                {row.status ? (
+                  <Chip color="success" size="sm">
+                    Hoạt động
+                  </Chip>
+                ) : (
+                  <Chip color="danger" size="sm">
+                    Không hoạt động
+                  </Chip>
+                )}
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
 
       <ModalAddDicount
         isOpen={isOpen}

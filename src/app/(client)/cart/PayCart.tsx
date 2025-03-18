@@ -34,7 +34,7 @@ export default function PayCart({ data, totalPrice }: any) {
     sessionStorage.getItem("setIsOpenModalPayment") === "true";
   const [isOpenModalPayment, setIsOpenModalPayment] = useState(isOpenSession);
   const [dataPayment, setDataPayment] = useState<any>(0);
-
+  const [discountId, setDiscountId] = useState<any>(0);
   useEffect(() => {
     const savedPaymentMethod = localStorage.getItem("paymentMethod");
     if (savedPaymentMethod) {
@@ -49,6 +49,7 @@ export default function PayCart({ data, totalPrice }: any) {
           if (res.data?.[0].status) {
             setDiscount(res.data[0].discount_percent);
             sessionStorage.setItem("coupon", coupon);
+            setDiscountId(res.data[0].id);
 
             enqueueSnackbar("Áp dụng mã giảm giá thành công!", {
               variant: "success",
@@ -111,6 +112,7 @@ export default function PayCart({ data, totalPrice }: any) {
         address: dataUsers?.addresses[address]?.address,
         discount_code: coupon,
         discount_percent: discount,
+        discount_id: discountId,
         final_total: finalTotalNumber,
         free_of_charge: freeOfCharge,
         payment_method: paymentMethod,
@@ -122,6 +124,7 @@ export default function PayCart({ data, totalPrice }: any) {
           };
         }),
       });
+      console.log(res, "thuan");
 
       if (res.ok) {
         setRefreshCart(!dataRefreshCart);

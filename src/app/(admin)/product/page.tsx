@@ -15,6 +15,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Card,
 } from "@nextui-org/react";
 import Loading from "@/app/_shared/components/Loading";
 import Pagination from "@/app/_shared/components/ui/Pagination";
@@ -182,8 +183,8 @@ function ProductsContent() {
         </div>
       </div>
 
-      {/* Products Table */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      {/* Products Table - Ẩn trên mobile */}
+      <div className="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
         <Table
           aria-label="Bảng danh sách sản phẩm"
           classNames={{
@@ -245,7 +246,7 @@ function ProductsContent() {
                 </TableCell>
                 <TableCell>
                   <span className="font-medium text-lg text-gray-900">
-                    {product.price}
+                    {product.price.toLocaleString("vi-VN")}đ
                   </span>
                 </TableCell>
                 <TableCell>
@@ -329,6 +330,101 @@ function ProductsContent() {
             ))}
           </TableBody>
         </Table>
+      </div>
+
+      {/* Danh sách sản phẩm cho mobile */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {products.map((product: any) => (
+          <Card key={product.id} className="p-4">
+            <div className="flex items-center gap-4">
+              <img
+                src={product.images}
+                alt={product.name}
+                className="w-24 h-24 rounded-lg object-cover"
+              />
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-800">{product.name}</h3>
+                <Chip size="sm" variant="flat" color="primary" className="my-1">
+                  {getCategoryName(product.category)}
+                </Chip>
+                <p className="text-sm text-gray-500 line-clamp-2">
+                  {product.description}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Giá:</span>
+                <span className="font-semibold text-gray-900">
+                  {product.price.toLocaleString("vi-VN")}đ
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Số lượng:</span>
+                <div className="text-right">
+                  <span className="font-semibold">{product.quantity}</span>
+                  {product.quantity < 10 && (
+                    <p className="text-xs text-red-500">Sắp hết hàng</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Trạng thái:</span>
+                {!product.status ? (
+                  <Chip color="success" variant="flat" size="sm">
+                    Hoạt Động
+                  </Chip>
+                ) : (
+                  <Chip color="danger" variant="flat" size="sm">
+                    Đang đóng
+                  </Chip>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end gap-2">
+              <Button
+                color="primary"
+                variant="flat"
+                size="sm"
+                onPress={() => {
+                  localStorage.setItem("dataEditProductId", product.id);
+                  localStorage.setItem("OpenAddEdit", "true");
+                  setIsOpenAddEdit(true);
+                }}
+              >
+                <Icon icon="Edit" />
+                Sửa
+              </Button>
+              <Button
+                color="success"
+                variant="flat"
+                size="sm"
+                onPress={() => {
+                  setIsOpenDetail(true);
+                  setDataDetail(product);
+                }}
+              >
+                <Icon icon="Eye" />
+                Chi tiết
+              </Button>
+              <Button
+                color="danger"
+                variant="flat"
+                size="sm"
+                onPress={() => handleDeleteProduct(product.id)}
+                isLoading={loading}
+                disabled={loading}
+              >
+                <Icon icon="Trash" />
+                Xóa
+              </Button>
+            </div>
+          </Card>
+        ))}
       </div>
 
       {/* Pagination */}

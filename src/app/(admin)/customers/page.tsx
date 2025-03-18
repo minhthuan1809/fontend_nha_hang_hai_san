@@ -12,6 +12,7 @@ import {
   Chip,
   Button,
   Input,
+  Card,
 } from "@nextui-org/react";
 import Icon from "@/app/_shared/utils/Icon";
 import Pagination from "@/app/_shared/components/ui/Pagination";
@@ -110,82 +111,176 @@ function CustomerPage() {
           <Icon icon="Plus" /> Thêm
         </Button>
       </div>
-      <Table aria-label="Bảng thông tin khách hàng">
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.uid}>{column.name}</TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={users} emptyContent="Không tìm thấy khách hàng">
-          {(item: UserType) => (
-            <TableRow key={item.id}>
-              <TableCell>
-                <div className="flex gap-2">
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <img
-                      src={item.avatar}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-bold">
-                      {item.fullName.charAt(0).toUpperCase() +
-                        item.fullName.slice(1)}
-                    </p>
-                    <p className="text-sm text-gray-500">{item.email}</p>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>{item.updated_at}</TableCell>
-              <TableCell>{item.created_at}</TableCell>
-              <TableCell>{item.level}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  {!item?.status ? (
-                    <Chip color="success">Hoạt động</Chip>
-                  ) : (
-                    <Chip color="danger">Khóa </Chip>
-                  )}
-                </div>
-              </TableCell>
 
-              <TableCell>
-                <div className="flex gap-2">
-                  {item.level !== "super_admin" && (
-                    <>
-                      <div
-                        className="flex gap-2 text-primary cursor-pointer"
-                        onClick={() => {
-                          setDataAccount(item);
-                          setOpenDetailAcc(true);
-                        }}
-                      >
-                        <Icon icon="Eye" />
-                      </div>
-                      <div
-                        className="flex gap-2 text-primary cursor-pointer"
-                        onClick={() => {
-                          setDataEdit(item);
-                          setOpenAddEditUser(true);
-                        }}
-                      >
-                        <Icon icon="Edit" />
-                      </div>
-                      <div
-                        className="flex gap-2 text-danger cursor-pointer"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <Icon icon="Trash" />
-                      </div>
-                    </>
-                  )}
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      {/* Bảng cho desktop */}
+      <div className="hidden md:block">
+        <Table aria-label="Bảng thông tin khách hàng">
+          <TableHeader columns={columns}>
+            {(column) => (
+              <TableColumn key={column.uid}>{column.name}</TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={users} emptyContent="Không tìm thấy khách hàng">
+            {(item: UserType) => (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                      <img
+                        src={item.avatar}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-bold">
+                        {item.fullName.charAt(0).toUpperCase() +
+                          item.fullName.slice(1)}
+                      </p>
+                      <p className="text-sm text-gray-500">{item.email}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{item.updated_at}</TableCell>
+                <TableCell>{item.created_at}</TableCell>
+                <TableCell>{item.level}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    {!item?.status ? (
+                      <Chip color="success">Hoạt động</Chip>
+                    ) : (
+                      <Chip color="danger">Khóa </Chip>
+                    )}
+                  </div>
+                </TableCell>
+
+                <TableCell>
+                  <div className="flex gap-2">
+                    {item.level !== "super_admin" && (
+                      <>
+                        <div
+                          className="flex gap-2 text-primary cursor-pointer"
+                          onClick={() => {
+                            setDataAccount(item);
+                            setOpenDetailAcc(true);
+                          }}
+                        >
+                          <Icon icon="Eye" />
+                        </div>
+                        <div
+                          className="flex gap-2 text-primary cursor-pointer"
+                          onClick={() => {
+                            setDataEdit(item);
+                            setOpenAddEditUser(true);
+                          }}
+                        >
+                          <Icon icon="Edit" />
+                        </div>
+                        <div
+                          className="flex gap-2 text-danger cursor-pointer"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          <Icon icon="Trash" />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Danh sách cho mobile */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {users.map((item) => (
+          <Card key={item.id} className="p-4">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-full overflow-hidden">
+                <img
+                  src={item.avatar}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p className="font-bold text-lg">
+                  {item.fullName.charAt(0).toUpperCase() +
+                    item.fullName.slice(1)}
+                </p>
+                <p className="text-gray-500">{item.email}</p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Ngày tạo:</span>
+                <span>{item.created_at}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Ngày cập nhật:</span>
+                <span>{item.updated_at}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Vai trò:</span>
+                <span>{item.level}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Trạng thái:</span>
+                {!item?.status ? (
+                  <Chip color="success" size="sm">
+                    Hoạt động
+                  </Chip>
+                ) : (
+                  <Chip color="danger" size="sm">
+                    Khóa
+                  </Chip>
+                )}
+              </div>
+            </div>
+
+            {item.level !== "super_admin" && (
+              <div className="flex justify-end gap-2 mt-4">
+                <Button
+                  size="sm"
+                  color="primary"
+                  variant="flat"
+                  onClick={() => {
+                    setDataAccount(item);
+                    setOpenDetailAcc(true);
+                  }}
+                >
+                  <Icon icon="Eye" />
+                  Chi tiết
+                </Button>
+                <Button
+                  size="sm"
+                  color="primary"
+                  variant="flat"
+                  onClick={() => {
+                    setDataEdit(item);
+                    setOpenAddEditUser(true);
+                  }}
+                >
+                  <Icon icon="Edit" />
+                  Sửa
+                </Button>
+                <Button
+                  size="sm"
+                  color="danger"
+                  variant="flat"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  <Icon icon="Trash" />
+                  Xóa
+                </Button>
+              </div>
+            )}
+          </Card>
+        ))}
+      </div>
+
       <Pagination page={page} total={total} />
       {openAddEditUser && (
         <AddEditUser

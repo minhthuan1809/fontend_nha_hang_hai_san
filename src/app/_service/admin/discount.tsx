@@ -101,3 +101,20 @@ export const updateDiscount = async (token: string, id: any, data: any) => {
     throw error;
   }
 };
+
+// get discount history
+export const getDiscountHistory = async (token: string) => {
+  try {
+    const res = await fetch(`${API}/history_discount`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("Lỗi khi lấy lịch sử mã giảm giá:", error);
+    throw error;
+  }
+};
