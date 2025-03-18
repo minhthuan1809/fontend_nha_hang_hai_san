@@ -208,3 +208,69 @@ export const getProductsDetail = async (id: any) => {
     };
   }
 };
+
+// get food sale
+export const getFoodSale = async (filter: string) => {
+  try {
+    const response = await fetch(`${API}/products/section?filter=${filter}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("error food sale", error);
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu food sale",
+    };
+  }
+};
+
+// history order
+export const getHistoryOrder = async (token: string, page: number) => {
+  try {
+    const response = await fetch(
+      `${API}/history_order/user?page=${page}&limit=10`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("error history order", error);
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu lịch sử đơn hàng",
+    };
+  }
+};
+
+// cancel order
+export const cancelOrder = async (
+  token: string,
+  id: string | number,
+  data: any
+) => {
+  try {
+    const response = await fetch(`${API}/order/cancel/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        status: "canceled",
+        reason: data,
+      }),
+    });
+    const _data = await response.json();
+    console.log(_data, "thuan");
+    return _data;
+  } catch (error) {
+    console.error(error);
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi hủy đơn hàng",
+    };
+  }
+};

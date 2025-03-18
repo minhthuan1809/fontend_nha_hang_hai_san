@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Button, Input, RadioGroup, Radio, Textarea } from "@nextui-org/react";
 import Link from "next/link";
 import Icon from "@/app/_shared/utils/Icon";
-import { useStore } from "@/app/store/ZustandSStore";
+import { RefreshCartStore, useStore } from "@/app/store/ZustandSStore";
 import ModalViewAddress from "./ModalViewAddress";
 import { getDiscountByCoupon } from "@/app/_service/admin/discount";
 import { getCookie } from "cookies-next";
@@ -26,7 +26,10 @@ export default function PayCart({ data, totalPrice }: any) {
   const token = getCookie("token");
   const router = useRouter();
   const [note, setNote] = useState("");
-
+  const { dataRefreshCart, setRefreshCart } = RefreshCartStore() as {
+    dataRefreshCart: boolean;
+    setRefreshCart: (value: boolean) => void;
+  };
   let isOpenSession =
     sessionStorage.getItem("setIsOpenModalPayment") === "true";
   const [isOpenModalPayment, setIsOpenModalPayment] = useState(isOpenSession);
@@ -121,6 +124,7 @@ export default function PayCart({ data, totalPrice }: any) {
       });
 
       if (res.ok) {
+        setRefreshCart(!dataRefreshCart);
         router.push("/order-history");
         enqueueSnackbar(res.message, { variant: "success" });
         localStorage.removeItem("dataCart");

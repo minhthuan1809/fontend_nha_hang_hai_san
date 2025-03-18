@@ -1,108 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import CartProduct from "@/app/_shared/components/ui/Cart";
 import Icon from "@/app/_shared/utils/Icon";
-const PopularFoodSection = () => {
-  const [menuItems, setMenuItems] = useState([
-    {
-      name: "Cá mặt quỷ chiên giòn",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.8,
-      category: "fish",
-      quantity: 15,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Ghẹ hấp xả",
-      price: "220.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.9,
-      category: "crab",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Tôm chiên bột",
-      price: "280.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.7,
-      category: "shrimp",
-      quantity: 8,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Cá chiên phượng hoàng",
-      price: "560.000 đ",
-      image: "https://picsum.photos/200",
-      hot: false,
-      rating: 4.5,
-      category: "fish",
-      quantity: 3,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Mực chiên giòn",
-      price: "80.000 đ",
-      image: "https://picsum.photos/200",
-      hot: true,
-      rating: 4.6,
-      category: "squid",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-    {
-      name: "Tôm tít chấy tỏi",
-      price: "120.000 đ",
-      image: "https://picsum.photos/200",
-      hot: false,
-      rating: 4.4,
-      category: "shrimp",
-      quantity: 12,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Cua rang me",
-      price: "180.000 đ",
-      image: "https://picsum.photos/200",
-      hot: false,
-      rating: 4.4,
-      category: "crab",
-      quantity: 5,
-      inStock: true,
-      status: false,
-    },
-    {
-      name: "Mực xào sa tế",
-      price: "150.000 đ",
-      image: "https://picsum.photos/200",
-      hot: false,
-      rating: 4.4,
-      category: "squid",
-      quantity: 0,
-      inStock: false,
-      status: false,
-    },
-  ]);
+import { getFoodSale } from "@/app/_service/client/layout";
 
+const PopularFoodSection = () => {
+  const [menuItems, setMenuItems] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
 
   const filteredItems =
     activeFilter === "all"
       ? menuItems
       : activeFilter === "hot"
-      ? menuItems.filter((item) => item.hot)
-      : menuItems.filter((item) => item.category === activeFilter);
+      ? menuItems.filter((item: any) => item.hot)
+      : menuItems.filter((item: any) => item.category === activeFilter);
+
+  useEffect(() => {
+    getFoodSale(activeFilter).then((res) => {
+      if (res.ok && res.data) {
+        const formattedData = res.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.images,
+          hot: item.hot,
+          rating: parseFloat(item.star) || 0,
+          category: item.category,
+          quantity: parseInt(item.quantity),
+          inStock: parseInt(item.quantity) > 0,
+          status: item.status,
+          quantity_sold: parseInt(item.quantity_sold),
+        }));
+        setMenuItems(formattedData);
+      }
+    });
+  }, [activeFilter]);
 
   return (
     <div id="food-sale" className="w-full bg-gray-50 py-8 sm:py-12 md:py-16">
@@ -146,16 +79,6 @@ const PopularFoodSection = () => {
               Món hot
             </button>
             <button
-              onClick={() => setActiveFilter("fish")}
-              className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
-                activeFilter === "fish"
-                  ? "bg-[#d97706] text-white"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              Cá
-            </button>
-            <button
               onClick={() => setActiveFilter("shrimp")}
               className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
                 activeFilter === "shrimp"
@@ -174,6 +97,16 @@ const PopularFoodSection = () => {
               }`}
             >
               Cua/Ghẹ
+            </button>
+            <button
+              onClick={() => setActiveFilter("scallop")}
+              className={`px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg transition-all ${
+                activeFilter === "scallop"
+                  ? "bg-[#d97706] text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Ốc
             </button>
           </div>
         </div>

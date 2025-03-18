@@ -22,6 +22,7 @@ export default function ModalViewOder({
   const formatCurrency = (value: string) => {
     return parseInt(value).toLocaleString("vi-VN") + "đ";
   };
+  console.log(data, "thuan");
 
   const statusColorMap: {
     [key: string]: {
@@ -54,7 +55,6 @@ export default function ModalViewOder({
 
   const status = data.status || "pending";
   const statusColor = statusColorMap[status] || statusColorMap.pending;
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">
       <ModalContent>
@@ -71,18 +71,22 @@ export default function ModalViewOder({
         </ModalHeader>
         <ModalBody>
           <div className="flex flex-col gap-6 pb-6">
-            <div className="flex items-center gap-4">
-              <img
-                src={data.user.avatar}
-                alt={data.user.fullName}
-                className="w-16 h-16 rounded-full object-cover border-2 border-amber-200"
-              />
-              <div>
-                <h3 className="font-semibold text-lg">{data.user.fullName}</h3>
-                <p className="text-gray-600">{data.user.email}</p>
-                <p className="text-gray-600">{data.phone}</p>
+            {data.user && (
+              <div className="flex items-center gap-4">
+                <img
+                  src={data.user?.avatar}
+                  alt={data.user.fullName}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-amber-200"
+                />
+                <div>
+                  <h3 className="font-semibold text-lg">
+                    {data.user.fullName}
+                  </h3>
+                  <p className="text-gray-600">{data.user.email}</p>
+                  <p className="text-gray-600">{data.phone}</p>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="border rounded-lg p-4">
               <div className="flex justify-between items-center">
@@ -107,6 +111,11 @@ export default function ModalViewOder({
                     ? "Thanh toán khi nhận hàng"
                     : "Chuyển khoản"}
                 </p>
+                {data.status === "canceled" && (
+                  <p className="text-red-600 mt-2">
+                    Lý do hủy: {data.reason || "Không có"}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -120,7 +129,7 @@ export default function ModalViewOder({
                     className="flex items-center gap-4 mb-4"
                   >
                     <img
-                      src={product.img}
+                      src={product.img || product.image_url}
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded-lg"
                     />

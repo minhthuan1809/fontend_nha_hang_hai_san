@@ -63,10 +63,13 @@ export default function OrderPage() {
   }, [token, searchTerm, currentPage, refresh]);
 
   useEffect(() => {
-    const time = setTimeout(() => {
-      fetchData();
-    }, 1000);
-    return () => clearTimeout(time);
+    fetchData(); // Gọi lần đầu ngay lập tức
+
+    const interval = setInterval(() => {
+      fetchData(); // Gọi lại sau mỗi 3 giây
+    }, 3000);
+
+    return () => clearInterval(interval); // Dọn dẹp interval khi component unmount
   }, [fetchData]);
 
   const dataOder = filteredOrders.filter((item) => {

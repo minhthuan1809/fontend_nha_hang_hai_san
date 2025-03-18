@@ -12,6 +12,10 @@ import "swiper/css/thumbs";
 import Loading from "@/app/_shared/components/Loading";
 import DescriptionDetailProduct from "./DescriptionDetailProduct";
 import SuggestProduct from "./SuggestProduct";
+import { addCard } from "@/app/_service/client/card";
+import { enqueueSnackbar } from "notistack";
+import { RefreshCartStore } from "@/app/store/ZustandSStore";
+import { getCookie } from "cookies-next";
 
 interface Image {
   id: number;
@@ -40,7 +44,11 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<string | null>(null);
-
+  const token = getCookie("token");
+  const { dataRefreshCart, setRefreshCart } = RefreshCartStore() as {
+    dataRefreshCart: boolean;
+    setRefreshCart: (value: boolean) => void;
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -85,7 +93,14 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    alert(`Đã thêm ${quantity} sản phẩm "${product.name}" vào giỏ hàng`);
+    addCard(token as string, product.id).then((data) => {
+      if (data.ok) {
+        setRefreshCart(!dataRefreshCart);
+        enqueueSnackbar(data.message, { variant: "success" });
+      } else {
+        enqueueSnackbar(data.message, { variant: "error" });
+      }
+    });
   };
 
   const formatCategory = (category: string): string => {
@@ -93,7 +108,9 @@ export default function ProductDetailPage() {
       fish: "Cá",
       shrimp: "Tôm",
       crab: "Cua/Ghẹ",
+      scallop: "Ốc",
       squid: "Mực",
+      other: "Khác",
     };
 
     for (const [english, vietnamese] of Object.entries(translations)) {
@@ -175,72 +192,51 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Thông tin sản phẩm */}
-          <div className="md:w-1/2 p-8 bg-gray-50">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {product.name}
-            </h1>
+          <div className="md:w-1/2 p-8 bg-gray-50 flex flex-col justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                {product.name}
+              </h1>
 
-            <div className="flex items-center mb-6">
-              <div className="flex mr-3">{renderStars(product.star)}</div>
-              <span className="text-gray-600 font-medium">
-                ({product.star}/5)
-              </span>
-            </div>
-
-            <div className="text-3xl font-bold text-red-600 mb-6">
-              {product.price}
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-center">
-                <span className="text-gray-700 font-medium w-32">
-                  Tình trạng:
-                </span>
-                {product.quantity > 0 ? (
-                  <span className="text-green-600 font-semibold">
-                    Còn hàng ({product.quantity})
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-semibold">Hết hàng</span>
-                )}
-              </div>
-
-              <div className="flex items-center">
-                <span className="text-gray-700 font-medium w-32">Đã bán:</span>
-                <span className="font-semibold">{product.quantity_sold}</span>
-              </div>
-
-              <div className="flex items-center">
-                <span className="text-gray-700 font-medium w-32">
-                  Danh mục:
-                </span>
-                <span className="capitalize text-blue-600 font-semibold">
-                  {formatCategory(product.category)}
+              <div className="flex items-center mb-6">
+                <div className="flex mr-3">{renderStars(product.star)}</div>
+                <span className="text-gray-600 font-medium">
+                  ({product.star}/5)
                 </span>
               </div>
 
-              <div className="flex items-center">
-                <span className="text-gray-700 font-medium w-32">
-                  Số lượng:
-                </span>
+              <div className="text-3xl font-bold text-red-600 mb-6">
+                {product.price}
+              </div>
+
+              <div className="space-y-6">
                 <div className="flex items-center">
-                  <button
-                    onClick={handleDecreaseQuantity}
-                    className="w-10 h-10 rounded-l-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center border border-gray-300"
-                    disabled={quantity <= 1}
-                  >
-                    -
-                  </button>
-                  <span className="w-16 h-10 flex items-center justify-center border-y border-gray-300 bg-white font-medium">
-                    {quantity}
+                  <span className="text-gray-700 font-medium w-32">
+                    Tình trạng:
                   </span>
-                  <button
-                    onClick={handleIncreaseQuantity}
-                    className="w-10 h-10 rounded-r-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center border border-gray-300"
-                    disabled={quantity >= product.quantity}
-                  >
-                    +
-                  </button>
+                  {product.quantity > 0 ? (
+                    <span className="text-green-600 font-semibold">
+                      Còn hàng ({product.quantity})
+                    </span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">Hết hàng</span>
+                  )}
+                </div>
+
+                <div className="flex items-center">
+                  <span className="text-gray-700 font-medium w-32">
+                    Đã bán:
+                  </span>
+                  <span className="font-semibold">{product.quantity_sold}</span>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="text-gray-700 font-medium w-32">
+                    Danh mục:
+                  </span>
+                  <span className="capitalize text-blue-600 font-semibold">
+                    {formatCategory(product.category)}
+                  </span>
                 </div>
               </div>
             </div>

@@ -36,7 +36,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         }
 
         const res = await authUser(token as string);
-        console.log(res);
 
         if (mounted) {
           setDataUsers(res.data);
@@ -98,16 +97,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     {
       name: "Tổng quan",
       href: "/dashboard",
+      icon: "Home",
+    },
+    {
+      name: "Thông Kê",
+      href: "/statistical",
       icon: "LayoutDashboard",
       submenu: [
         {
-          name: "Thống Kê",
-          href: "/dashboard/stats",
+          name: "Doanh thu",
+          href: "/statistical/stats",
           icon: "LineChart",
         },
         {
           name: "Báo Cáo",
-          href: "/dashboard/reports",
+          href: "/statistical/reports",
           icon: "FileText",
         },
       ],
@@ -135,16 +139,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       ],
     },
     {
-      name: "Sản Phẩm",
-      href: "/product",
-      icon: "ShoppingBag",
-    },
-    {
-      name: "Khách Hàng",
-      href: "/customers",
-      icon: "Users",
-    },
-    {
       name: "Mã Giảm Giá",
       href: "/discount",
       icon: "DollarSign",
@@ -161,6 +155,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         },
       ],
     },
+    {
+      name: "Sản Phẩm",
+      href: "/product",
+      icon: "ShoppingBag",
+    },
+    {
+      name: "Khách Hàng",
+      href: "/customers",
+      icon: "Users",
+    },
+
     {
       name: "Bài Viết",
       href: "/articles",

@@ -57,9 +57,9 @@ export default function CartProduct({
               <div className="relative">
                 <div className="h-40 sm:h-52 overflow-hidden">
                   <img
-                    src={item?.images}
+                    src={item?.image || item?.images}
                     alt={item?.name || "Sản phẩm"}
-                    className="w-full h-[150px] sm:h-[200px] object-cover transform transition-transform duration-500"
+                    className="w-full h-[150px] sm:h-[250px] object-contain transform transition-transform duration-500"
                   />
                   {item?.name && (
                     <Link

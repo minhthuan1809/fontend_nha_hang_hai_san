@@ -84,8 +84,6 @@ export default function ModalAddDicount({
 
   // Handle edit
   const handleEdit = async () => {
-    console.log(isEdit?.id);
-
     setLoading(true);
     try {
       const res = await updateDiscount(token as string, isEdit?.id, form);

@@ -36,8 +36,6 @@ export default function ModalCart() {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectAll, setSelectAll] = useState(false);
 
-  console.log(dataCart);
-
   // Tính tổng tiền cho các sản phẩm được chọn
   const calculateTotal = () => {
     if (!dataCart?.data?.length) return 0;

@@ -99,7 +99,7 @@ export default function AdsHomePage() {
             className="absolute top-2 right-2 md:top-4 md:right-4 bg-white/50 backdrop-blur-sm z-10"
             radius="full"
             size={isMobile ? "sm" : "md"}
-            onClick={handleClose}
+            onPress={handleClose}
             aria-label="Đóng quảng cáo"
           >
             ✕

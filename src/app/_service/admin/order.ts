@@ -36,8 +36,6 @@ export const confirmOrder = async (token: string, id: string, data: any) => {
     });
     const _data = await res.json();
 
-    console.log("data", _data);
-
     return _data;
   } catch (error) {
     return {

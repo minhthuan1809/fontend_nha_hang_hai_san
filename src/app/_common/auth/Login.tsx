@@ -105,7 +105,7 @@ export default function Login() {
           enqueueSnackbar(res.message, { variant: "error" });
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
         enqueueSnackbar("Đã xảy ra lỗi", { variant: "error" });
       } finally {
         setLoading(false);
