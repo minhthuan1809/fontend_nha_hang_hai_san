@@ -56,11 +56,13 @@ export default function CartProduct({
             >
               <div className="relative">
                 <div className="h-40 sm:h-52 overflow-hidden">
-                  <img
-                    src={item?.image || item?.images}
-                    alt={item?.name || "Sản phẩm"}
-                    className="w-full h-[150px] sm:h-[250px] object-contain transform transition-transform duration-500"
-                  />
+                  <div className="w-full h-[150px] sm:h-[650px]">
+                    <img
+                      src={item?.image || item?.images}
+                      alt={item?.name || "Sản phẩm"}
+                      className="w-full h-full sm:h-[250px] object-cover transform transition-transform duration-500"
+                    />
+                  </div>
                   {item?.name && (
                     <Link
                       href={`/products/${removeAccentsAndSpaces(item.name)}/${

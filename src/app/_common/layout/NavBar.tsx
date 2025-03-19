@@ -257,7 +257,49 @@ export default function App() {
         />
       </NavbarContent>
 
+      {/* Menu mobile */}
       <NavbarMenu className="pt-4 pb-6 px-4 bg-white dark:bg-gray-900 overflow-auto max-h-[80vh]">
+        {user && (
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 mt-5">
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <div className="font-medium text-gray-800 dark:text-gray-200">
+                  {user?.name.charAt(0).toUpperCase() + user?.name.slice(1)}
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {user?.email}
+                </div>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Link
+                href="/account"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Icon icon="CircleUser" size={20} />
+                Thông tin tài khoản
+              </Link>
+              <Link
+                href="/order-history"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Icon icon="History" size={20} />
+                Lịch sử mua hàng
+              </Link>
+            </div>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-4" />
+          </div>
+        )}
+
         {navData.navigation.slice(0, 5).map((item: any) => (
           <NavbarMenuItem key={item.id} className="my-1">
             <Link
@@ -274,7 +316,7 @@ export default function App() {
           </NavbarMenuItem>
         ))}
 
-        {!user && (
+        {!user ? (
           <div className="flex flex-col gap-3 mt-6">
             <Button
               className="w-full font-medium py-2 rounded-lg transition-colors bg-amber-600 text-white"
@@ -299,6 +341,16 @@ export default function App() {
               {navData.navigation[6]?.name || "Đăng ký"}
             </Button>
           </div>
+        ) : (
+          <Button
+            className="w-full font-medium py-2 rounded-lg transition-colors bg-red-500 text-white mt-6"
+            onPress={() => {
+              handleLogout();
+              setIsMenuOpen(false);
+            }}
+          >
+            Đăng xuất
+          </Button>
         )}
       </NavbarMenu>
     </Navbar>

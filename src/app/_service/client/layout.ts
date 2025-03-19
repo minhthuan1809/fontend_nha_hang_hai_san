@@ -274,3 +274,17 @@ export const cancelOrder = async (
     };
   }
 };
+
+//news_header
+export const getNewsHeader = async () => {
+  try {
+    const response = await fetch(`${API}/news_header`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      ok: false,
+      message: "Đã xảy ra lỗi khi lấy dữ liệu news header",
+    };
+  }
+};

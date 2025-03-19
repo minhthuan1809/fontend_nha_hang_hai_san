@@ -8,14 +8,7 @@ import { getProducts } from "@/app/_service/client/layout";
 import Icon from "@/app/_shared/utils/Icon";
 import Loading from "@/app/_shared/components/Loading";
 import { dataFilter } from "@/app/_shared/utils/dataFilter";
-import {
-  Input,
-  Select,
-  SelectItem,
-  Card,
-  CardBody,
-  Chip,
-} from "@nextui-org/react";
+import { Input, Select, SelectItem, Chip } from "@nextui-org/react";
 
 const MenuPageContent = () => {
   const router = useRouter();
