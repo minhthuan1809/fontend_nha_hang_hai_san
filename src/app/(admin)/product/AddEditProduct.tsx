@@ -122,7 +122,7 @@ export default function AddEditProduct({
 
       const productData = {
         ...form,
-        description: editorContent.replace(/<[^>]*>/g, ""), // Remove HTML tags
+        description: editorContent,
         images: imageUrls,
       };
 

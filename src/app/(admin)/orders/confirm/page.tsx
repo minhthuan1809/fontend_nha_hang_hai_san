@@ -26,6 +26,7 @@ import Icon from "@/app/_shared/utils/Icon";
 import { Order, OrderStatus } from "../type";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/app/_shared/components/ui/Pagination";
+import No_found from "../../No_found";
 
 export default function OrderPage() {
   const token = getCookie("token");
@@ -40,12 +41,14 @@ export default function OrderPage() {
   const [loadingBtn, setLoadingBtn] = useState<{ [key: string]: boolean }>({});
   const page = useSearchParams().get("page");
   const currentPage = page ? parseInt(page) : 1;
+  const [role, setRole] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
       const res = await getAllOrder(token as string, currentPage, searchTerm);
 
       if (res.ok) {
+        setRole(false);
         setFilteredOrders(res.data.orders);
         setStatus(
           res.data.orders.map((item: Order) => ({
@@ -55,10 +58,12 @@ export default function OrderPage() {
         );
         setTotalPages(res.data.pagination.total_pages);
       } else {
+        setRole(true);
         setFilteredOrders([]);
         setStatus([]);
       }
     } catch (error) {
+      setRole(true);
       console.error("Lỗi khi tải dữ liệu:", error);
       enqueueSnackbar("Có lỗi xảy ra khi tải dữ liệu", { variant: "error" });
     }
@@ -158,6 +163,9 @@ export default function OrderPage() {
     }
   };
 
+  if (role) {
+    return <No_found />;
+  }
   return (
     <div className="md:p-6">
       <Card className="mb-6 shadow-lg">

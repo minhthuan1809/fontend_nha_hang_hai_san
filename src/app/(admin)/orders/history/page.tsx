@@ -26,6 +26,7 @@ import Icon from "@/app/_shared/utils/Icon";
 import { Order, OrderStatus } from "../type";
 import Pagination from "@/app/_shared/components/ui/Pagination";
 import { useSearchParams } from "next/navigation";
+import No_found from "../../No_found";
 
 export default function OrderHistoryPage() {
   const token = getCookie("token");
@@ -37,6 +38,7 @@ export default function OrderHistoryPage() {
   const [totalPages, setTotalPages] = useState(0);
   const page = useSearchParams().get("page");
   const currentPage = page ? parseInt(page) : 1;
+  const [role, setRole] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
@@ -47,15 +49,18 @@ export default function OrderHistoryPage() {
       );
 
       if (res.ok) {
+        setRole(false);
         setFilteredOrders(res.data);
         setTotalPages(res.pagination.total_pages);
       } else {
+        setRole(true);
         setFilteredOrders([]);
         setTotalPages(0);
       }
     } catch (error) {
       console.error("Lỗi khi tải dữ liệu:", error);
       enqueueSnackbar("Có lỗi xảy ra khi tải dữ liệu", { variant: "error" });
+      setRole(true);
     }
   }, [token, searchTerm, currentPage]);
 
@@ -84,6 +89,10 @@ export default function OrderHistoryPage() {
       minute: "2-digit",
     });
   };
+
+  if (role) {
+    return <No_found />;
+  }
 
   return (
     <div className="p-6">

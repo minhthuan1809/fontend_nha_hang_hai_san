@@ -109,11 +109,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           href: "/statistical/stats",
           icon: "LineChart",
         },
-        {
-          name: "Báo Cáo",
-          href: "/statistical/reports",
-          icon: "FileText",
-        },
       ],
     },
     {

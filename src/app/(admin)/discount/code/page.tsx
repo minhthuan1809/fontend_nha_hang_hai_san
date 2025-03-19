@@ -18,6 +18,7 @@ import {
 import Icon from "@/app/_shared/utils/Icon";
 import { enqueueSnackbar } from "notistack";
 import ModalAddDicount from "./ModalAddDicount";
+import No_found from "../../No_found";
 
 export default function Page() {
   const token = getCookie("token");
@@ -26,12 +27,16 @@ export default function Page() {
   const [refresh, setRefresh] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState<any>(null);
+  const [role, setRole] = useState(true);
 
   useEffect(() => {
     if (token) {
       getDiscount(token as string, "").then((response) => {
         if (response.ok) {
           setData(response.data || []);
+          setRole(false);
+        } else {
+          setRole(true);
         }
         setLoading(false);
       });
@@ -70,6 +75,10 @@ export default function Page() {
     { name: "TRẠNG THÁI", uid: "status" },
     { name: "HÀNH ĐỘNG", uid: "action" },
   ];
+
+  if (role) {
+    return <No_found />;
+  }
 
   return (
     <div className="p-4">

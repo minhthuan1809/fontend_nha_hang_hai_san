@@ -150,7 +150,6 @@ function ProductsContent() {
                   setCategoryFilter(Array.from(keys)[0].toString())
                 }
               >
-                <DropdownItem key="all">Tất cả</DropdownItem>
                 <>
                   {dataFilter.map((category) => (
                     <DropdownItem key={category.key}>
@@ -246,7 +245,7 @@ function ProductsContent() {
                 </TableCell>
                 <TableCell>
                   <span className="font-medium text-lg text-gray-900">
-                    {product.price.toLocaleString("vi-VN")}đ
+                    {product.price.toLocaleString("vi-VN")}
                   </span>
                 </TableCell>
                 <TableCell>

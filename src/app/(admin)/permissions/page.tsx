@@ -61,6 +61,7 @@ function PermissionPage() {
       }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -188,7 +189,7 @@ function PermissionPage() {
         />
         <Button
           color="primary"
-          onClick={() => {
+          onPress={() => {
             setDataEdit("");
             setCheckRole(true);
           }}
@@ -203,44 +204,38 @@ function PermissionPage() {
           <TableColumn>Hành động</TableColumn>
         </TableHeader>
         <TableBody>
-          {roles.length > 0 ? (
-            roles
-              .filter((role: any) => role.name !== "user")
-              .map((role: any, index: number) => (
-                <TableRow key={role.id}>
-                  <TableCell className="w-20">{index + 1}</TableCell>
-                  <TableCell>{role.name}</TableCell>
+          {roles
+            .filter(
+              (role: any) => role.name !== "user" && role.name !== "super_admin"
+            )
+            .map((role: any, index: number) => (
+              <TableRow key={role.id}>
+                <TableCell className="w-20">{index + 1}</TableCell>
+                <TableCell>{role.name}</TableCell>
 
-                  <TableCell className="w-28">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="mr-2 cursor-pointer text-primary "
-                        onClick={() => {
-                          setCheckRole((prev) => !prev);
-                          setDataEdit(role);
-                        }}
-                      >
-                        <Icon icon="Edit" />
-                      </div>
-                      <div
-                        className="mr-2 cursor-pointer text-red-500"
-                        onClick={() => {
-                          handleDelete(role.id);
-                        }}
-                      >
-                        <Icon icon="Trash" />
-                      </div>
+                <TableCell className="w-28">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="mr-2 cursor-pointer text-primary "
+                      onClick={() => {
+                        setCheckRole((prev) => !prev);
+                        setDataEdit(role);
+                      }}
+                    >
+                      <Icon icon="Edit" />
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))
-          ) : (
-            <TableRow>
-              <TableCell className="text-center">-</TableCell>
-              <TableCell className="text-center">Không có dữ liệu</TableCell>
-              <TableCell className="text-center">-</TableCell>
-            </TableRow>
-          )}
+                    <div
+                      className="mr-2 cursor-pointer text-red-500"
+                      onClick={() => {
+                        handleDelete(role.id);
+                      }}
+                    >
+                      <Icon icon="Trash" />
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
       {/* Pagination */}

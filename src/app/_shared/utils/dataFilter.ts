@@ -1,4 +1,5 @@
 export const dataFilter = [
+  { key: "all", value: "Tất cả" },
   { key: "fish", value: "Cá" },
   { key: "shrimp", value: "Tôm" },
   { key: "crab", value: "Cua/Ghẹ" },

@@ -25,6 +25,7 @@ import Icon from "@/app/_shared/utils/Icon";
 import { getStats } from "@/app/_service/admin/stats";
 import { getCookie } from "cookies-next";
 import { exportToExcel } from "@/app/(admin)/statistical/stats/exportExcel";
+import No_found from "../../No_found";
 
 export default function StatisticsPage() {
   const [timeRange, setTimeRange] = useState<"year" | "quarter" | "month">(
@@ -33,6 +34,7 @@ export default function StatisticsPage() {
   const [date, setDate] = useState<any>();
   const [statsData, setStatsData] = useState<any>(null);
   const token = getCookie("token");
+  const [role, setRole] = useState<any>(null);
 
   // Format tiền VND
   const formatCurrency = (amount: number) => {
@@ -45,7 +47,12 @@ export default function StatisticsPage() {
 
   useEffect(() => {
     getStats(token as string, date).then((data) => {
-      setStatsData(data.data);
+      if (data.ok) {
+        setStatsData(data.data);
+        setRole(true);
+      } else {
+        setRole(false);
+      }
     });
   }, [date, token]);
 
@@ -79,6 +86,9 @@ export default function StatisticsPage() {
     quarter: [],
     month: [],
   };
+  if (!role) {
+    return <No_found />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/30 md:p-6  ">

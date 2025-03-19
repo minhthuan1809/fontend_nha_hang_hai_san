@@ -15,16 +15,21 @@ import {
   Button,
 } from "@nextui-org/react";
 import { enqueueSnackbar } from "notistack";
+import No_found from "../../No_found";
 
 export default function DiscountHistoryPage() {
   const token = getCookie("token");
   const [data, setData] = useState<any[]>([]);
+  const [role, setRole] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await getDiscountHistory(token as string);
       if (res.ok) {
         setData(res.data);
+        setRole(false);
+      } else {
+        setRole(true);
       }
     };
     fetchData();
@@ -43,6 +48,10 @@ export default function DiscountHistoryPage() {
       minute: "2-digit",
     });
   };
+
+  if (role) {
+    return <No_found />;
+  }
 
   return (
     <div className="md:p-6">

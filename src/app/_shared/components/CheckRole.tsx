@@ -35,6 +35,7 @@ export default function CheckRole({
     setPermissions(newPermissions);
   };
 
+  console.log(permissions);
   useEffect(() => {
     if (data) {
       setPermissions(data);
@@ -68,14 +69,25 @@ export default function CheckRole({
         delete_header: false,
         get_contacts: false,
         delete_contacts: false,
+        get_discount: false,
+        post_discount: false,
+        put_discount: false,
+        delete_discount: false,
+        get_order: false,
+        post_order: false,
+        put_order: false,
+        delete_order: false,
+        get_stats: false,
       });
     }
   }, [data]);
 
   return (
-    <Card className="p-8 space-y-8">
-      <div className="flex justify-between items-center border-b pb-4">
-        <h1 className="text-2xl font-bold text-primary">Phân quyền</h1>
+    <Card className="p-4 md:p-8 space-y-6 md:space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4">
+        <h1 className="text-xl md:text-2xl font-bold text-primary">
+          Phân quyền
+        </h1>
         <Checkbox
           className="text-gray-600 hover:text-primary transition-colors"
           isSelected={Object.values(permissions).every(
@@ -87,13 +99,13 @@ export default function CheckRole({
         </Checkbox>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý người dùng
           </h2>
-          <div className="space-x-3 pl-3">
+          <div className="flex flex-col md:flex-row md:space-x-3 space-y-2 md:space-y-0 pl-3">
             <Checkbox
               isSelected={permissions.get_user}
               onValueChange={() => handlePermissionChange("get_user")}
@@ -125,12 +137,12 @@ export default function CheckRole({
           </div>
         </Card>
 
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý sản phẩm
           </h2>
-          <div className="space-x-3 pl-3">
+          <div className="flex flex-col md:flex-row md:space-x-3 space-y-2 md:space-y-0 pl-3">
             <Checkbox
               isSelected={permissions.put_product}
               onValueChange={() => handlePermissionChange("put_product")}
@@ -155,12 +167,12 @@ export default function CheckRole({
           </div>
         </Card>
 
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý Vai trò
           </h2>
-          <div className="space-x-10 pl-3">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
             <Checkbox
               isSelected={permissions.get_role}
               onValueChange={() => handlePermissionChange("get_role")}
@@ -192,12 +204,12 @@ export default function CheckRole({
           </div>
         </Card>
 
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý tin tức
           </h2>
-          <div className="space-x-10 pl-3">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
             <Checkbox
               isSelected={permissions.put_new}
               onValueChange={() => handlePermissionChange("put_new")}
@@ -221,12 +233,73 @@ export default function CheckRole({
             </Checkbox>
           </div>
         </Card>
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
+            <span className="w-1 h-6 bg-primary rounded-full"></span>
+            Quản lý đơn hàng
+          </h2>
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
+            <Checkbox
+              isSelected={permissions.get_order}
+              onValueChange={() => handlePermissionChange("get_order")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xem đơn hàng
+            </Checkbox>
+            <Checkbox
+              isSelected={permissions.put_order}
+              onValueChange={() => handlePermissionChange("put_order")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Sửa đơn hàng & xác nhận
+            </Checkbox>
+          </div>
+        </Card>
+
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
+            <span className="w-1 h-6 bg-primary rounded-full"></span>
+            Quản lý khuyến mãi
+          </h2>
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
+            <Checkbox
+              isSelected={permissions.get_discount}
+              onValueChange={() => handlePermissionChange("get_discount")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xem khuyến mãi
+            </Checkbox>
+            <Checkbox
+              isSelected={permissions.put_discount}
+              onValueChange={() => handlePermissionChange("put_discount")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Sửa khuyến mãi
+            </Checkbox>
+            <Checkbox
+              isSelected={permissions.post_discount}
+              onValueChange={() => handlePermissionChange("post_discount")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Thêm khuyến mãi
+            </Checkbox>
+            <Checkbox
+              isSelected={permissions.delete_discount}
+              onValueChange={() => handlePermissionChange("delete_discount")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xóa khuyến mãi
+            </Checkbox>
+          </div>
+        </Card>
+
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý liên hệ
           </h2>
-          <div className="space-x-10 pl-3">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
             <Checkbox
               isSelected={permissions.get_contacts}
               onValueChange={() => handlePermissionChange("get_contacts")}
@@ -244,19 +317,36 @@ export default function CheckRole({
             </Checkbox>
           </div>
         </Card>
-        <Card className="p-6 shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
+            <span className="w-1 h-6 bg-primary rounded-full"></span>
+            Thống kê
+          </h2>
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
+            <Checkbox
+              isSelected={permissions.get_stats}
+              onValueChange={() => handlePermissionChange("get_stats")}
+              className="text-gray-600 hover:text-primary transition-colors"
+            >
+              Xem thống kê
+            </Checkbox>
+          </div>
+        </Card>
+
+        <Card className="p-4 md:p-6 shadow-sm">
+          <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
             Quản lý giao diện
           </h2>
 
-          <div className="space-y-6 pl-3">
+          <div className="space-y-4 md:space-y-6 pl-3">
             <div>
-              <h3 className="font-medium mb-3 text-gray-700 flex items-center gap-2 ">
+              <h3 className="font-medium mb-2 md:mb-3 text-gray-700 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                 Menu và Logo
               </h3>
-              <div className="space-x-10 pl-3 ">
+              <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
                 <Checkbox
                   isSelected={permissions.put_nav_logo}
                   onValueChange={() => handlePermissionChange("put_nav_logo")}
@@ -286,11 +376,11 @@ export default function CheckRole({
             <Divider />
 
             <div>
-              <h3 className="font-medium mb-3 text-gray-700 flex items-center gap-2">
+              <h3 className="font-medium mb-2 md:mb-3 text-gray-700 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                 Chân trang
               </h3>
-              <div className="space-y-2 pl-3 space-x-10">
+              <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
                 <Checkbox
                   isSelected={permissions.put_footer}
                   onValueChange={() => handlePermissionChange("put_footer")}
@@ -318,11 +408,11 @@ export default function CheckRole({
             <Divider />
 
             <div>
-              <h3 className="font-medium mb-3 text-gray-700 flex items-center gap-2">
+              <h3 className="font-medium mb-2 md:mb-3 text-gray-700 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                 Giới thiệu
               </h3>
-              <div className="space-y-2 pl-3 space-x-10">
+              <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
                 <Checkbox
                   isSelected={permissions.put_about}
                   onValueChange={() => handlePermissionChange("put_about")}
@@ -350,11 +440,11 @@ export default function CheckRole({
             <Divider />
 
             <div>
-              <h3 className="font-medium mb-3 text-gray-700 flex items-center gap-2">
+              <h3 className="font-medium mb-2 md:mb-3 text-gray-700 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                 Trang chủ
               </h3>
-              <div className="space-y-2 pl-3 space-x-10">
+              <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0 pl-3">
                 <Checkbox
                   isSelected={permissions.put_header}
                   onValueChange={() => handlePermissionChange("put_header")}
@@ -382,11 +472,11 @@ export default function CheckRole({
         </Card>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <div className="flex flex-col md:flex-row justify-end gap-4">
         <Button
           color="danger"
           size="lg"
-          className="px-8 font-medium"
+          className="w-full md:w-auto px-8 font-medium"
           onPress={() => close(false)}
         >
           Hủy
@@ -394,7 +484,7 @@ export default function CheckRole({
         <Button
           color="primary"
           size="lg"
-          className="px-8 font-medium"
+          className="w-full md:w-auto px-8 font-medium"
           onPress={handleSave}
         >
           {data ? "Cập nhật" : "Lưu thay đổi"}
