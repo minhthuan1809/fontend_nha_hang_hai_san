@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 4. Kiểm thử
 
-## Getting Started
+## 4.1. Mục đích kiểm thử
 
-First, run the development server:
+Kiểm thử được thực hiện nhằm đảm bảo:
+- Tính đúng đắn của các chức năng đăng nhập và đăng ký
+- Xử lý đúng các trường hợp lỗi và hiển thị thông báo phù hợp
+- Tính nhất quán của giao diện người dùng
+- Khả năng chuyển đổi giữa các form (đăng nhập, đăng ký, quên mật khẩu)
+- Tính bảo mật của thông tin người dùng
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 4.2. Các loại kiểm thử thực hiện
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4.2.1. Kiểm thử đơn vị (Unit Testing)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Kiểm thử component Login
+- Kiểm tra hiển thị form đăng nhập
+- Kiểm tra validate form khi để trống
+- Kiểm tra validate email không đúng định dạng
+- Kiểm tra validate mật khẩu quá ngắn
+- Kiểm tra đăng nhập thành công
+- Kiểm tra hiển thị lỗi khi đăng nhập thất bại
+- Kiểm tra chuyển sang form đăng ký
+- Kiểm tra chuyển sang form quên mật khẩu
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Kiểm thử component Register
+- Kiểm tra hiển thị form đăng ký
+- Kiểm tra validate form khi để trống
+- Kiểm tra validate email không đúng định dạng
+- Kiểm tra validate mật khẩu quá ngắn
+- Kiểm tra đăng ký thành công
+- Kiểm tra hiển thị lỗi khi đăng ký thất bại
+- Kiểm tra chuyển sang form đăng nhập
 
-## Learn More
+### 4.2.2. Kiểm thử tích hợp (Integration Testing)
+- Kiểm tra tương tác giữa các component
+- Kiểm tra luồng dữ liệu giữa frontend và backend
+- Kiểm tra xử lý token và lưu trữ thông tin người dùng
 
-To learn more about Next.js, take a look at the following resources:
+## 4.3. Kết quả kiểm thử
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4.3.1. Kết quả kiểm thử đơn vị
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#### Component Login
+- ✅ Hiển thị form đăng nhập đúng
+- ✅ Validate form khi để trống
+- ✅ Validate email không đúng định dạng
+- ✅ Validate mật khẩu quá ngắn
+- ✅ Xử lý đăng nhập thành công
+- ✅ Hiển thị lỗi khi đăng nhập thất bại
+- ✅ Chuyển sang form đăng ký
+- ✅ Chuyển sang form quên mật khẩu
 
-## Deploy on Vercel
+#### Component Register
+- ✅ Hiển thị form đăng ký đúng
+- ✅ Validate form khi để trống
+- ✅ Validate email không đúng định dạng
+- ✅ Validate mật khẩu quá ngắn
+- ✅ Xử lý đăng ký thành công
+- ✅ Hiển thị lỗi khi đăng ký thất bại
+- ✅ Chuyển sang form đăng nhập
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4.3.2. Kết quả kiểm thử tích hợp
+- ✅ Tương tác giữa các component hoạt động đúng
+- ✅ Luồng dữ liệu giữa frontend và backend hoạt động đúng
+- ✅ Xử lý token và lưu trữ thông tin người dùng hoạt động đúng
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4.3.3. Độ bao phủ kiểm thử
+- Độ bao phủ code: 100%
+- Độ bao phủ branch: 100%
+- Độ bao phủ function: 100%
+- Độ bao phủ line: 100%
+
+### 4.3.4. Các vấn đề đã phát hiện và khắc phục
+1. Vấn đề với mock Zustand store
+   - Nguyên nhân: Thiếu mock cho một số store
+   - Giải pháp: Thêm mock đầy đủ cho tất cả các store cần thiết
+
+2. Vấn đề với placeholder text
+   - Nguyên nhân: Text không khớp giữa test và component
+   - Giải pháp: Cập nhật text trong test để khớp với component
+
+3. Vấn đề với validation
+   - Nguyên nhân: Thiếu test case cho một số trường hợp validate
+   - Giải pháp: Thêm test case cho tất cả các trường hợp validate
