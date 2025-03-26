@@ -13,7 +13,6 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
-import { enqueueSnackbar } from "notistack";
 
 export default function ModalDetailAcc({
   open,
@@ -24,6 +23,7 @@ export default function ModalDetailAcc({
   onClose: () => void;
   data: any;
 }) {
+  console.log(data);
   return (
     <Modal
       isOpen={open}
@@ -79,12 +79,12 @@ export default function ModalDetailAcc({
               <TableColumn>Địa chỉ</TableColumn>
             </TableHeader>
             <TableBody>
-              {data?.address && data.address.length > 0 ? (
-                data.address.map((item: any, index: number) => (
+              {data?.addresses && data?.addresses.length > 0 ? (
+                data?.addresses.map((item: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
-                    <TableCell>{item.address}</TableCell>
+                    <TableCell>{item?.phone}</TableCell>
+                    <TableCell>{item?.address}</TableCell>
                   </TableRow>
                 ))
               ) : (
